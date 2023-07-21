@@ -37,8 +37,8 @@ class CreateParty extends StatefulWidget {
 class _CreatePartyState extends State<CreateParty> {
   DefaultController defaultController = Get.put(DefaultController());
 
-  Future<String?> savePhotoToFirebase(String tokenId, File photo,
-      String imageName) async {
+  Future<String?> savePhotoToFirebase(
+      String tokenId, File photo, String imageName) async {
     try {
       setState(() {
         controller.isLoading.value = true;
@@ -50,7 +50,7 @@ class _CreatePartyState extends State<CreateParty> {
 
       // Create a reference to the photo in Firebase Storage
       Reference photoRef =
-      storage.ref().child('$tokenId/PartyPost/$imageName.jpg');
+          storage.ref().child('$tokenId/PartyPost/$imageName.jpg');
 
       // Upload the photo to Firebase Storage
       await photoRef.putFile(photo);
@@ -75,7 +75,7 @@ class _CreatePartyState extends State<CreateParty> {
       img = await _cropImage(imageFile: img);
       setState(() {
         savePhotoToFirebase(
-            '${GetStorage().read('token')}', img!, 'Party New Event')
+                '${GetStorage().read('token')}', img!, 'Party New Event')
             .then((value) {
           controller.timeline.value = value!;
           controller.isLoading.value = false;
@@ -90,7 +90,7 @@ class _CreatePartyState extends State<CreateParty> {
 
   Future<File?> _cropImage({required File imageFile}) async {
     CroppedFile? croppedImage =
-    await ImageCropper().cropImage(sourcePath: imageFile.path);
+        await ImageCropper().cropImage(sourcePath: imageFile.path);
     if (croppedImage == null) return null;
     return File(croppedImage.path);
   }
@@ -104,20 +104,19 @@ class _CreatePartyState extends State<CreateParty> {
           top: Radius.circular(25.0),
         ),
       ),
-      builder: (context) =>
-          DraggableScrollableSheet(
-              initialChildSize: 0.28,
-              maxChildSize: 0.4,
-              minChildSize: 0.28,
-              expand: false,
-              builder: (context, scrollController) {
-                return SingleChildScrollView(
-                  controller: scrollController,
-                  child: SelectPhotoOptionsScreen(
-                    onTap: _pickImageProfile,
-                  ),
-                );
-              }),
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectPhotoOptionsScreen(
+                onTap: _pickImageProfile,
+              ),
+            );
+          }),
     );
   }
 
@@ -175,7 +174,6 @@ class _CreatePartyState extends State<CreateParty> {
     super.initState();
   }
 
-
   @override
   void dispose() {
     controller.timeline.value = '';
@@ -211,522 +209,518 @@ class _CreatePartyState extends State<CreateParty> {
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: Obx(
-              () =>
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          () => SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Image.asset('assets/mice.png'),
-                              Text(
-                                'Host New Event',
-                                style: TextStyle(
-                                  fontFamily: 'Oswald',
-                                  fontSize: 14.sp,
-                                  color: const Color(0xffc40d0d),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                softWrap: false,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              defaultController.defaultControllerType.value = 2;
-                              _showSelectPhotoOptionsProfile(context);
-                            },
-                            child: Obx(
-                                  () =>
-                                  Stack(
-                                    children: [
-                                      controller.isLoading.value == false
-                                          ? Container(
-                                        height: 160,
-                                        width: double.maxFinite,
-                                        child: controller.timeline.value != ''
-                                            ? Card(
-                                            child: CachedNetworkImageWidget(
-                                                imageUrl:
-                                                controller.timeline.value,
-                                                width: Get.width,
-                                                height: 160,
-                                                fit: BoxFit.fill,
-                                                errorWidget: (context, url,
-                                                    error) =>
-                                                const Center(
-                                                  child:
-                                                  CupertinoActivityIndicator(
-                                                    radius: 15,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                placeholder: (context, url) =>
-                                                const Center(
-                                                    child:
-                                                    CupertinoActivityIndicator(
-                                                        color: Colors
-                                                            .black,
-                                                        radius: 15))))
-                                            : Card(
-                                          child: Lottie.asset(
-                                            'assets/127619-photo-click.json',
-                                          ),
-                                        ),
-                                      )
-                                          : Container(
-                                        child: const Center(
-                                          child: CupertinoActivityIndicator(
-                                            radius: 15,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 0,
-                                        right: 0,
-                                        child: Container(
-                                          child: IconButton(
-                                            onPressed: () {
-                                              defaultController
-                                                  .defaultControllerType.value =
-                                              2;
-                                              _showSelectPhotoOptionsProfile(
-                                                  context);
-                                            },
-                                            icon: const Icon(
-                                              Icons.camera_alt,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 10,
-                                        right: 10,
-                                        child: Container(
-                                            height: 30,
-                                            width: 30,
-                                            child: const Icon(
-                                              size: 30,
-                                              Icons.camera_alt,
-                                              color: Colors.red,
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFieldWithTitle(
-                        title: 'Party Title',
-                        controller: controller.title,
-                        inputType: TextInputType.name,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an party title';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      TextFieldWithTitle(
-                        title: 'Party Description',
-                        controller: controller.description,
-                        inputType: TextInputType.name,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an party description';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 28.0, vertical: 14),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Mobile Number',
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontFamily: 'malgun',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: TextFormField(
-                                controller: controller.mobileNumber,
-                                keyboardType: TextInputType.number,
-                                obscureText: false,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.black,
-                                ),
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(10)
-                                ],
-                                decoration: InputDecoration(
-                                  prefixIcon: Container(
-                                      height: 5,
-                                      width: 5,
-                                      child: Center(
-                                        child: Image.asset(
-                                          'assets/indian_flag.png',
-                                        ),
-                                      )),
-                                  prefixText: ' +91 ',
-                                  prefixStyle: TextStyle(
-                                      color: Colors.grey[400], fontSize: 15.sp),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  border: InputBorder.none,
-                                  hintText: "Enter Mobile Number",
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey[400], fontSize: 12.sp),
-                                ),
-                                onChanged: (value) {},
-
-                                // added validator function
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      controller.isPopular.value == false
-                          ? Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    controller.getStartDate(context);
-                                  },
-                                  child: TextFieldWithTitle(
-                                    title: 'Start Date',
-                                    passGesture: () {
-                                      controller.getStartDate(context);
-                                    },
-                                    controller: controller.startDate,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter an start date';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    controller.getEndDate(context);
-                                  },
-                                  child: TextFieldWithTitle(
-                                    title: 'End Date',
-                                    passGesture: () {
-                                      controller.getEndDate(context);
-                                    },
-                                    controller: controller.endDate,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter an end date';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    controller.getStartTime(context);
-                                  },
-                                  child: TextFieldWithTitle(
-                                    passGesture: () {
-                                      controller.getStartTime(context);
-                                    },
-                                    title: 'Start Time',
-                                    controller: controller.startTime,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter an start time';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    controller.getEndTime(context);
-                                  },
-                                  child: TextFieldWithTitle(
-                                    passGesture: () {
-                                      controller.getEndTime(context);
-                                    },
-                                    title: 'End Time',
-                                    controller: controller.endTime,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter an end time';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                          : Container(),
-                      //LocationButton(),
-                      TextFieldWithTitle(
-                        title: 'Address',
-                        controller: controller.location,
-                        inputType: TextInputType.name,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter House number';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Get.width * 0.07,
-                        ),
-                        child: CSCPicker(
-                          showStates: true,
-                          showCities: true,
-                          layout: Layout.vertical,
-                          flagState: CountryFlag.ENABLE,
-                          // headingStyle: TextStyle(
-                          //   fontSize: 13.sp,
-                          //   fontFamily: 'malgun',
-                          //   fontWeight: FontWeight.bold,
-                          //   color: Colors.black,
-                          // ),
-
-                          dropdownDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-
-                          //Disabled Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER]  (USE with disabled dropdownDecoration)
-                          disabledDropdownDecoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-
-                          ///placeholders for dropdown search field
-                          countrySearchPlaceholder: "Country",
-                          stateSearchPlaceholder: "State",
-                          citySearchPlaceholder: "City",
-
-                          ///labels for dropdown
-                          countryDropdownLabel: "Country",
-                          stateDropdownLabel: "State",
-                          cityDropdownLabel: "City",
-
-                          //defaultCountry: CscCountry.India,
-
-                          ///Country Filter [OPTIONAL PARAMETER]
-                          // countryFilter: [
-                          //   CscCountry.India,
-                          //   CscCountry.United_States,
-                          //   CscCountry.Canada
-                          // ],
-
-                          ///selected item style [OPTIONAL PARAMETER]
-                          selectedItemStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400),
-
-                          ///DropdownDialog Heading style [OPTIONAL PARAMETER]
-                          dropdownHeadingStyle: TextStyle(
-                              color: Colors.black,
+                          Image.asset('assets/mice.png'),
+                          Text(
+                            'Host New Event',
+                            style: TextStyle(
+                              fontFamily: 'Oswald',
                               fontSize: 14.sp,
-                              fontWeight: FontWeight.bold),
-
-                          ///DropdownDialog Item style [OPTIONAL PARAMETER]
-                          dropdownItemStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12.sp,
+                              color: const Color(0xffc40d0d),
+                              fontWeight: FontWeight.w600,
+                            ),
+                            softWrap: false,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          defaultController.defaultControllerType.value = 2;
+                          _showSelectPhotoOptionsProfile(context);
+                        },
+                        child: Obx(
+                          () => Stack(
+                            children: [
+                              controller.isLoading.value == false
+                                  ? Container(
+                                      height: 160,
+                                      width: double.maxFinite,
+                                      child: controller.timeline.value != ''
+                                          ? Card(
+                                              child: CachedNetworkImageWidget(
+                                                  imageUrl:
+                                                      controller.timeline.value,
+                                                  width: Get.width,
+                                                  height: 160,
+                                                  fit: BoxFit.fill,
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      const Center(
+                                                        child:
+                                                            CupertinoActivityIndicator(
+                                                          radius: 15,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                  placeholder: (context, url) =>
+                                                      const Center(
+                                                          child:
+                                                              CupertinoActivityIndicator(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  radius: 15))))
+                                          : Card(
+                                              child: Lottie.asset(
+                                                'assets/127619-photo-click.json',
+                                              ),
+                                            ),
+                                    )
+                                  : Container(
+                                      child: const Center(
+                                        child: CupertinoActivityIndicator(
+                                          radius: 15,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  child: IconButton(
+                                    onPressed: () {
+                                      defaultController
+                                          .defaultControllerType.value = 2;
+                                      _showSelectPhotoOptionsProfile(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: Container(
+                                    height: 30,
+                                    width: 30,
+                                    child: const Icon(
+                                      size: 30,
+                                      Icons.camera_alt,
+                                      color: Colors.red,
+                                    )),
+                              ),
+                            ],
                           ),
-
-                          ///Dialog box radius [OPTIONAL PARAMETER]
-                          dropdownDialogRadius: 8.0,
-
-                          ///Search bar radius [OPTIONAL PARAMETER]
-                          searchBarRadius: 8.0,
-
-                          ///triggers once country selected in dropdown
-                          onCountryChanged: (value) {},
-
-                          ///triggers once state selected in dropdown
-                          onStateChanged: (value) {},
-
-                          ///triggers once city selected in dropdown
-                          onCityChanged: (value) {},
                         ),
                       ),
-
-                      TextFieldWithTitle(
-                        title: 'Pin Code ',
-                        controller: controller.pincode,
-                        inputType: TextInputType.name,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Pin Code : ';
-                          } else {
-                            return null;
-                          }
-                        },
-                        maxlength: 6,
-                      ),
-                      SizedBox(
-                        height: Get.height * 0.02,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 28.0),
-                        child: Text(
-                          'Who can join',
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFieldWithTitle(
+                    title: 'Party Title',
+                    controller: controller.title,
+                    inputType: TextInputType.name,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter an party title';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  TextFieldWithTitle(
+                    title: 'Party Description',
+                    controller: controller.description,
+                    inputType: TextInputType.name,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter an party description';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 28.0, vertical: 14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Mobile Number',
                           style: TextStyle(
-                            fontSize: 15.sp,
+                            fontSize: 13.sp,
                             fontFamily: 'malgun',
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                      ),
-                      OptionSelector(),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFieldWithTitle(
-                              title: 'Start Age',
-                              controller: controller.startPeopleAge,
-                              inputType: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter an start age';
-                                } else {
-                                  return null;
-                                }
-                              },
-                            ),
+                        const SizedBox(height: 8),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: TextFieldWithTitle(
-                              title: 'End Age',
-                              inputType: TextInputType.number,
-                              controller: controller.endPeopleAge,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter an end age';
-                                } else {
-                                  return null;
-                                }
-                              },
+                          child: TextFormField(
+                            controller: controller.mobileNumber,
+                            keyboardType: TextInputType.number,
+                            obscureText: false,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.black,
                             ),
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(10)
+                            ],
+                            decoration: InputDecoration(
+                              prefixIcon: Container(
+                                  height: 5,
+                                  width: 5,
+                                  child: Center(
+                                    child: Image.asset(
+                                      'assets/indian_flag.png',
+                                    ),
+                                  )),
+                              prefixText: ' +91 ',
+                              prefixStyle: TextStyle(
+                                  color: Colors.grey[400], fontSize: 15.sp),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              border: InputBorder.none,
+                              hintText: "Enter Mobile Number",
+                              hintStyle: TextStyle(
+                                  color: Colors.grey[400], fontSize: 12.sp),
+                            ),
+                            onChanged: (value) {},
+
+                            // added validator function
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  controller.isPopular.value == false
+                      ? Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      controller.getStartDate(context);
+                                    },
+                                    child: TextFieldWithTitle(
+                                      title: 'Start Date',
+                                      passGesture: () {
+                                        controller.getStartDate(context);
+                                      },
+                                      controller: controller.startDate,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter an start date';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      controller.getEndDate(context);
+                                    },
+                                    child: TextFieldWithTitle(
+                                      title: 'End Date',
+                                      passGesture: () {
+                                        controller.getEndDate(context);
+                                      },
+                                      controller: controller.endDate,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter an end date';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      controller.getStartTime(context);
+                                    },
+                                    child: TextFieldWithTitle(
+                                      passGesture: () {
+                                        controller.getStartTime(context);
+                                      },
+                                      title: 'Start Time',
+                                      controller: controller.startTime,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter an start time';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      controller.getEndTime(context);
+                                    },
+                                    child: TextFieldWithTitle(
+                                      passGesture: () {
+                                        controller.getEndTime(context);
+                                      },
+                                      title: 'End Time',
+                                      controller: controller.endTime,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter an end time';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Container(),
+                  //LocationButton(),
+                  TextFieldWithTitle(
+                    title: 'Address',
+                    controller: controller.location,
+                    inputType: TextInputType.name,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter House number';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Get.width * 0.07,
+                    ),
+                    child: CSCPicker(
+                      showStates: true,
+                      showCities: true,
+                      layout: Layout.vertical,
+                      flagState: CountryFlag.ENABLE,
+                      // headingStyle: TextStyle(
+                      //   fontSize: 13.sp,
+                      //   fontFamily: 'malgun',
+                      //   fontWeight: FontWeight.bold,
+                      //   color: Colors.black,
+                      // ),
+
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      TextFieldWithTitle(
-                        title: 'Party People Limit',
-                        controller: controller.peopleLimit,
-                        inputType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter people limit';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      TextFieldWithTitle(
-                        title: 'Offers',
-                        controller: controller.offersText,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter offers';
-                          } else {
-                            return null;
-                          }
-                        },
+
+                      //Disabled Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER]  (USE with disabled dropdownDecoration)
+                      disabledDropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
 
-                      const SizedBox(
-                        height: 10,
+                      ///placeholders for dropdown search field
+                      countrySearchPlaceholder: "Country",
+                      stateSearchPlaceholder: "State",
+                      citySearchPlaceholder: "City",
+
+                      ///labels for dropdown
+                      countryDropdownLabel: "Country",
+                      stateDropdownLabel: "State",
+                      cityDropdownLabel: "City",
+
+                      //defaultCountry: CscCountry.India,
+
+                      ///Country Filter [OPTIONAL PARAMETER]
+                      // countryFilter: [
+                      //   CscCountry.India,
+                      //   CscCountry.United_States,
+                      //   CscCountry.Canada
+                      // ],
+
+                      ///selected item style [OPTIONAL PARAMETER]
+                      selectedItemStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400),
+
+                      ///DropdownDialog Heading style [OPTIONAL PARAMETER]
+                      dropdownHeadingStyle: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold),
+
+                      ///DropdownDialog Item style [OPTIONAL PARAMETER]
+                      dropdownItemStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12.sp,
                       ),
-                      Center(child: AmenitiesButton()),
-                      const SizedBox(
-                        height: 25,
+
+                      ///Dialog box radius [OPTIONAL PARAMETER]
+                      dropdownDialogRadius: 8.0,
+
+                      ///Search bar radius [OPTIONAL PARAMETER]
+                      searchBarRadius: 8.0,
+
+                      ///triggers once country selected in dropdown
+                      onCountryChanged: (value) {},
+
+                      ///triggers once state selected in dropdown
+                      onStateChanged: (value) {},
+
+                      ///triggers once city selected in dropdown
+                      onCityChanged: (value) {},
+                    ),
+                  ),
+
+                  TextFieldWithTitle(
+                    title: 'Pin Code ',
+                    controller: controller.pincode,
+                    inputType: TextInputType.name,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter Pin Code : ';
+                      } else {
+                        return null;
+                      }
+                    },
+                    maxlength: 6,
+                  ),
+                  SizedBox(
+                    height: Get.height * 0.02,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                    child: Text(
+                      'Who can join',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontFamily: 'malgun',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  OptionSelector(),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFieldWithTitle(
+                          title: 'Start Age',
+                          controller: controller.startPeopleAge,
+                          inputType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an start age';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: TextFieldWithTitle(
+                          title: 'End Age',
+                          inputType: TextInputType.number,
+                          controller: controller.endPeopleAge,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an end age';
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  TextFieldWithTitle(
+                    title: 'Party People Limit',
+                    controller: controller.peopleLimit,
+                    inputType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter people limit';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  TextFieldWithTitle(
+                    title: 'Offers',
+                    controller: controller.offersText,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter offers';
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(child: AmenitiesButton()),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                ],
               ),
+            ),
+          ),
         ));
   }
 }

@@ -29,7 +29,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   getAmenities() async {
     setState(() {
       var jsonAddAmenitiesData =
-      widget.organizationData['organization_amenities'];
+          widget.organizationData['organization_amenities'];
       listOfAmenities.clear();
       for (var i = 0; i < jsonAddAmenitiesData.length; i++) {
         setState(() {
@@ -52,221 +52,214 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   }
 
   CreteOrganisationProfileController addOrganizationsEventController =
-  Get.put(CreteOrganisationProfileController());
+      Get.put(CreteOrganisationProfileController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
+      child: SafeArea(
+        child: Column(
+          children: [
+            Stack(
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      child: CachedNetworkImageWidget(
-                        imageUrl: '${widget.organizationData['timeline_pic']}',
-                        fit: BoxFit.fill,
-                        height: 180,
-                        width: Get.width,
-                        errorWidget: (context, url, error) =>
+                Container(
+                  child: CachedNetworkImageWidget(
+                    imageUrl: '${widget.organizationData['timeline_pic']}',
+                    fit: BoxFit.fill,
+                    height: 180,
+                    width: Get.width,
+                    errorWidget: (context, url, error) =>
                         const Icon(Icons.error_outline),
-                        placeholder: (context, url) =>
-                        const Center(
-                            child: CupertinoActivityIndicator(
-                                color: Colors.white, radius: 15)),
-                      ),
-                    ),
-
-                    Positioned(
-                      bottom: 0,
-                      left: Get.width * 0.4,
-                      child: ClipOval(
-                        child: Stack(
-                          children: [
-                            CachedNetworkImageWidget(
-                              imageUrl: '${widget
-                                  .organizationData['profile_pic']}',
-                              fit: BoxFit.fill,
-                              height: 100,
-                              width: 100,
-                              errorWidget: (context, url, error) =>
-                              const Icon(Icons.error_outline),
-                              placeholder: (context, url) =>
-                              const Center(
-                                  child: CupertinoActivityIndicator(
-                                      color: Colors.black, radius: 15)),
-                            ),
-                            if (widget.organizationData[
-                            'profile_pic_approval_status'] ==
-                                '0')
-                              BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                child: Container(
-                                  color: Colors.grey.withOpacity(0.1),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (widget
-                        .organizationData['profile_pic_approval_status'] !=
-                        '1')
-                      BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        child: Container(
-                          color: Colors.grey.withOpacity(0.1),
-                        ),
-                      ),
-                  ],
+                    placeholder: (context, url) => const Center(
+                        child: CupertinoActivityIndicator(
+                            color: Colors.white, radius: 15)),
+                  ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 28.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                Positioned(
+                  bottom: 0,
+                  left: Get.width * 0.4,
+                  child: ClipOval(
+                    child: Stack(
                       children: [
-                        Text(
-                          "${widget.organizationData['name']}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'malgun',
-                              fontSize: 18.sp),
+                        CachedNetworkImageWidget(
+                          imageUrl: '${widget.organizationData['profile_pic']}',
+                          fit: BoxFit.fill,
+                          height: 100,
+                          width: 100,
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error_outline),
+                          placeholder: (context, url) => const Center(
+                              child: CupertinoActivityIndicator(
+                                  color: Colors.black, radius: 15)),
                         ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          width: Get.width * 0.8,
-                          child: Text(
-                            "${widget.organizationData['description']}"
-                                .capitalizeFirst!,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.black,
-                                letterSpacing: 1.01,
-                                fontSize: 14.sp,
-                                fontFamily: 'malgun'),
+                        if (widget.organizationData[
+                                'profile_pic_approval_status'] ==
+                            '0')
+                          BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                            child: Container(
+                              color: Colors.grey.withOpacity(0.1),
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        SmoothStarRating(
-                          allowHalfRating: false,
-                          starCount: 5,
-                          rating: double.parse(
-                              widget.organizationData['rating']),
-                          size: 18.sp,
-                          color: Colors.orange,
-                          borderColor: Colors.orange,
-                          filledIconData: Icons.star,
-                          halfFilledIconData: Icons.star_half,
-                          defaultIconData: Icons.star_border,
-                          spacing: .5,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          widget.phoneNumber,
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'malgun'),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          widget.organizationData['branch']
-                              .toString()
-                              .capitalizeFirst!,
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'malgun'),
-                        ),
-                        LikesAndViewsWidget(
-                            likes: int.parse(widget.organizationData['like']),
-                            views: int.parse(widget.organizationData['view'])),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          widget.organizationData['city_id'] == '-'
-                              ? ''
-                              : "${widget.organizationData['city_id']}"
-                              .capitalizeFirst!,
-                          style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14.sp,
-                              fontFamily: 'malgun'),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        OrganizationProfileButton(
-                          onPressed: () {
-                            Get.to(const EditOrganisationProfile());
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Selected Amenities",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'malgun',
-                                fontSize: 13.sp),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        MultiSelectContainer(
-                          isMaxSelectableWithPerpetualSelects: true,
-                          controller: MultiSelectController(
-                              deSelectPerpetualSelectedItems: true),
-                          itemsDecoration: const MultiSelectDecorations(),
-                          itemsPadding: const EdgeInsets.all(10),
-                          highlightColor: Colors.red,
-                          maxSelectableCount: 0,
-                          prefix: MultiSelectPrefix(
-                              disabledPrefix: const Icon(
-                                Icons.do_disturb_alt_sharp,
-                                color: Colors.red,
-                                size: 14,
-                              )),
-                          items: listOfAmenities,
-                          onChange: (List<dynamic> selectedItems,
-                              selectedItem) {},
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
                       ],
                     ),
                   ),
                 ),
+                if (widget.organizationData['profile_pic_approval_status'] !=
+                    '1')
+                  BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Container(
+                      color: Colors.grey.withOpacity(0.1),
+                    ),
+                  ),
               ],
             ),
-          ),
-        ));
+            const SizedBox(
+              height: 15,
+            ),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${widget.organizationData['name']}",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'malgun',
+                          fontSize: 18.sp),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: Get.width * 0.8,
+                      child: Text(
+                        "${widget.organizationData['description']}"
+                            .capitalizeFirst!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            letterSpacing: 1.01,
+                            fontSize: 14.sp,
+                            fontFamily: 'malgun'),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SmoothStarRating(
+                      allowHalfRating: false,
+                      starCount: 5,
+                      rating: double.parse(widget.organizationData['rating']),
+                      size: 18.sp,
+                      color: Colors.orange,
+                      borderColor: Colors.orange,
+                      filledIconData: Icons.star,
+                      halfFilledIconData: Icons.star_half,
+                      defaultIconData: Icons.star_border,
+                      spacing: .5,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      widget.phoneNumber,
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'malgun'),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      widget.organizationData['branch']
+                          .toString()
+                          .capitalizeFirst!,
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'malgun'),
+                    ),
+                    LikesAndViewsWidget(
+                        likes: int.parse(widget.organizationData['like']),
+                        views: int.parse(widget.organizationData['view'])),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      widget.organizationData['city_id'] == '-'
+                          ? ''
+                          : "${widget.organizationData['city_id']}"
+                              .capitalizeFirst!,
+                      style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14.sp,
+                          fontFamily: 'malgun'),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    OrganizationProfileButton(
+                      onPressed: () {
+                        Get.to(const EditOrganisationProfile());
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Selected Amenities",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'malgun',
+                            fontSize: 13.sp),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    MultiSelectContainer(
+                      isMaxSelectableWithPerpetualSelects: true,
+                      controller: MultiSelectController(
+                          deSelectPerpetualSelectedItems: true),
+                      itemsDecoration: const MultiSelectDecorations(),
+                      itemsPadding: const EdgeInsets.all(10),
+                      highlightColor: Colors.red,
+                      maxSelectableCount: 0,
+                      prefix: MultiSelectPrefix(
+                          disabledPrefix: const Icon(
+                        Icons.do_disturb_alt_sharp,
+                        color: Colors.red,
+                        size: 14,
+                      )),
+                      items: listOfAmenities,
+                      onChange: (List<dynamic> selectedItems, selectedItem) {},
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }
 
@@ -291,10 +284,10 @@ class _OrganizationProfileButtonState extends State<OrganizationProfileButton>
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     _animation =
-    Tween<double>(begin: 1.0, end: 0.95).animate(_animationController)
-      ..addListener(() {
-        setState(() {});
-      });
+        Tween<double>(begin: 1.0, end: 0.95).animate(_animationController)
+          ..addListener(() {
+            setState(() {});
+          });
   }
 
   @override
