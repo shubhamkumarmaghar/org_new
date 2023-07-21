@@ -11,8 +11,6 @@ import 'package:partypeoplebusiness/controller/organisation/dashboard/organizati
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 
 class PartyController extends GetxController {
-  //TODO: Implement AddOrganizationsEvent2Controller
-
   var isComplet = false.obs;
   RxInt numberOfDays = 1.obs;
   var isLoading = false.obs;
@@ -52,6 +50,44 @@ class PartyController extends GetxController {
 
   var getPrefiledData;
   RxBool isEditable = false.obs;
+
+  @override
+  void dispose() {
+    isComplet.close();
+    numberOfDays.close();
+    isLoading.close();
+    pincode.dispose();
+    selectedAmenities.close();
+    count.close();
+    date.dispose();
+    mobileNumber.dispose();
+    title.dispose();
+    timeline.close();
+    description.dispose();
+    startDate.dispose();
+    endDate.dispose();
+    popular_start_date.dispose();
+    popular_end_date.dispose();
+    startTime.dispose();
+    endTime.dispose();
+    location.dispose();
+    image.dispose();
+    partyType.close();
+
+    gender.dispose();
+    startPeopleAge.dispose();
+    endPeopleAge.dispose();
+    peopleLimit.dispose();
+    partyStatus.dispose();
+    ladiesPrice.dispose();
+    stagPrice.dispose();
+    couplesPrice.dispose();
+    othersPrice.dispose();
+    offersText.dispose();
+    isPopular.close();
+    partyStatusChange.close();
+    super.dispose();
+  }
 
   getEndDate(BuildContext context) async {
     DateTime selectedDate = DateTime.now();
