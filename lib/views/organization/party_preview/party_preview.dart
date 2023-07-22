@@ -216,6 +216,12 @@ class _PartyPreviewState extends State<PartyPreview> {
                   "${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['start_date']))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['end_date']))}",
             ),
             CustomListTile(
+              icon: Icons.punch_clock_sharp,
+              title: "Party Timings",
+              subtitle:
+                  "${widget.data['start_time']} to ${widget.data['end_time']}",
+            ),
+            CustomListTile(
               icon: Icons.favorite,
               title: "Party Likes",
               subtitle: "${widget.data['like']} Likes",
