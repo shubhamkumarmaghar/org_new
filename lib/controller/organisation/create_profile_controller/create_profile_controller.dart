@@ -301,7 +301,7 @@ class CreteOrganisationProfileController extends GetxController {
           .toString()
           .replaceAll('[', '')
           .replaceAll(']', ''),
-      'city_id': '${fullAddress.text}, $city, $state, $county',
+      'city_id': '${fullAddress.text}',
       'description': description.text,
       'branch': branches.text,
       'name': name.text.toUpperCase(),

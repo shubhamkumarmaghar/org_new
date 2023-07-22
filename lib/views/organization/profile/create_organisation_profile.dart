@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -235,6 +236,118 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                   title: 'Organization Full Address',
                   controller: controller.fullAddress,
                   inputType: TextInputType.name,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.07,
+                  ),
+                  child: CSCPicker(
+                    showStates: true,
+                    showCities: true,
+                    layout: Layout.vertical,
+                    flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
+
+                    dropdownDecoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 1)),
+
+                    //Disabled Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER]  (USE with disabled dropdownDecoration)
+                    disabledDropdownDecoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        color: Colors.white,
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 1)),
+
+                    ///placeholders for dropdown search field
+                    countrySearchPlaceholder: "Country",
+                    stateSearchPlaceholder: "State",
+                    citySearchPlaceholder: "City",
+
+                    ///labels for dropdown
+                    countryDropdownLabel: "Country",
+                    stateDropdownLabel: "State",
+                    cityDropdownLabel: "City",
+
+                    ///Country Filter [OPTIONAL PARAMETER]
+
+                    // headingStyle: TextStyle(
+                    //   fontSize: 13.sp,
+                    //   fontWeight: FontWeight.bold,
+                    //   color: Colors.white,
+                    // ),
+
+                    ///selected item style [OPTIONAL PARAMETER]
+                    selectedItemStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400),
+
+                    ///DropdownDialog Heading style [OPTIONAL PARAMETER]
+                    dropdownHeadingStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold),
+
+                    ///DropdownDialog Item style [OPTIONAL PARAMETER]
+                    dropdownItemStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.sp,
+                    ),
+
+                    ///Dialog box radius [OPTIONAL PARAMETER]
+                    dropdownDialogRadius: 8.0,
+
+                    ///Search bar radius [OPTIONAL PARAMETER]
+                    searchBarRadius: 8.0,
+
+                    ///triggers once country selected in dropdown
+                    onCountryChanged: (value) {
+                      print(value);
+                      setState(() {
+                        controller.county.value = value.toString();
+                      });
+                    },
+
+                    ///triggers once state selected in dropdown
+                    onStateChanged: (value) {
+                      print(value);
+                      setState(() {
+                        if (controller.county.value.isNotEmpty) {
+                          controller.state.value = value.toString();
+                        }
+                      });
+                    },
+
+                    ///triggers once city selected in dropdown
+                    onCityChanged: (value) {
+                      print(value);
+
+                      setState(() {
+                        if (controller.state.value.isNotEmpty) {
+                          controller.city.value = value.toString();
+                        }
+                      });
+                    },
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: Get.height * 0.025),
+                  child: Text('Select Amenities *',
+                      style: TextStyle(
+                        fontFamily: 'malgun',
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.0,
+                        color: Colors.white,
+                      )),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Container(
                   alignment: Alignment.center,

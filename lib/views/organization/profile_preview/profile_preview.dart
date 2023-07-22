@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:partypeoplebusiness/controller/organisation/create_profile_controller/create_profile_controller.dart';
 import 'package:partypeoplebusiness/views/organization/profile/edit_organisation_profile.dart';
 import 'package:sizer/sizer.dart';
@@ -134,6 +135,19 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                           fontWeight: FontWeight.bold,
                           fontFamily: 'malgun',
                           fontSize: 18.sp),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "Username - ${GetStorage().read('username')}"
+                          .capitalizeFirst!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black,
+                          letterSpacing: 1.01,
+                          fontSize: 14.sp,
+                          fontFamily: 'malgun'),
                     ),
                     const SizedBox(
                       height: 15,

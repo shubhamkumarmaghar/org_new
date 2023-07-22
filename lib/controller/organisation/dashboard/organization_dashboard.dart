@@ -74,14 +74,11 @@ class OrganizationDashboardController extends GetxController {
       phoneNumber.value = jsonDecode(response.body)['user_phone_number'];
       notificationCount.value =
           jsonDecode(response.body)['notification_count'].toString();
-
       timelinePic.value = data['timeline_pic'];
       circularDP.value = data['profile_pic'];
-
       likes.value = _formatNumber(data['like']);
       views.value = _formatNumber(data['view']);
       going.value = _formatNumber(data['ongoing']);
-
       organisationName.value = data['name'];
       approvalStatus.value = data['approval_status'];
       bluetick.value = data['bluetick_status'];

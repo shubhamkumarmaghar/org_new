@@ -107,7 +107,7 @@ class LoginController extends GetxController {
         if (kDebugMode) {
           print('Json Data For OTP VERIFICATION FUNC :: $json');
         }
-
+        GetStorage().write('username', username.text);
         getAPIOverview();
       }
     } else {
