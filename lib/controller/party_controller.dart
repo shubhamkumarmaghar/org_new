@@ -53,39 +53,22 @@ class PartyController extends GetxController {
 
   @override
   void dispose() {
-    isComplet.close();
-    numberOfDays.close();
-    isLoading.close();
-    pincode.dispose();
-    selectedAmenities.close();
-    count.close();
-    date.dispose();
-    mobileNumber.dispose();
-    title.dispose();
-    timeline.close();
-    description.dispose();
-    startDate.dispose();
-    endDate.dispose();
-    popular_start_date.dispose();
-    popular_end_date.dispose();
-    startTime.dispose();
-    endTime.dispose();
-    location.dispose();
-    image.dispose();
-    partyType.close();
-
-    gender.dispose();
-    startPeopleAge.dispose();
-    endPeopleAge.dispose();
-    peopleLimit.dispose();
-    partyStatus.dispose();
-    ladiesPrice.dispose();
-    stagPrice.dispose();
-    couplesPrice.dispose();
-    othersPrice.dispose();
-    offersText.dispose();
-    isPopular.close();
-    partyStatusChange.close();
+    timeline.value = '';
+    title.text = '';
+    description.text = '';
+    mobileNumber.text = '';
+    startDate.text = '';
+    endDate.text = '';
+    startTime.text = '';
+    endTime.text = '';
+    peopleLimit.text = '';
+    startPeopleAge.text = '';
+    endPeopleAge.text = '';
+    offersText.text = '';
+    ladiesPrice.text = '';
+    stagPrice.text = '';
+    othersPrice.text = '';
+    couplesPrice.text = '';
     super.dispose();
   }
 

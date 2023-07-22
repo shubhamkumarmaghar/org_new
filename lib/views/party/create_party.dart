@@ -37,6 +37,12 @@ class CreateParty extends StatefulWidget {
 class _CreatePartyState extends State<CreateParty> {
   DefaultController defaultController = Get.put(DefaultController());
 
+  String getRandomString() {
+    DateTime now = DateTime.now();
+    int randomNum = now.microsecondsSinceEpoch + now.millisecondsSinceEpoch;
+    return 'R${randomNum.toString()}';
+  }
+
   Future<String?> savePhotoToFirebase(
       String tokenId, File photo, String imageName) async {
     try {
@@ -49,8 +55,9 @@ class _CreatePartyState extends State<CreateParty> {
       FirebaseStorage storage = FirebaseStorage.instance;
 
       // Create a reference to the photo in Firebase Storage
-      Reference photoRef =
-          storage.ref().child('$tokenId/PartyPost/$imageName.jpg');
+      Reference photoRef = storage
+          .ref()
+          .child('$tokenId/PartyPost/${getRandomString()}$imageName.jpg');
 
       // Upload the photo to Firebase Storage
       await photoRef.putFile(photo);
@@ -191,8 +198,8 @@ class _CreatePartyState extends State<CreateParty> {
     controller.ladiesPrice.text = '';
     controller.stagPrice.text = '';
     controller.othersPrice.text = '';
+    controller.isEditable.value = false;
     controller.couplesPrice.text = '';
-    controller.dispose(); // Call dispose() when the page is closed.
     super.dispose();
   }
 

@@ -32,11 +32,10 @@ class Amenity {
   String type;
   bool selected;
 
-  Amenity(
-      {required this.id,
-      required this.name,
-      required this.type,
-      this.selected = false});
+  Amenity({required this.id,
+    required this.name,
+    required this.type,
+    this.selected = false});
 
   factory Amenity.fromJson(Map<String, dynamic> json) {
     return Amenity(
@@ -105,16 +104,15 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
   void getSelectedID() {
     print(controller.getPrefiledData['party_amenitie']);
     for (var i = 0;
-        i < controller.getPrefiledData['party_amenitie'].length;
-        i++) {
+    i < controller.getPrefiledData['party_amenitie'].length;
+    i++) {
       var amenityName = controller.getPrefiledData['party_amenitie'][i]['name'];
       print(amenityName);
       setState(() {
         _categories.forEach((category) {
           category.amenities.forEach((amenity) {
             if (amenity.name == amenityName) {
-              if (controller.selectedAmenities.contains(amenity.id)) {
-              } else {
+              if (controller.selectedAmenities.contains(amenity.id)) {} else {
                 controller.selectedAmenities.add(amenity.id);
               }
               amenity.selected = true;
@@ -133,6 +131,27 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
   }
 
   @override
+  void dispose() {
+    controller.timeline.value = '';
+    controller.title.text = '';
+    controller.description.text = '';
+    controller.mobileNumber.text = '';
+    controller.startDate.text = '';
+    controller.endDate.text = '';
+    controller.startTime.text = '';
+    controller.endTime.text = '';
+    controller.peopleLimit.text = '';
+    controller.startPeopleAge.text = '';
+    controller.endPeopleAge.text = '';
+    controller.offersText.text = '';
+    controller.ladiesPrice.text = '';
+    controller.stagPrice.text = '';
+    controller.othersPrice.text = '';
+    controller.couplesPrice.text = '';
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -143,92 +162,92 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
       ),
       body: _categoryLists.isEmpty
           ? Container(
-              child: const Center(
-                child: CupertinoActivityIndicator(
-                  radius: 15,
-                  color: Colors.black,
-                ),
-              ),
-            )
+        child: const Center(
+          child: CupertinoActivityIndicator(
+            radius: 15,
+            color: Colors.black,
+          ),
+        ),
+      )
           : ListView(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: Get.height * 0.9,
+            child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: Get.height * 0.9,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: _categoryLists.length,
-                    itemBuilder: (context, index) {
-                      final categoryList = _categoryLists[index];
+              itemCount: _categoryLists.length,
+              itemBuilder: (context, index) {
+                final categoryList = _categoryLists[index];
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(categoryList.title,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(categoryList.title,
+                          style: TextStyle(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Wrap(
+                        spacing: 10.0,
+                        children: categoryList.amenities.map((amenity) {
+                          return GestureDetector(
+                            onTap: () => _selectAmenity(amenity),
+                            child: Chip(
+                              label: Text(
+                                amenity.name,
                                 style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 13.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Wrap(
-                              spacing: 10.0,
-                              children: categoryList.amenities.map((amenity) {
-                                return GestureDetector(
-                                  onTap: () => _selectAmenity(amenity),
-                                  child: Chip(
-                                    label: Text(
-                                      amenity.name,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13.sp,
-                                          fontFamily: 'malgun'),
-                                    ),
-                                    backgroundColor: amenity.selected
-                                        ? Colors.red
-                                        : Colors.grey[400],
-                                  ),
-                                );
-                              }).toList(),
+                                    fontFamily: 'malgun'),
+                              ),
+                              backgroundColor: amenity.selected
+                                  ? Colors.red
+                                  : Colors.grey[400],
                             ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    if (index == _categoryLists.length - 1)
+                      Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            alignment: Alignment.center,
+                            child: AmenitiesButton(() {
+                              if (controller.isEditable.value == true) {
+                                controller.sendEditParty();
+                              } else {
+                                controller.sendRequst();
+                              }
+                            }),
                           ),
-                          if (index == _categoryLists.length - 1)
-                            Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10),
-                                  alignment: Alignment.center,
-                                  child: AmenitiesButton(() {
-                                    if (controller.isEditable.value == true) {
-                                      controller.sendEditParty();
-                                    } else {
-                                      controller.sendRequst();
-                                    }
-                                  }),
-                                ),
-                                SizedBox(
-                                  height: 25,
-                                ),
-                              ],
-                            ),
+                          SizedBox(
+                            height: 25,
+                          ),
                         ],
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-              ],
+                      ),
+                  ],
+                );
+              },
             ),
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -255,21 +274,21 @@ class _AmenitiesButtonState extends State<AmenitiesButton> {
       ),
       label: controller.isEditable.value == true
           ? const Text(
-              'Update Party',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            )
+        'Update Party',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      )
           : const Text(
-              'Create Party',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
+        'Create Party',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
       style: ElevatedButton.styleFrom(
         primary: Colors.red,
         shape: RoundedRectangleBorder(
