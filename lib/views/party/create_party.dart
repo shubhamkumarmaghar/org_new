@@ -176,8 +176,6 @@ class _CreatePartyState extends State<CreateParty> {
     } else {
       nonField();
     }
-    // fillFieldPreFilled();
-
     super.initState();
   }
 
