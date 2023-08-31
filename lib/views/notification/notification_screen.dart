@@ -21,7 +21,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   getAllNotification() async {
     http.Response response = await http.post(
         Uri.parse(
-            'http://app.partypeople.in/v1/notification/get_all_notification'),
+            'https://app.partypeople.in/v1/notification/get_all_notification'),
         headers: {"x-access-token": '${GetStorage().read('token')}'});
 
     print(response.body);
@@ -70,9 +70,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 DateTime notificationCreatedOn = DateTime.parse(
                     data['data'][index]['notification_created_on']);
 
-                String formattedDateTime = DateFormat('h:mm a, EEE, d/MM/y')
-                    .format(notificationCreatedOn
-                        .add(Duration(hours: 5, minutes: 30)));
+                String formattedDateTime = DateFormat('h:mm a, EEE, d/MM/y').
+                format(notificationCreatedOn
+                    //.add(Duration(hours: 5, minutes: 30)
+                );
 
                 return data['data'] != null
                     ? Container(

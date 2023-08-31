@@ -132,8 +132,8 @@ class _DrawerViewState extends State<DrawerView> {
                   title: 'Logout',
                   icon: Icons.login_outlined,
                   onTap: () {
-                    GetStorage().write('loggedIn', '0');
-                    GetStorage().write('token', '');
+                    GetStorage().remove('token');
+                    GetStorage().remove('loggedIn');
                     Get.offAll(LoginView());
                   },
                 ),

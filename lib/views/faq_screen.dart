@@ -14,11 +14,6 @@ class FAQScreen extends StatelessWidget {
           'Popular Parties: When your party is a regular party, you can make it a popular party by boosting it; popular parties are displayed as the popular events at the top of the home screen. Popular parties draw attention from the public by appearing at the top of the audience\'s home screen.',
     ),
     FAQItem(
-      question: 'How does the Party People business application function?',
-      answer:
-          'First, organisations must register with the application with attractive profiles and offers that may be seen by the public. Party People is an application designed for promoting events and parties with full control and monitoring of the events. The audience will be able to compare, explore, and select the events in a way that works best for them by viewing your party event and organization with all of its amenities.',
-    ),
-    FAQItem(
       question:
           'How do I obtain ratings in the Party People business application?',
       answer:

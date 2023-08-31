@@ -6,6 +6,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:partypeoplebusiness/views/login_user/login_screen.dart';
 import 'package:partypeoplebusiness/views/onboarding_screens/onboarding_screen.dart';
 
+import '../organization/dashboard/organisation_dashboard.dart';
+
 class SplashScreenMain extends StatefulWidget {
   const SplashScreenMain({Key? key}) : super(key: key);
 
@@ -19,8 +21,15 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
     super.initState();
     Timer(const Duration(seconds: 2), () {
       if ('${GetStorage().read('onboarding')}' == '1') {
-        Get.offAll(LoginView());
-      } else {
+
+        if(GetStorage().read('loggedIn') == '1') {
+          Get.offAll(OrganisationDashboard());
+        }
+        else{
+           Get.offAll(LoginView());
+      }
+      }
+      else {
         Get.offAll(OnBoardingScreen());
       }
     });

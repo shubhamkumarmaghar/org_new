@@ -63,7 +63,7 @@ class OrganizationDashboardController extends GetxController {
     isLoading.value = true;
     if (GetStorage().read('token') != null) {
       final response = await http.post(
-        Uri.parse('http://app.partypeople.in/v1/party/organization_details'),
+        Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
         headers: {'x-access-token': '${GetStorage().read('token')}'},
       );
 
@@ -128,7 +128,7 @@ class OrganizationDashboardController extends GetxController {
     try {
       http.Response response = await http.post(
         Uri.parse(
-            'http://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
+            'https://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
         body: {
           'organization_id': organisationID.value.toString(),
           'status': '0'
@@ -187,7 +187,7 @@ class OrganizationDashboardController extends GetxController {
 
       await http.post(
         Uri.parse(
-            'http://app.partypeople.in/v1/order/update_ragular_papular_status'),
+            'https://app.partypeople.in/v1/order/update_ragular_papular_status'),
       );
 
       update();
@@ -199,7 +199,7 @@ class OrganizationDashboardController extends GetxController {
   getOrganisationDetailsPopular() async {
     http.Response response = await http.post(
         Uri.parse(
-            'http://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
+            'https://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
         body: {
           'organization_id': organisationID.value.toString(),
           'status': '5'

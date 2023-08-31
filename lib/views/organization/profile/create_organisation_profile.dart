@@ -334,18 +334,7 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                     },
                   ),
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: Get.height * 0.025),
-                  child: Text('Select Amenities *',
-                      style: TextStyle(
-                        fontFamily: 'malgun',
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.0,
-                        color: Colors.white,
-                      )),
-                ),
+
                 const SizedBox(
                   height: 10,
                 ),

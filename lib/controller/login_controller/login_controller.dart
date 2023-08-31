@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -29,12 +30,12 @@ class LoginController extends GetxController {
         deviceToken.value = token!;
       });
 
-      print('API started');
       http.Response response = await http
-          .post(Uri.parse('http://app.partypeople.in/v1/account/login'), body: {
+          .post(Uri.parse('https://app.partypeople.in/v1/account/login'), body: {
         'phone': mobileNumber.text,
         'username': username.text,
-        'device_token': deviceToken.value
+        'device_token': deviceToken.value,
+        'user_type':'Organization'
       });
       print('API started');
 
@@ -48,6 +49,7 @@ class LoginController extends GetxController {
         Get.snackbar('OTP', 'OTP Sent Successfully',
             backgroundColor: Colors.white);
         print('User Token Authentication => ${json['data']['token']}');
+        print(GetStorage().read('token'));
 
         Get.to(OTPScreen());
       }
@@ -61,7 +63,7 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       http.Response response = await http.post(
-          Uri.parse('http://app.partypeople.in/v1/party/organization_details'),
+          Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
           headers: {
             'x-access-token': '${GetStorage().read('token')}',
           });
@@ -69,6 +71,7 @@ class LoginController extends GetxController {
 
       if (jsonDecode(response.body)['message'] == 'Organization Data Found.') {
         GetStorage().write('loggedIn', '1');
+        log(GetStorage().read('loggedIn'));
         isLoading.value = false;
         Get.offAll(OrganisationDashboard());
       } else {
@@ -90,6 +93,7 @@ class LoginController extends GetxController {
         ),
         body: {
           'otp': otpValue,
+          'user_type' : 'Organization'
         },
         headers: {
           'x-access-token': '${GetStorage().read('token')}',
@@ -108,7 +112,8 @@ class LoginController extends GetxController {
           print('Json Data For OTP VERIFICATION FUNC :: $json');
         }
         GetStorage().write('username', username.text);
-        getAPIOverview();
+
+        await getAPIOverview();
       }
     } else {
       isLoading.value = false;

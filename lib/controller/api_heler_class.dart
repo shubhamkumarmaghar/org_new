@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../constants/statecity/model/state_model.dart';
+
 class APIService extends GetxController {
+
   final String _baseUrl =
       'https://example.com/api/'; // replace with your base URL
 
@@ -48,4 +53,6 @@ class APIService extends GetxController {
       rethrow;
     }
   }
+
+
 }

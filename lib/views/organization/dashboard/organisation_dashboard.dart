@@ -44,7 +44,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
   readNotificationCount() async {
     http.Response response = await http.post(
         Uri.parse(
-            'http://app.partypeople.in/v1/party/notification_read_status_update'),
+            'https://app.partypeople.in/v1/party/notification_read_status_update'),
         headers: {'x-access-token': '${GetStorage().read('token')}'});
 
     print('Notification count read ::${response.body}');
@@ -82,6 +82,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
         itShouldLoad = false;
       });
     });
+
     super.initState();
   }
 
@@ -163,8 +164,10 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                       ),
                       Flexible(
                         child: Text(
-                          controller.organisationName.value,
+                          '${controller.organisationName.value}',
                           textAlign: TextAlign.center,
+                         overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontFamily: 'SegeoUI',
@@ -175,7 +178,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                           ? Row(
                               children: [
                                 const SizedBox(
-                                  width: 8,
+                                  width: 4,
                                 ),
                                 Container(
                                   margin: const EdgeInsets.only(top: 2),

@@ -72,16 +72,15 @@ class _MyAppState extends State<MyApp> {
     print(GetStorage().read('loggedIn'));
     print('user Token');
     print(GetStorage().read('token'));
+    print(GetStorage().read('onboarding'));
     return Sizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
-            title: 'Flutter Demo',
+            title: 'Party People Business',
             theme: ThemeData(
               primarySwatch: Colors.red,
             ),
-            home: GetStorage().read('loggedIn') == '1'
-                ? const OrganisationDashboard()
-                : SplashScreenMain());
+            home:  SplashScreenMain());
       },
     );
   }

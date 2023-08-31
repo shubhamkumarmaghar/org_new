@@ -20,7 +20,7 @@ class SubscriptionController extends GetxController {
   ///Call this function if payment was successfull
   oderIdPlaced(String partyID, String startDate, String endDate) async {
     http.Response response = await http.post(
-        Uri.parse('http://app.partypeople.in/v1/order/create_order'),
+        Uri.parse('https://app.partypeople.in/v1/order/create_order'),
         body: {
           'party_id': partyID,
           'amount': '499',

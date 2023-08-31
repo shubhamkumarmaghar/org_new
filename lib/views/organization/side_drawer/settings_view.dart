@@ -25,7 +25,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   deleteAccountAPICall() async {
     http.Response response = await http.post(
-        Uri.parse('http://app.partypeople.in/v1/party/delete_organization'),
+        Uri.parse('https://app.partypeople.in/v1/party/delete_organization'),
         headers: {
           'x-access-token': '${GetStorage().read('token')}'
         },
@@ -39,9 +39,9 @@ class _SettingsViewState extends State<SettingsView> {
             'You\'r request for account deactivation has successfully saved',
             '',
             colorText: Colors.white);
-
         Get.offAll(LoginView());
-        GetStorage().write('token', '');
+        GetStorage().remove('token');
+        GetStorage().remove('loggedIn');
       }
     }
   }
@@ -88,9 +88,9 @@ class _SettingsViewState extends State<SettingsView> {
         'subject=Contact Party People&body=App Version 3.23', //add subject and body here
   );
 
-  final Uri linkForTerms = Uri.parse('https://www.partypeople.in/');
-  final Uri linkForAbout = Uri.parse('https://www.partypeople.in/');
-  final Uri linkForPrivacy = Uri.parse('https://www.partypeople.in/');
+  final Uri linkForTerms = Uri.parse('https://www.partypeople.in/termss_and_condotion');
+  final Uri linkForAbout = Uri.parse('https://partypeople.in/about_us');
+  final Uri linkForPrivacy = Uri.parse('https://www.partypeople.in/privacy_policy');
 
   bool lockAppSwitchVal = true;
   bool like = true;

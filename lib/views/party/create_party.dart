@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:csc_picker/csc_picker.dart';
@@ -19,12 +20,16 @@ import 'package:partypeoplebusiness/views/party/party_amenities.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/cached_image_placeholder.dart';
+import '../../constants/statecity/model/state_model.dart';
+import '../../controller/api_heler_class.dart';
 import '../../controller/organisation/create_profile_controller/select_photo_options_screen.dart';
 
 //
 // class AddOrganizationsEvent2View
 //     extends GetView<AddOrganizationsEvent2Controller> {
 //
+
+
 class CreateParty extends StatefulWidget {
   bool isPopular;
 
@@ -35,6 +40,14 @@ class CreateParty extends StatefulWidget {
 }
 
 class _CreatePartyState extends State<CreateParty> {
+  String selectCity = 'Select City';
+  String selectState = 'Select State';
+  List<StateName> cityItems = [];
+  List<StateName> stateItems =[];
+  List state = [];
+  List city = [];
+
+
   DefaultController defaultController = Get.put(DefaultController());
 
   String getRandomString() {
@@ -169,14 +182,47 @@ class _CreatePartyState extends State<CreateParty> {
     });
   }
 
+
+  void statelist (){
+    state.add('Select State');
+    stateItems.forEach((element) {
+      state.add(element.name);
+    });
+    setState(() {
+
+    });
+    //log('${stateItemss.first}');
+  }
+
+  void cityList (String cityId) async {
+    await controller.getCityData(cityid: cityId);
+    cityItems = controller.cityName;
+    city.add('Select City');
+    cityItems.forEach((element) {
+      // stateItemss  = [{element.id:element.name},];
+      city.add(element.name);
+    });
+    setState(() {
+
+    });
+  }
+
+
   @override
   void initState() {
+
     if (controller.isEditable.value == true) {
       fillFieldPreFilled();
     } else {
       nonField();
     }
+    getData();
     super.initState();
+  }
+  Future<void > getData()async{
+   await controller.getStateData();
+    stateItems = controller.stateName;
+    statelist();
   }
 
   @override
@@ -198,6 +244,10 @@ class _CreatePartyState extends State<CreateParty> {
     controller.othersPrice.text = '';
     controller.isEditable.value = false;
     controller.couplesPrice.text = '';
+    cityItems.clear();
+    stateItems.clear();
+    state.clear();
+    city.clear();
     super.dispose();
   }
 
@@ -534,7 +584,117 @@ class _CreatePartyState extends State<CreateParty> {
                     },
                   ),
 
-                  Padding(
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 25),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextFormField(
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.black,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        border: InputBorder.none,
+                        hintText: "India",
+                        enabled: false,
+                        hintStyle: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      onChanged: (value) {
+                      },
+                    ),
+                  ),
+                  Container(
+                   // width: 300,
+                    padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14),
+                      child: DropdownButtonFormField<String>(
+                         decoration: InputDecoration(
+                         enabledBorder: OutlineInputBorder(
+                         borderSide:
+                        BorderSide(color: Colors.white, width: 2),
+                         borderRadius: BorderRadius.circular(8),
+                         ),
+                        border: OutlineInputBorder(
+                          borderSide:BorderSide(color: Colors.white, width: 2),
+                         borderRadius: BorderRadius.circular(8),
+                         ),
+
+                        filled: true,
+                        fillColor: Colors.white,
+                        ),
+                         dropdownColor: Colors.white,
+                        value:selectState,
+                        onChanged: (newValue)  {
+                          selectState = newValue.toString();
+                          controller.state.value=selectState;
+                          selectCity ='Select City';
+                            log('$selectState');
+                          city.clear();
+                           cityList(selectState);
+                          controller.cityName.clear();
+                          cityItems.clear();
+                          setState(() {
+
+                          });
+                        },
+                        items: state.map((items) {
+                          return DropdownMenuItem<String>(
+                            value: items.toString(),
+                            child: Text(items.toString() ),
+                          );
+                        }).toList(),
+                      )
+                  ),
+
+                  // for city
+                  Container(
+                    // width: 300,
+                      padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14),
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.white, width: 2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide:BorderSide(color: Colors.white, width: 2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        dropdownColor: Colors.white,
+                        value:selectCity,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectCity = newValue.toString();
+                            controller.city.value=selectCity;
+                          });
+                        },
+                        items: city.map((items) {
+                          return DropdownMenuItem<String>(
+                            value: items.toString(),
+                            child: Text(items.toString() ),
+                          );
+                        }).toList(),
+                      )
+                  ),
+                  /* Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: Get.width * 0.07,
                     ),
@@ -542,7 +702,8 @@ class _CreatePartyState extends State<CreateParty> {
                       showStates: true,
                       showCities: true,
                       layout: Layout.vertical,
-                      flagState: CountryFlag.ENABLE,
+                      flagState: CountryFlag.DISABLE,
+
                       // headingStyle: TextStyle(
                       //   fontSize: 13.sp,
                       //   fontFamily: 'malgun',
@@ -619,16 +780,40 @@ class _CreatePartyState extends State<CreateParty> {
                       searchBarRadius: 8.0,
 
                       ///triggers once country selected in dropdown
-                      onCountryChanged: (value) {},
+                      onCountryChanged: (value) {
+                        print(value);
+                        setState(() {
+                          controller.county.value = value.toString();
+                          log('country ${controller.county.value}');
+                        });
+                      },
 
                       ///triggers once state selected in dropdown
-                      onStateChanged: (value) {},
+                      onStateChanged: (value) {
+                        print(value);
+                        setState(() {
+                          if (controller.county.value.isNotEmpty) {
+                            controller.state.value = value.toString();
+                            log('state ${controller.state.value}');
+                          }
+                        });
+                      },
 
                       ///triggers once city selected in dropdown
-                      onCityChanged: (value) {},
+                      onCityChanged: (value) {
+                        print(value);
+                        setState(() {
+                          if (controller.state.value.isNotEmpty) {
+                            controller.city.value = value.toString();
+                            log('city ${controller.city.value}');
+                          }
+                        });
+                      },
                     ),
                   ),
 
+
+                  */
                   TextFieldWithTitle(
                     title: 'Pin Code ',
                     controller: controller.pincode,
@@ -856,7 +1041,6 @@ class AmenitiesButton extends StatelessWidget {
             break;
           }
         }
-
         if (hasEmptyField) {
           Get.snackbar(emptyFieldTitle, emptyFieldMessage);
         } else {}
@@ -989,3 +1173,5 @@ class _TextFieldWithTitleState extends State<TextFieldWithTitle> {
     );
   }
 }
+
+

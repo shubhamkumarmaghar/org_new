@@ -1,1 +1,1 @@
-const apiUrlString = 'http://app.partypeople.in/v1/';
+const apiUrlString = 'https://app.partypeople.in/v1/';

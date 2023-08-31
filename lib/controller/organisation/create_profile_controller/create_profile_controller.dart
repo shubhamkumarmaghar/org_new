@@ -159,7 +159,7 @@ class CreteOrganisationProfileController extends GetxController {
 
     // Get organization details
     final organizationResponse = await http.post(
-      Uri.parse('http://app.partypeople.in/v1/party/organization_details'),
+      Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
       headers: {
         'x-access-token': '${GetStorage().read('token')}',
       },
@@ -199,7 +199,7 @@ class CreteOrganisationProfileController extends GetxController {
     print("Token From Shared Preference :=> '${GetStorage().read('token')}");
     // Get all amenities
     final amenitiesResponse = await http.get(
-      Uri.parse('http://app.partypeople.in/v1/party/organization_amenities'),
+      Uri.parse('https://app.partypeople.in/v1/party/organization_amenities'),
       headers: {
         'x-access-token': '${GetStorage().read('token')}',
       },
@@ -238,6 +238,9 @@ class CreteOrganisationProfileController extends GetxController {
           .replaceAll('[', '')
           .replaceAll(']', ''),
       'city_id': '${fullAddress.text}, $city, $state, $county',
+      'country' : county.value,
+      'city' :  city.value,
+      'state' : state.value,
       'description': description.text,
       'branch': branches.text == '' ? "No Branches" : branches.text,
       'name': name.text.toUpperCase(),
@@ -270,7 +273,7 @@ class CreteOrganisationProfileController extends GetxController {
 
   getAPIOverview() async {
     http.Response response = await http.post(
-        Uri.parse('http://app.partypeople.in/v1/party/organization_details'),
+        Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
         headers: {'x-access-token': '${GetStorage().read('token')}'});
     organisationID.value = jsonDecode(response.body)['data'][0]['id'];
     if (jsonDecode(response.body)['data'] != null) {
@@ -295,13 +298,16 @@ class CreteOrganisationProfileController extends GetxController {
     var headers = {'x-access-token': '${GetStorage().read('token')}'};
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('http://app.partypeople.in/v1/party/update_organization'));
+        Uri.parse('https://app.partypeople.in/v1/party/update_organization'));
     request.fields.addAll({
       'organization_amenitie_id': selectedAmenitiesListID
           .toString()
           .replaceAll('[', '')
           .replaceAll(']', ''),
       'city_id': '${fullAddress.text}',
+      'country' : county.value,
+      'city' :  city.value,
+      'state' : state.value,
       'description': description.text,
       'branch': branches.text,
       'name': name.text.toUpperCase(),

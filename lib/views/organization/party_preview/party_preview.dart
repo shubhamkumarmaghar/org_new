@@ -43,7 +43,7 @@ class _PartyPreviewState extends State<PartyPreview> {
 
   Future<void> _fetchData() async {
     http.Response response = await http.get(
-      Uri.parse('http://app.partypeople.in/v1/party/party_amenities'),
+      Uri.parse('https://app.partypeople.in/v1/party/party_amenities'),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final data = jsonDecode(response.body);
@@ -101,12 +101,12 @@ class _PartyPreviewState extends State<PartyPreview> {
           shrinkWrap: true,
           children: [
             const SizedBox(
-              height: 65,
+              height: 15,
             ),
             widget.data['image_status'] == '1'
                 ? Container(
                     padding: EdgeInsets.zero,
-                    height: 160,
+                    height: 200,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -115,7 +115,7 @@ class _PartyPreviewState extends State<PartyPreview> {
                         imageUrl: '${widget.data['cover_photo']}',
                         width: Get.width,
                         height: 160,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         errorWidget: (context, url, error) => const Center(
                               child: CupertinoActivityIndicator(
                                 radius: 15,
@@ -209,6 +209,12 @@ class _PartyPreviewState extends State<PartyPreview> {
                         "${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['pr_start_date']))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['pr_end_date']))}",
                   )
                 : Container(),
+
+           CustomListTile(
+              icon: Icons.location_on_rounded,
+              title: "Party Address",
+              subtitle:widget.data['latitude'] + " , " + widget.data['longitude'])
+                ,
             CustomListTile(
               icon: Icons.calendar_month,
               title: "Party Start & End Dates",

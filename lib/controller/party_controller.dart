@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,11 @@ import 'package:intl/intl.dart';
 import 'package:partypeoplebusiness/controller/organisation/dashboard/organization_dashboard.dart';
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 
+import '../constants/statecity/model/state_model.dart';
+
 class PartyController extends GetxController {
+  List<StateName> stateName = [] ;
+  List<StateName> cityName = [] ;
   var isComplet = false.obs;
   RxInt numberOfDays = 1.obs;
   var isLoading = false.obs;
@@ -45,6 +50,9 @@ class PartyController extends GetxController {
   final couplesPrice = TextEditingController();
   final othersPrice = TextEditingController();
   final offersText = TextEditingController();
+  var county = ''.obs;
+  var state = ''.obs;
+  var city = ''.obs;
   RxBool isPopular = false.obs;
   var partyStatusChange = "".obs;
 
@@ -263,7 +271,7 @@ class PartyController extends GetxController {
     };
 
     var request = http.MultipartRequest(
-        'POST', Uri.parse('http://app.partypeople.in/v1/party/update'));
+        'POST', Uri.parse('https://app.partypeople.in/v1/party/update'));
     request.fields.addAll({
       'title': title.text,
       'description': description.text,
@@ -272,7 +280,11 @@ class PartyController extends GetxController {
       'start_time': startTime.text,
       'end_time': endTime.text,
       'latitude': location.text,
-      'longitude': location.text,
+      'longitude': '$city , $state , India',
+      'city':city.toString(),
+      'state':state.toString(),
+      'country':'India',
+      'pincode' : pincode.text,
       'type': getPertyType(partyType.value),
       'gender': genderList
           .toString()
@@ -392,7 +404,7 @@ class PartyController extends GetxController {
     };
 
     var request = http.MultipartRequest(
-        'POST', Uri.parse('http://app.partypeople.in/v1/party/add'));
+        'POST', Uri.parse('https://app.partypeople.in/v1/party/add'));
     request.fields.addAll({
       'title': title.text,
       'description': description.text,
@@ -401,7 +413,11 @@ class PartyController extends GetxController {
       'start_time': startTime.text,
       'end_time': endTime.text,
       'latitude': location.text,
-      'longitude': location.text,
+      'longitude': '$city , $state , India',
+      'city':city.toString(),
+      'state':state.toString(),
+      'country': 'India',
+      'pincode' : pincode.text,
       'type': getPertyType(partyType.value),
       'gender': genderList
           .toString()
@@ -423,6 +439,7 @@ class PartyController extends GetxController {
       'couples': couplesPrice.text,
       'others': othersPrice.text,
       'cover_photo': timeline.value
+
     });
 
     request.headers.addAll(headers);
@@ -446,7 +463,8 @@ class PartyController extends GetxController {
             duration: const Duration(seconds: 3));
         // Get.offAllNamed('/dashbord');
       }
-    } else {
+    }
+    else {
       //print(response.statusCode);
       isLoading.value = false;
       Get.snackbar(response.reasonPhrase!,
@@ -455,6 +473,7 @@ class PartyController extends GetxController {
           backgroundColor: Colors.red,
           colorText: Colors.white,
           duration: const Duration(seconds: 3));
+      log('${response}');
       // print(response.headers);
     }
   }
@@ -468,5 +487,82 @@ class PartyController extends GetxController {
       case 'Neon party':
         return '3';
     }
+  }
+
+   Future<void> getStateData() async {
+    final response = await http.post(
+      Uri.parse('https://app.partypeople.in/v1/home/states'),
+      headers: <String, String>{
+        'x-access-token': '${GetStorage().read('token')}',
+      },
+
+    );
+
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response,
+      // then parse the JSON.
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      if (jsonResponse['status'] == 1 && jsonResponse['message'].contains('Data Found')) {
+        var data= StateCityModel.fromJson(jsonResponse) ;
+        var list = data.data ?? [] ;
+        stateName= list ;
+        cityName.clear();
+        update();
+      }
+      else {
+        print('else  Data not found');
+
+        //isLiked= false;
+      }
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to fetch data ');
+
+    }
+  }
+
+
+  Future<void> getCityData({required String cityid}) async {
+    final response = await http.post(
+        Uri.parse('https://app.partypeople.in/v1/home/cities'),
+        headers: <String, String>{
+          'x-access-token': '${GetStorage().read('token')}',
+        },
+        body: {'state_id' : cityid,}
+
+    );
+
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response,
+      // then parse the JSON.
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      print(jsonResponse);
+      if (jsonResponse['status'] == 1 && jsonResponse['message'].contains('Data Found')) {
+        //  cityName = jsonResponse['data'];
+        var data= StateCityModel.fromJson(jsonResponse) ;
+        var list = data.data ?? [] ;
+        cityName= list ;
+        update();
+      }
+      else {
+        print('else  Data not found');
+
+        //isLiked= false;
+      }
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to fetch data ');
+
+    }
+  }
+
+  @override
+  void onClose() {
+    stateName.clear();
+    cityName.clear();
+    super.onClose();
   }
 }

@@ -36,7 +36,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
 
     // Get organization details
     final organizationResponse = await http.post(
-      Uri.parse('http://app.partypeople.in/v1/party/organization_details'),
+      Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final organizationData = await jsonDecode(organizationResponse.body)['data']
@@ -72,7 +72,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
 
     // Get all amenities
     final amenitiesResponse = await http.get(
-      Uri.parse('http://app.partypeople.in/v1/party/organization_amenities'),
+      Uri.parse('https://app.partypeople.in/v1/party/organization_amenities'),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final amenitiesData = await jsonDecode(amenitiesResponse.body)['data'];

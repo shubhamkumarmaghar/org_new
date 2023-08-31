@@ -67,7 +67,7 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
 
   Future<void> _fetchData() async {
     http.Response response = await http.get(
-      Uri.parse('http://app.partypeople.in/v1/party/party_amenities'),
+      Uri.parse('https://app.partypeople.in/v1/party/party_amenities'),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final data = jsonDecode(response.body);
