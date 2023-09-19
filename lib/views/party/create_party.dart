@@ -1012,7 +1012,10 @@ class AmenitiesButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () {
-        Get.to(const AmenitiesPartyScreen());
+
+        bool hasEmptyField = false;
+        String emptyFieldTitle = '';
+        String emptyFieldMessage = '';
         List<Map<String, String>> fieldsToValidate = [
           {'Party Image': controller.timeline.value},
           {'Party Title': controller.title.text},
@@ -1025,11 +1028,6 @@ class AmenitiesButton extends StatelessWidget {
           {'Party End Age': controller.endPeopleAge.text},
           {'Party People Limit': controller.peopleLimit.text},
         ];
-
-        bool hasEmptyField = false;
-        String emptyFieldTitle = '';
-        String emptyFieldMessage = '';
-
         for (var field in fieldsToValidate) {
           String title = field.keys.first;
           String value = field.values.first;
@@ -1043,7 +1041,16 @@ class AmenitiesButton extends StatelessWidget {
         }
         if (hasEmptyField) {
           Get.snackbar(emptyFieldTitle, emptyFieldMessage);
-        } else {}
+          return;
+        }
+        if(controller.timeline.value.isEmpty){
+          Get.snackbar("Error ", "Cover Image should not be empty");
+          return;
+        }
+        Get.to(const AmenitiesPartyScreen());
+
+
+
       },
       icon: const Icon(
         Icons.grid_view,

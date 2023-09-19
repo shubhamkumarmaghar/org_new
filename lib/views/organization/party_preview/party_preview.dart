@@ -88,6 +88,7 @@ class _PartyPreviewState extends State<PartyPreview> {
   @override
   void initState() {
     _fetchData();
+    controller.partyId.value = widget.data['id'];
     super.initState();
   }
 

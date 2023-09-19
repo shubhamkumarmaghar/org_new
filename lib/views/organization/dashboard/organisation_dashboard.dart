@@ -1522,6 +1522,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                       partyController.isEditable.value = true;
                                       partyController.getPrefiledData =
                                           widget.jsonPartyData[index];
+                                      partyController.partyId.value = partyController.getPrefiledData['id'];
                                       if (widget.jsonPartyData[index]
                                               ['papular_status'] ==
                                           '1') {

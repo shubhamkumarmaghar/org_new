@@ -75,6 +75,7 @@ dependencies:
   dio: ^5.1.1
   expandable: ^5.0.1
   flutter_faq: ^1.0.1+1
+  webview_flutter: ^4.2.4
 
 
 

@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, unnecessary_null_comparison, must_be_immutable, duplicate_ignore
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:partypeoplebusiness/controller/party_controller.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../../widgets/webView.dart';
 import '../controllers/subscription_controller.dart';
 
 // ignore: must_be_immutable
@@ -25,8 +27,8 @@ class _SubscriptionViewState extends State<SubscriptionView> {
       Get.put(SubscriptionController());
 
   PartyController partyController = Get.put(PartyController());
-  Razorpay _razorpay = Razorpay();
-
+ // Razorpay _razorpay = Razorpay();
+/*
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     try {
       subscriptionController.oderIdPlaced(
@@ -56,19 +58,19 @@ class _SubscriptionViewState extends State<SubscriptionView> {
       print('Error in external wallet callback: $e');
     }
   }
-
+*/
   @override
   void initState() {
     super.initState();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+   // _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+ //   _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+  //  _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _razorpay.clear();
+    //_razorpay.clear();
   }
 
   @override
@@ -316,6 +318,37 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                 ),
               ],
             ),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+
+                    },
+                    child: TextFieldWithTitleSub(
+                      title: 'Please enter your email',
+                     /* passGesture: () {
+                        DateTime startDate =
+                        DateTime.parse(widget.data['start_date']);
+                        DateTime endDate =
+                        DateTime.parse(widget.data['end_date']);
+                        partyController.getStartDatePop(
+                            context, startDate, endDate);
+                      },*/
+                      controller: partyController.email,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter email address';
+                        } else {
+                          return null;
+                        }
+                      },
+                      enabled: true,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             _infoBox(),
             SizedBox(
               height: 20,
@@ -325,7 +358,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  var options = {
+              /*    var options = {
                     'key': 'rzp_test_qiTDenaoeqV1Zr',
                     // Replace with your Razorpay API key
                     'amount': (int.parse(
@@ -344,16 +377,26 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                     }
                   };
 
+
                   try {
                     _razorpay.open(options);
                   } catch (e) {
                     print(e.toString());
                   }
-                },
+
+               */
+                  if(partyController.popular_start_date.text.isEmpty ||partyController.popular_end_date.text.isEmpty || partyController.email.text.isEmpty ){
+                    Get.snackbar('Field is missing','Please fill all details');
+                  }
+                  else {
+                    selectPlanBottom(
+                      context: context, amount: '1', startDate: partyController
+                        .popular_start_date.text, endDate: partyController
+                        .popular_end_date.text,);
+                  }
+                  },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                  // Set the background color to red
-                  onPrimary: Colors.white,
+                  foregroundColor: Colors.white, backgroundColor: Colors.red,
                   // Set the text color to white
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   // Adjust the button padding
@@ -372,6 +415,138 @@ class _SubscriptionViewState extends State<SubscriptionView> {
         ),
       ),
     )));
+
+
+  }
+  void  selectPlanBottom({required BuildContext context ,
+    required String amount ,
+    required String startDate ,
+    required String endDate}){
+    double totalamount = double.parse(amount)*partyController.numberOfDays.value;
+   log('${partyController.numberOfDays.value}  $totalamount' );
+    showModalBottomSheet(context: context,backgroundColor: Colors.red.shade100, shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(20),
+      ),
+    ),builder: (context)
+    {
+      return Container(
+        height: Get.height*0.2,
+        width: Get.width,
+        decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight:Radius.circular(20) )),
+        margin: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Text('For Boost plan' , style: TextStyle(fontSize: 20 , fontWeight: FontWeight.w600, color: Colors.black),),
+            SizedBox(height: 30,),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Start Date:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
+                  Text(startDate , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('End Date:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
+                  Text(endDate, style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total Amount:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
+                  Text('₹'+'${totalamount}' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                ]),
+            Spacer(),
+             GestureDetector(
+              onTap: () async {
+                {       await subscriptionController.subscriptionPurchase(
+                    partyId: partyController.partyId.value,
+                    startDate: startDate,
+                    endDate: endDate,
+                    userType: 'Organization',
+                    amount: '${totalamount}');
+                Navigator.pop(context);
+                 await Get.to(
+                      WebViewContainer(url:'https://app.partypeople.in/easebuzz/easebuzz.php?api_name=initiate_payment'
+                      '&amount= $totalamount'
+                  // '&amount=${double.parse('10')}'
+                      '&phone=${widget.data['phone_number']}'
+                      '&email=${partyController.email.value.text}'
+                      '&firstname=${widget.data['organization']}'
+                      '&country=${widget.data['country']}'
+                      '&state=${widget.data['state']}'
+                      '&city=${widget.data['city']}'
+                      '&order_id=${subscriptionController.subsOrderId}'
+                      '&zipcode=${widget.data['pincode']}'
+                      '&usertype=Organization',
+                          partyId:widget.data['id'],
+                      start_Date:startDate ,
+                      end_Date:endDate),
+                 );
+
+                  /* var options = {
+                    'key': 'rzp_test_qiTDenaoeqV1Zr',
+                    // Replace with your Razorpay API key
+                    'amount': (int.parse(amount)) * 100,
+                    // Amount in paise (e.g., for INR 500.00, use 50000)
+                    'name': 'PARTY PEOPLE ',
+                    'description': 'RAMBER ENTERTAINMENT PVT LTD',
+                    'prefill': {
+                      'contact': 'CUSTOMER_CONTACT_NUMBER',
+                      'email': 'CUSTOMER_EMAIL'
+                    },
+                    'external': {
+                      'wallets': ['paytm'] // Supported wallets
+                    }
+                  };
+
+                  try {
+                    _razorpay.open(options);
+                  } catch (e) {
+                    print(e.toString());
+                  }
+                  */
+/*
+                    String access_key = "555a2b009214573bd833feca997244f1721ac69d7f2b09685911bc943dcf5201";
+                    String pay_mode = "test";
+                    Object parameters =
+                    {
+                      "access_key":access_key,
+                      "pay_mode":pay_mode,
+                    //  "amount": (double.parse(amount)),
+                    };
+                    final payment_response = await _channel.invokeMethod("payWithEasebuzz", parameters);
+                  String result = payment_response['result'];
+
+                    /* payment_response is the HashMap containing the response of the payment.
+You can parse it accordingly to handle response */
+*/
+                };
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: Get.width * 0.028),
+                height: MediaQuery.of(context).size.width * 0.12,
+                width: MediaQuery.of(context).size.width * 0.5,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    //color: Colors.amber,
+                    border: Border.all(color: Colors.red.shade900)
+                  //const Color(0xFFffa914),
+                ),
+                child:Text(
+                  'CONTINUE',textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Poppins',
+                      fontSize: 20),
+                ),
+
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    );
   }
 
   Widget _netflixLogo() {
@@ -581,6 +756,123 @@ class _TextFieldWithTitleSubState extends State<TextFieldWithTitleSub> {
             ),
         ],
       ),
+    );
+  }
+
+  void  selectPlanBottom({required BuildContext context , required String amount , required String name,required String startDate , required String endDate}){
+    showModalBottomSheet(context: context,backgroundColor: Colors.red.shade100, shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(20),
+      ),
+    ),builder: (context)
+
+    {
+      return Container(
+        height: Get.height*0.2,
+        width: Get.width,
+        decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight:Radius.circular(20) )),
+        margin: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Text('For Boost plan' , style: TextStyle(fontSize: 20 , fontWeight: FontWeight.w600, color: Colors.black),),
+            SizedBox(height: 30,),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Start Date:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
+                  Text(startDate , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('End Date:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
+                  Text(endDate, style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total Amount:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
+                  Text('₹'+amount , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                ]),
+            Spacer(),
+           /* GestureDetector(
+              onTap: () async {
+                {
+                  Navigator.pop(context);
+                  Get.to(WebViewContainer(url:'https://app.partypeople.in/easebuzz/easebuzz.php?api_name=initiate_payment'
+                      '&amount=${double.parse(amount)}'
+                  // '&amount=${double.parse('10')}'
+                      '&phone=${subController.individualProfileController.userMobile.value}'
+                      '&email=${subController.individualProfileController.email.value}'
+                      '&firstname=${subController.individualProfileController.username.value}'
+                      '&country=${subController.individualProfileController.country.value}'
+                      '&state=${subController.individualProfileController.state.value}'
+                      '&city=${subController.individualProfileController.city.value}'
+                      '&order_id=${subController.subsOrderId}'
+                      '&zipcode=${subController.individualProfileController.pincode.value}'
+                      '&usertype=Individual'));
+
+                  /* var options = {
+                    'key': 'rzp_test_qiTDenaoeqV1Zr',
+                    // Replace with your Razorpay API key
+                    'amount': (int.parse(amount)) * 100,
+                    // Amount in paise (e.g., for INR 500.00, use 50000)
+                    'name': 'PARTY PEOPLE ',
+                    'description': 'RAMBER ENTERTAINMENT PVT LTD',
+                    'prefill': {
+                      'contact': 'CUSTOMER_CONTACT_NUMBER',
+                      'email': 'CUSTOMER_EMAIL'
+                    },
+                    'external': {
+                      'wallets': ['paytm'] // Supported wallets
+                    }
+                  };
+
+                  try {
+                    _razorpay.open(options);
+                  } catch (e) {
+                    print(e.toString());
+                  }
+                  */
+/*
+                    String access_key = "555a2b009214573bd833feca997244f1721ac69d7f2b09685911bc943dcf5201";
+                    String pay_mode = "test";
+                    Object parameters =
+                    {
+                      "access_key":access_key,
+                      "pay_mode":pay_mode,
+                    //  "amount": (double.parse(amount)),
+                    };
+                    final payment_response = await _channel.invokeMethod("payWithEasebuzz", parameters);
+                  String result = payment_response['result'];
+
+                    /* payment_response is the HashMap containing the response of the payment.
+You can parse it accordingly to handle response */
+*/
+                };
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: Get.width * 0.028),
+                height: MediaQuery.of(context).size.width * 0.12,
+                width: MediaQuery.of(context).size.width * 0.5,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    //color: Colors.amber,
+                    border: Border.all(color: Colors.red.shade900)
+                  //const Color(0xFFffa914),
+                ),
+                child:Text(
+                  'CONTINUE',textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Poppins',
+                      fontSize: 20),
+                ),
+
+              ),
+            ),*/
+          ],
+        ),
+      );
+    }
     );
   }
 }

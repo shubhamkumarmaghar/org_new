@@ -30,6 +30,7 @@ class PartyController extends GetxController {
   var name = '';
   var genderList = [];
   RxString timeline = ''.obs;
+  var email = TextEditingController();
   final description = TextEditingController();
   final startDate = TextEditingController();
   final endDate = TextEditingController();
@@ -53,6 +54,7 @@ class PartyController extends GetxController {
   var county = ''.obs;
   var state = ''.obs;
   var city = ''.obs;
+  RxString partyId= ''.obs;
   RxBool isPopular = false.obs;
   var partyStatusChange = "".obs;
 
@@ -77,6 +79,8 @@ class PartyController extends GetxController {
     stagPrice.text = '';
     othersPrice.text = '';
     couplesPrice.text = '';
+    email.text='';
+    partyId.value = '';
     super.dispose();
   }
 
@@ -305,7 +309,6 @@ class PartyController extends GetxController {
       'stag': stagPrice.text,
       'couples': couplesPrice.text,
       'others': othersPrice.text,
-
       'party_id': '${getPrefiledData['id']}',
       'cover_photo': timeline.value
       // 'organization_id': '1'

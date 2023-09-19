@@ -8,8 +8,30 @@ import 'package:partypeoplebusiness/views/organization/dashboard/organisation_da
 import 'package:partypeoplebusiness/views/splash_screen/splash_screen_view.dart';
 import 'package:sizer/sizer.dart';
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  return;
+  await Firebase.initializeApp();
+  FlutterLocalNotificationsPlugin pluginInstance =
+  FlutterLocalNotificationsPlugin();
+  var init = const InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/launcher_icon')
+  );
+  pluginInstance.initialize(init);
+  AndroidNotificationDetails androidSpec = const AndroidNotificationDetails(
+    'ch_id',
+    'ch_name',
+    importance: Importance.high,
+    priority: Priority.high,
+    playSound: true,
+  );
+  NotificationDetails platformSpec =
+
+  NotificationDetails(android: androidSpec);
+
+  await pluginInstance.show(
+      0, message.data['title'], message.data['body'], platformSpec);
+
+  //return;
 }
 
 Future<void> main() async {
