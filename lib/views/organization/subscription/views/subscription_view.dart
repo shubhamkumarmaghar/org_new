@@ -390,7 +390,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                   }
                   else {
                     selectPlanBottom(
-                      context: context, amount: '1', startDate: partyController
+                      context: context, amount: '499', startDate: partyController
                         .popular_start_date.text, endDate: partyController
                         .popular_end_date.text,);
                   }
@@ -422,7 +422,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
     required String amount ,
     required String startDate ,
     required String endDate}){
-    double totalamount = double.parse(amount)*partyController.numberOfDays.value;
+    String totalamount = '${double.parse(amount)*partyController.numberOfDays.value}';
    log('${partyController.numberOfDays.value}  $totalamount' );
     showModalBottomSheet(context: context,backgroundColor: Colors.red.shade100, shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
@@ -457,6 +457,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
             Spacer(),
              GestureDetector(
               onTap: () async {
+                 log('start date :${startDate} ${endDate}');
                 {       await subscriptionController.subscriptionPurchase(
                     partyId: partyController.partyId.value,
                     startDate: startDate,
@@ -464,9 +465,10 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                     userType: 'Organization',
                     amount: '${totalamount}');
                 Navigator.pop(context);
+
                  await Get.to(
                       WebViewContainer(url:'https://app.partypeople.in/easebuzz/easebuzz.php?api_name=initiate_payment'
-                      '&amount= $totalamount'
+                      '&amount=${double.parse(totalamount)}'
                   // '&amount=${double.parse('10')}'
                       '&phone=${widget.data['phone_number']}'
                       '&email=${partyController.email.value.text}'

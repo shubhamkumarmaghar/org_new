@@ -14,6 +14,7 @@ import 'package:partypeoplebusiness/views/organization/side_drawer/verification_
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../organization_transction_report/view/transction_screen.dart';
 import '../../faq_screen.dart';
 
 // class DrawerView extends GetView<DrawerController2> {
@@ -119,6 +120,13 @@ class _DrawerViewState extends State<DrawerView> {
                   icon: Icons.history,
                   onTap: () {
                     Get.to(const AllPartiesHistory());
+                  },
+                ),
+                CustomOptionWidget(
+                  title: 'All Transaction History',
+                  icon: Icons.history,
+                  onTap: () {
+                    Get.to(const TransctionReportedUsersView());
                   },
                 ),
                 CustomOptionWidget(

@@ -273,7 +273,7 @@ class PartyController extends GetxController {
       'x-access-token': '${GetStorage().read('token')}'
       // 'Cookie': 'ci_session=f72b54d682c45ebf19fcc0fd54cef39508588d0c'
     };
-
+log('kkkkkkkkkkkkkkkkkkkkkkk $city, $state, India');
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://app.partypeople.in/v1/party/update'));
     request.fields.addAll({
@@ -284,7 +284,7 @@ class PartyController extends GetxController {
       'start_time': startTime.text,
       'end_time': endTime.text,
       'latitude': location.text,
-      'longitude': '$city , $state , India',
+      'longitude': '$city, $state, India',
       'city':city.toString(),
       'state':state.toString(),
       'country':'India',
@@ -416,7 +416,7 @@ class PartyController extends GetxController {
       'start_time': startTime.text,
       'end_time': endTime.text,
       'latitude': location.text,
-      'longitude': '$city , $state , India',
+      'longitude': '$city, $state, India',
       'city':city.toString(),
       'state':state.toString(),
       'country': 'India',
