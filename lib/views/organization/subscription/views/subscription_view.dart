@@ -390,9 +390,9 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                   }
                   else {
                     selectPlanBottom(
-                      context: context, amount: '499', startDate: partyController
-                        .popular_start_date.text, endDate: partyController
-                        .popular_end_date.text,);
+                      context: context, amount: '499', startDate: '${partyController
+                        .popular_start_date.text} ${widget.data['start_time']}', endDate: '${partyController
+                        .popular_end_date.text}');
                   }
                   },
                 style: ElevatedButton.styleFrom(
@@ -442,7 +442,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Start Date:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
-                  Text(startDate , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                  Text(startDate.split(' ').first , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
                 ]),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

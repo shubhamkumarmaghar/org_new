@@ -85,13 +85,15 @@ class PartyController extends GetxController {
   }
 
   getEndDate(BuildContext context) async {
+
+
     DateTime selectedDate = DateTime.now();
     print('Time');
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: startingDate,
         firstDate: startingDate,
-        lastDate: DateTime(2101));
+        lastDate: startingDate.add(Duration(days: 1)) );
     if (picked != null && picked != selectedDate) {
       var date = picked.toString().split(" ");
       var date1 = date[0].split("-");
@@ -201,7 +203,7 @@ class PartyController extends GetxController {
     );
   }
 
-  var startingDate;
+  late DateTime startingDate;
 
   getStartDate(BuildContext context) async {
     DateTime selectedDate = DateTime.now();
