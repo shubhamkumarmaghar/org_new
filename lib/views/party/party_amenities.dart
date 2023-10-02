@@ -102,11 +102,10 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
   }
 
   void getSelectedID() {
-    print(controller.getPrefiledData['party_amenitie']);
-    for (var i = 0;
-    i < controller.getPrefiledData['party_amenitie'].length;
-    i++) {
-      var amenityName = controller.getPrefiledData['party_amenitie'][i]['name'];
+    print(controller.getPrefiledData.partyAmenitie);
+    int? len = controller.getPrefiledData.partyAmenitie?.length;
+    for (var i = 0; i < len!; i++) {
+      var amenityName = controller.getPrefiledData.partyAmenitie?[i].name;
       print(amenityName);
       setState(() {
         _categories.forEach((category) {

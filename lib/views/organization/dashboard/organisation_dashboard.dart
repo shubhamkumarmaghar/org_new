@@ -22,7 +22,9 @@ import 'package:sizer/sizer.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import '../../../controller/organisation/dashboard/organization_dashboard.dart';
+import '../../../model/partyModel/partyDataModel.dart';
 import '../../notification/notification_screen.dart';
+import '../party_preview/party_preview_screen_new.dart';
 
 class OrganisationDashboard extends StatefulWidget {
   const OrganisationDashboard({Key? key}) : super(key: key);
@@ -450,12 +452,17 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                             int index, int pageViewIndex) {
                                           return GestureDetector(
                                             onTap: () {
-                                              Get.to(PartyPreview(
+                                              /*Get.to(PartyPreview(
                                                 isHistory: false,
                                                 isPopularParty: true,
                                                 data: controller
-                                                        .jsonPartyPopularData[
-                                                    index],
+                                                        .jsonPartyPopularData[index],
+                                              ));*/
+                                              Get.to(PartyPreviewScreen(
+                                                isHistory: false,
+                                                isPopularParty: true,
+                                                party: controller
+                                                    .jsonPartyPopularData[index],
                                               ));
                                             },
                                             child: Stack(
@@ -527,7 +534,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                               10,
                                                                         ),
                                                                         Text(
-                                                                          '${controller.jsonPartyPopularData[index]['like']}',
+                                                                          '${controller.jsonPartyPopularData[index].like}',
                                                                           style: TextStyle(
                                                                               color: Colors.black,
                                                                               fontSize: 6.sp),
@@ -563,7 +570,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                               10,
                                                                         ),
                                                                         Text(
-                                                                          '${controller.jsonPartyPopularData[index]['view']}',
+                                                                          '${controller.jsonPartyPopularData[index].view}',
                                                                           style: TextStyle(
                                                                               color: Colors.black,
                                                                               fontSize: 6.sp),
@@ -596,7 +603,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                               10,
                                                                         ),
                                                                         Text(
-                                                                          '${controller.jsonPartyPopularData[index]['ongoing']}',
+                                                                          '${controller.jsonPartyPopularData[index].ongoing}',
                                                                           style: TextStyle(
                                                                               color: Colors.black,
                                                                               fontSize: 6.sp),
@@ -639,7 +646,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                           Radius.circular(
                                                                               12),
                                                                     ),
-                                                                    child: controller.jsonPartyPopularData[index]['image_status'] == '1'
+                                                                    child: controller.jsonPartyPopularData[index].imageStatus == '1'
                                                                         ? Container(
                                                                             height:
                                                                                 Get.height * 0.5,
@@ -657,7 +664,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                             child:
                                                                                 CachedNetworkImage(
                                                                               fit: BoxFit.cover,
-                                                                              imageUrl: '${controller.jsonPartyPopularData[index]['cover_photo']}',
+                                                                              imageUrl: '${controller.jsonPartyPopularData[index].coverPhoto}',
                                                                             ),
                                                                           )
                                                                         : Container(
@@ -679,7 +686,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                               imageFilter: ui.ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                                                                               child: CachedNetworkImage(
                                                                                 fit: BoxFit.cover,
-                                                                                imageUrl: '${controller.jsonPartyPopularData[index]['cover_photo']}',
+                                                                                imageUrl: '${controller.jsonPartyPopularData[index].coverPhoto}',
                                                                               ),
                                                                             ),
                                                                           )),
@@ -722,11 +729,11 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                               CrossAxisAlignment.start,
                                                                           children: [
                                                                             Text(
-                                                                              '${controller.jsonPartyPopularData[index]['title']}'.capitalizeFirst!,
+                                                                              '${controller.jsonPartyPopularData[index].title}'.capitalizeFirst!,
                                                                               style: TextStyle(fontSize: 13.sp, overflow: TextOverflow.ellipsis, fontFamily: 'malgun', fontWeight: FontWeight.bold),
                                                                             ),
                                                                             Text(
-                                                                              '${controller.jsonPartyPopularData[index]['pr_start_date']} - ${controller.jsonPartyPopularData[index]['pr_end_date']}',
+                                                                              '${controller.jsonPartyPopularData[index].prStartDate} - ${controller.jsonPartyPopularData[index].prEndDate}',
                                                                               style: TextStyle(fontSize: 9.sp, fontFamily: 'malgun'),
                                                                             ),
                                                                             SmoothStarRating(
@@ -888,7 +895,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                             ),
                             PartiesContainerWidget(
                                 jsonPartyData:
-                                    controller.jsonPartyOgranisationDataToday,
+                                    controller.jsonPartyOrganisationDataToday,
                                 lengthOfParties:
                                     controller.lengthOfTodayParties.value),
                             const SizedBox(
@@ -905,7 +912,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                             ),
                             PartiesContainerWidget(
                                 jsonPartyData:
-                                    controller.jsonPartyOgranisationDataTomm,
+                                    controller.jsonPartyOrganisationDataTomm,
                                 lengthOfParties:
                                     controller.lengthOfTommParties.value),
                             const SizedBox(
@@ -958,26 +965,39 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       if (controller.jsonPartyOgranisationDataUpcomming[
-                                                                  index][
-                                                              'papular_status'] ==
+                                                                  index].papularStatus ==
                                                           '1') {
                                                         print(
-                                                            "Printing status :: ${controller.jsonPartyOgranisationDataUpcomming[index]['papular_status']}");
+                                                            "Printing status :: ${controller.jsonPartyOgranisationDataUpcomming[index].papularStatus}");
 
-                                                        Get.to(PartyPreview(
+                                                        Get.to(/*PartyPreview(
                                                           isPopularParty: true,
                                                           isHistory: false,
                                                           data: controller
                                                                   .jsonPartyOgranisationDataUpcomming[
                                                               index],
+                                                        ));*/
+                                                            PartyPreviewScreen(
+                                                          isPopularParty: true,
+                                                          isHistory: false,
+                                                          party: controller
+                                                              .jsonPartyOgranisationDataUpcomming[
+                                                          index],
                                                         ));
                                                       } else {
-                                                        Get.to(PartyPreview(
+                                                        /*Get.to(PartyPreview(
                                                           isPopularParty: false,
                                                           isHistory: false,
                                                           data: controller
                                                                   .jsonPartyOgranisationDataUpcomming[
                                                               index],
+                                                        ));*/
+                                                        Get.to(PartyPreviewScreen(
+                                                          isPopularParty: false,
+                                                          isHistory: false,
+                                                          party: controller
+                                                              .jsonPartyOgranisationDataUpcomming[
+                                                          index],
                                                         ));
                                                       }
                                                     },
@@ -996,9 +1016,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                         17.0),
                                                           ),
                                                           child: controller.jsonPartyOgranisationDataUpcomming[
-                                                                          index]
-                                                                      [
-                                                                      'image_status'] ==
+                                                                          index].imageStatus ==
                                                                   '1'
                                                               ? ClipRRect(
                                                                   borderRadius:
@@ -1008,7 +1026,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                   child:
                                                                       CachedNetworkImage(
                                                                     imageUrl:
-                                                                        '${controller.jsonPartyOgranisationDataUpcomming[index]['cover_photo']}',
+                                                                        '${controller.jsonPartyOgranisationDataUpcomming[index].coverPhoto}',
                                                                     fit: BoxFit
                                                                         .cover,
                                                                   ),
@@ -1028,7 +1046,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                     child:
                                                                         CachedNetworkImage(
                                                                       imageUrl:
-                                                                          '${controller.jsonPartyOgranisationDataUpcomming[index]['cover_photo']}',
+                                                                          '${controller.jsonPartyOgranisationDataUpcomming[index].coverPhoto}',
                                                                       fit: BoxFit
                                                                           .cover,
                                                                     ),
@@ -1086,7 +1104,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                             .start,
                                                                     children: [
                                                                       Text(
-                                                                        "${controller.jsonPartyOgranisationDataUpcomming[index]['title']}"
+                                                                        "${controller.jsonPartyOgranisationDataUpcomming[index].title}"
                                                                             .capitalizeFirst!,
                                                                         style:
                                                                             TextStyle(
@@ -1115,7 +1133,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                             CrossAxisAlignment.start,
                                                                         children: [
                                                                           Text(
-                                                                            DateFormat('d, MMM, yyyy').format(DateTime.parse(controller.jsonPartyOgranisationDataUpcomming[index]['start_date'])),
+                                                                            DateFormat('d, MMM, yyyy').format(DateTime.parse('${controller.jsonPartyOgranisationDataUpcomming[index].startDate}')),
                                                                             style:
                                                                                 TextStyle(
                                                                               fontSize: 12.sp,
@@ -1123,7 +1141,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                             ),
                                                                           ),
                                                                           Text(
-                                                                            '${controller.jsonPartyOgranisationDataUpcomming[index]['start_time']}',
+                                                                            '${controller.jsonPartyOgranisationDataUpcomming[index].startTime}',
                                                                             style:
                                                                                 TextStyle(
                                                                               fontSize: 12.sp,
@@ -1160,13 +1178,13 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                                 controller.jsonPartyOgranisationDataUpcomming[index],
                                                                           ));
                                                                         },
-                                                                        child: controller.jsonPartyOgranisationDataUpcomming[index]['approval_status'] != "1"
+                                                                        child: controller.jsonPartyOgranisationDataUpcomming[index].approvalStatus != "1"
                                                                             ? Card(
                                                                                 elevation: 5,
                                                                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                                                                                 child: Container(decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(40)), child: SizedBox(height: 15, width: 15, child: Lottie.asset('assets/127247-disapproved.json'))),
                                                                               )
-                                                                            : controller.jsonPartyOgranisationDataUpcomming[index]['papular_status'] == '0'
+                                                                            : controller.jsonPartyOgranisationDataUpcomming[index].papularStatus == '0'
                                                                                 ? Card(
                                                                                     elevation: 5,
                                                                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -1190,15 +1208,13 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                           .jsonPartyOgranisationDataUpcomming[
                                                                       index];
                                                               if (controller.jsonPartyOgranisationDataUpcomming[
-                                                                          index]
-                                                                      [
-                                                                      'papular_status'] ==
+                                                                          index].papularStatus ==
                                                                   '1') {
                                                                 partyController
                                                                     .isPopular
                                                                     .value = true;
                                                                 print(
-                                                                    "Printing status :: ${controller.jsonPartyOgranisationDataUpcomming[index]['papular_status']}");
+                                                                    "Printing status :: ${controller.jsonPartyOgranisationDataUpcomming[index].papularStatus}");
                                                                 Get.to(CreateParty(
                                                                     isPopular:
                                                                         true));
@@ -1257,7 +1273,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
 
 class PartiesContainerWidget extends StatefulWidget {
   int lengthOfParties = 0;
-  dynamic jsonPartyData = {};
+  List<Party> jsonPartyData = [];
 
   PartiesContainerWidget(
       {required this.lengthOfParties, required this.jsonPartyData});
@@ -1302,19 +1318,28 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              if (widget.jsonPartyData[index]
-                                      ['papular_status'] ==
+                              if (widget.jsonPartyData[index].papularStatus ==
                                   '1') {
-                                Get.to(PartyPreview(
+                                /*Get.to(PartyPreview(
                                   isHistory: false,
                                   isPopularParty: true,
                                   data: widget.jsonPartyData[index],
+                                ));*/
+                                Get.to(PartyPreviewScreen(
+                                  isHistory: false,
+                                  isPopularParty: true,
+                                  party: widget.jsonPartyData[index],
                                 ));
                               } else {
-                                Get.to(PartyPreview(
+                                /*Get.to(PartyPreview(
                                   isHistory: false,
                                   isPopularParty: false,
                                   data: widget.jsonPartyData[index],
+                                ));*/
+                                Get.to(PartyPreviewScreen(
+                                  isHistory: false,
+                                  isPopularParty: false,
+                                  party: widget.jsonPartyData[index],
                                 ));
                               }
                             },
@@ -1327,15 +1352,14 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                     color: const Color(0xffffffff),
                                     borderRadius: BorderRadius.circular(17.0),
                                   ),
-                                  child: widget.jsonPartyData[index]
-                                              ['image_status'] ==
+                                  child: widget.jsonPartyData[index].imageStatus ==
                                           '1'
                                       ? ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(13.0),
                                           child: CachedNetworkImage(
                                             imageUrl:
-                                                '${widget.jsonPartyData[index]['cover_photo']}',
+                                                '${widget.jsonPartyData[index].coverPhoto}',
                                             fit: BoxFit.cover,
                                           ),
                                         )
@@ -1347,7 +1371,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                                 sigmaX: 8.0, sigmaY: 8.0),
                                             child: CachedNetworkImage(
                                               imageUrl:
-                                                  '${widget.jsonPartyData[index]['cover_photo']}',
+                                                  '${widget.jsonPartyData[index].coverPhoto}',
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -1389,7 +1413,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "${widget.jsonPartyData[index]['title']}"
+                                                "${widget.jsonPartyData[index].title}"
                                                     .capitalizeFirst!,
                                                 style: TextStyle(
                                                   overflow:
@@ -1410,7 +1434,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                               ),
                                               SizedBox(height: 3),
                                               Text(
-                                                "${widget.jsonPartyData[index]['description']}"
+                                                "${widget.jsonPartyData[index].description}"
                                                     .capitalizeFirst!,
                                                 style: TextStyle(
                                                   overflow:
@@ -1431,7 +1455,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                               ),
                                               SizedBox(height: 3),
                                               Text(
-                                                '${widget.jsonPartyData[index]['start_time']}',
+                                                '${widget.jsonPartyData[index].startTime}',
                                                 style: TextStyle(
                                                   fontFamily: 'malgun',
                                                   fontSize: 10.sp,
@@ -1459,30 +1483,40 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                                 partyController
                                                         .getPrefiledData =
                                                     widget.jsonPartyData[index];
-                                                if (widget.jsonPartyData[index]
-                                                        ['papular_status'] ==
+                                                if (widget.jsonPartyData[index].papularStatus ==
                                                     '1') {
                                                   partyController
                                                       .isPopular.value = true;
-                                                  Get.to(PartyPreview(
+                                                  /*Get.to(PartyPreview(
                                                     isHistory: false,
                                                     isPopularParty: true,
                                                     data: widget
+                                                        .jsonPartyData[index],
+                                                  ));*/
+                                                  Get.to(PartyPreviewScreen(
+                                                    isHistory: false,
+                                                    isPopularParty: true,
+                                                    party: widget
                                                         .jsonPartyData[index],
                                                   ));
                                                 } else {
                                                   partyController
                                                       .isPopular.value = false;
-                                                  Get.to(PartyPreview(
+                                               /*   Get.to(PartyPreview(
                                                     isHistory: false,
                                                     isPopularParty: false,
                                                     data: widget
                                                         .jsonPartyData[index],
+                                                  ));*/
+                                                  Get.to(PartyPreviewScreen(
+                                                    isHistory: false,
+                                                    isPopularParty: false,
+                                                    party: widget
+                                                        .jsonPartyData[index],
                                                   ));
                                                 }
                                               },
-                                              child: widget.jsonPartyData[index]
-                                                          ['approval_status'] !=
+                                              child: widget.jsonPartyData[index].approvalStatus !=
                                                       "1"
                                                   ? Card(
                                                       elevation: 5,
@@ -1506,8 +1540,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                                               child: Lottie.asset(
                                                                   'assets/127247-disapproved.json'))),
                                                     )
-                                                  : widget.jsonPartyData[index][
-                                                              'papular_status'] ==
+                                                  : widget.jsonPartyData[index].papularStatus ==
                                                           '1'
                                                       ? Container()
                                                       : Container()),
@@ -1522,17 +1555,17 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                       partyController.isEditable.value = true;
                                       partyController.getPrefiledData =
                                           widget.jsonPartyData[index];
-                                      partyController.partyId.value = partyController.getPrefiledData['id'];
-                                      if (widget.jsonPartyData[index]
-                                              ['papular_status'] ==
+                                      partyController.partyId.value = partyController.getPrefiledData.id!;
+                                      if (widget.jsonPartyData[index].papularStatus ==
                                           '1') {
                                         partyController.isPopular.value = true;
                                         Get.to(Get.to(
                                             CreateParty(isPopular: true)));
                                       } else {
                                         partyController.isPopular.value = false;
-                                        Get.to(Get.to(
-                                            CreateParty(isPopular: false)));
+                                        Get.to(
+                                            CreateParty(isPopular: false)
+                                        );
                                       }
                                     },
                                     child: CircleAvatar(

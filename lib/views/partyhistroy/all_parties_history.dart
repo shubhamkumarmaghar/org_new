@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:adobe_xd/gradient_xd_transform.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,8 +9,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:partypeoplebusiness/controller/organisation/dashboard/organization_dashboard.dart';
-import 'package:partypeoplebusiness/views/organization/party_preview/party_preview.dart';
+import 'package:partypeoplebusiness/views/partyhistroy/party_history_controller/party_History_controller.dart';
 import 'package:sizer/sizer.dart';
+
+import '../../model/partyModel/partyDataModel.dart';
+import '../organization/party_preview/party_preview_screen_new.dart';
 
 class AllPartiesHistory extends StatefulWidget {
   const AllPartiesHistory({Key? key}) : super(key: key);
@@ -20,15 +24,13 @@ class AllPartiesHistory extends StatefulWidget {
 
 class _AllPartiesHistoryState extends State<AllPartiesHistory> {
   var data;
-  List<dynamic> allParties = [];
-  String status = '0';
-  bool isLoading = false;
+  //List<Party> allParties = [];
   OrganizationDashboardController dashboardController = Get.find();
 
-  getAllPartiesHistory() async {
-    setState(() {
-      isLoading = true;
-    });
+ /* getAllPartiesHistory() async {
+
+      dashboardController.isLoading.value = true;
+
 
     try {
       http.Response response = await http.post(
@@ -42,38 +44,39 @@ class _AllPartiesHistoryState extends State<AllPartiesHistory> {
           'status': '0',
         },
       );
-
+      log('abcd ${jsonDecode(response.body)}');
       var decodedData = jsonDecode(response.body);
       print(decodedData);
       if (decodedData != null) {
         setState(() {
-          status = '1';
+          //status = '1';
         });
       }
       setState(() {
         allParties = decodedData['data'];
 
         allParties.sort((a, b) {
-          DateTime startDateA = DateTime.parse(a['start_date']);
-          DateTime startDateB = DateTime.parse(b['start_date']);
+          DateTime startDateA = DateTime.parse('${a.startDate}');
+          DateTime startDateB = DateTime.parse('${b.startDate}');
           return startDateA.compareTo(startDateB);
         });
         allParties = allParties.reversed.toList(); // Reversing the list
 
-        isLoading = false;
+        dashboardController.isLoading.value = false;
       });
     } catch (error) {
       print('Error: $error');
       setState(() {
-        status = '0';
-        isLoading = false;
+        //status = '0';
+        dashboardController.isLoading.value = false;
       });
     }
   }
+*/
 
   @override
   void initState() {
-    getAllPartiesHistory();
+ //   getAllPartiesHistory();
     super.initState();
   }
 
@@ -85,69 +88,76 @@ class _AllPartiesHistoryState extends State<AllPartiesHistory> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: isLoading == true
-          ? const Center(
-              child: CupertinoActivityIndicator(
-              radius: 15,
-              color: Colors.black,
-            ))
-          : status == '0'
+      body:
+      GetBuilder<PartyHistoryController>(
+        init: PartyHistoryController(),
+        builder:(controller) {
+          return controller.isLoading == true
               ? const Center(
-                  child: Text("No Data Found"),
-                )
-              : Stack(
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: RadialGradient(
-                          center: Alignment(1, -0.45),
-                          radius: 0.9,
-                          colors: [
-                            Color(0xff7e160a),
-                            Color(0xff2e0303),
-                          ],
-                          stops: [0.0, 1],
-                          transform: GradientXDTransform(
-                            0.0,
-                            -1.0,
-                            1.23,
-                            0.0,
-                            -0.115,
-                            1.0,
-                            Alignment(0.0, 0.0),
-                          ),
-                        ),
-                      ),
+              child: CupertinoActivityIndicator(
+                radius: 15,
+                color: Colors.black,
+              ))
+              :  Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(1, -0.45),
+                    radius: 0.9,
+                    colors: [
+                      Color(0xff7e160a),
+                      Color(0xff2e0303),
+                    ],
+                    stops: [0.0, 1],
+                    transform: GradientXDTransform(
+                      0.0,
+                      -1.0,
+                      1.23,
+                      0.0,
+                      -0.115,
+                      1.0,
+                      Alignment(0.0, 0.0),
                     ),
-                    ListView.builder(
-                      itemCount: allParties.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(PartyPreview(
+                  ),
+                ),
+              ),
+              ListView.builder(
+                itemCount: controller.allParties.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      /*Get.to(PartyPreview(
                               data: allParties[index],
                               isPopularParty: false,
                               isHistory: true,
-                            ));
-                          },
-                          child: CustomListTile(
-                            endTime: '${allParties[index]['end_time']}',
-                            startTime: '${allParties[index]['start_time']}',
-                            endDate: '${allParties[index]['end_date']}',
-                            startDate: '${allParties[index]['start_date']}',
-                            title: '${allParties[index]['title']}',
-                            subtitle: '${allParties[index]['description']}',
-                            trailingText: "Trailing Text",
-                            leadingImage: '${allParties[index]['cover_photo']}',
-                            leadingIcon: const Icon(Icons.history),
-                            trailingIcon: const Icon(Icons.add),
-                            city: '${allParties[index]['city_id']}',
-                          ),
-                        );
-                      },
+                            ));*/
+                      Get.to(PartyPreviewScreen(
+                        party: controller.allParties[index],
+                        isPopularParty: false,
+                        isHistory: true,
+                      ));
+                    },
+                    child: CustomListTile(
+                      endTime: '${controller.allParties[index].endTime}',
+                      startTime: '${controller.allParties[index].startTime}',
+                      endDate: '${controller.allParties[index].endDate}',
+                      startDate: '${controller.allParties[index].startDate}',
+                      title: '${controller.allParties[index].title}',
+                      subtitle: '${controller.allParties[index].description}',
+                      trailingText: "Trailing Text",
+                      leadingImage: '${controller.allParties[index].coverPhoto}',
+                      leadingIcon: const Icon(Icons.history),
+                      trailingIcon: const Icon(Icons.add),
+                      city: '${controller.allParties[index].city}',
                     ),
-                  ],
-                ),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      )
     );
   }
 }

@@ -143,22 +143,26 @@ class _CreatePartyState extends State<CreateParty> {
   PartyController controller = Get.put(PartyController());
 
   fillFieldPreFilled() async {
-    controller.timeline.value = '${controller.getPrefiledData['cover_photo']}';
-    controller.title.text = controller.getPrefiledData['title'];
-    controller.description.text = controller.getPrefiledData['description'];
-    controller.mobileNumber.text = controller.getPrefiledData['phone_number'];
-    controller.startDate.text = controller.getPrefiledData['start_date'];
-    controller.endDate.text = controller.getPrefiledData['end_date'];
-    controller.startTime.text = controller.getPrefiledData['start_time'];
-    controller.endTime.text = controller.getPrefiledData['end_time'];
-    controller.peopleLimit.text = controller.getPrefiledData['person_limit'];
-    controller.startPeopleAge.text = controller.getPrefiledData['start_age'];
-    controller.endPeopleAge.text = controller.getPrefiledData['end_age'];
-    controller.offersText.text = controller.getPrefiledData['offers'];
-    controller.ladiesPrice.text = controller.getPrefiledData['ladies'];
-    controller.stagPrice.text = controller.getPrefiledData['stag'];
-    controller.othersPrice.text = controller.getPrefiledData['others'];
-    controller.couplesPrice.text = controller.getPrefiledData['couples'];
+    controller.timeline.value = '${controller.getPrefiledData.coverPhoto}';
+    controller.title.text = controller.getPrefiledData.title!;
+    controller.description.text = controller.getPrefiledData.description!;
+    controller.mobileNumber.text = controller.getPrefiledData.phoneNumber!;
+    controller.startDate.text = controller.getPrefiledData.startDate!;
+    controller.endDate.text = controller.getPrefiledData.endDate!;
+    controller.startTime.text = controller.getPrefiledData.startTime!;
+    controller.endTime.text = controller.getPrefiledData.endTime!;
+    controller.peopleLimit.text = controller.getPrefiledData.personLimit!;
+    controller.startPeopleAge.text = controller.getPrefiledData.startAge!;
+    controller.endPeopleAge.text = controller.getPrefiledData.endAge!;
+    controller.offersText.text = controller.getPrefiledData.offers!;
+    controller.ladiesPrice.text = controller.getPrefiledData.ladies!;
+    controller.stagPrice.text = controller.getPrefiledData.stag!;
+    controller.othersPrice.text = controller.getPrefiledData.others!;
+    controller.couplesPrice.text = controller.getPrefiledData.couples!;
+    controller.pincode.text = controller.getPrefiledData.pincode!;
+    controller.location.text = controller.getPrefiledData.latitude!;
+    controller.state.value = controller.getPrefiledData.state!;
+
   }
 
   nonField() {
@@ -179,6 +183,8 @@ class _CreatePartyState extends State<CreateParty> {
       controller.stagPrice.text = '';
       controller.othersPrice.text = '';
       controller.couplesPrice.text = '';
+      controller.pincode.text='';
+      controller.location.text='';
     });
   }
 

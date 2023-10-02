@@ -8,13 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:partypeoplebusiness/controller/party_controller.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../../model/partyModel/partyDataModel.dart';
 import '../../../../widgets/webView.dart';
 import '../controllers/subscription_controller.dart';
 
 // ignore: must_be_immutable
 class SubscriptionView extends StatefulWidget {
   String id;
-  var data;
+  Party data;
 
   SubscriptionView({required this.id, required this.data});
 
@@ -214,12 +215,12 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                 color: Colors.white,
               ),
               title: Text(
-                "${widget.data['title']}".capitalizeFirst!,
+                "${widget.data.title}".capitalizeFirst!,
                 style: const TextStyle(
                     fontFamily: 'malgun', fontSize: 17, color: Colors.white),
               ),
               subtitle: Text(
-                "${widget.data['description']}".capitalizeFirst!,
+                "${widget.data.description}".capitalizeFirst!,
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -234,7 +235,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                     fontFamily: 'malgun', fontSize: 17, color: Colors.white),
               ),
               subtitle: Text(
-                "${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['start_date']))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['end_date']))}",
+                "${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.data.startDate}'))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.data.endDate}'))}",
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -244,9 +245,9 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                   child: GestureDetector(
                     onTap: () {
                       DateTime startDate =
-                          DateTime.parse(widget.data['start_date']);
+                          DateTime.parse('${widget.data.startDate}');
                       DateTime endDate =
-                          DateTime.parse(widget.data['end_date']);
+                          DateTime.parse('${widget.data.endDate}');
                       partyController.getStartDatePop(
                           context, startDate, endDate);
                     },
@@ -254,9 +255,9 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                       title: 'Popular Start Date',
                       passGesture: () {
                         DateTime startDate =
-                            DateTime.parse(widget.data['start_date']);
+                        DateTime.parse('${widget.data.startDate}');
                         DateTime endDate =
-                            DateTime.parse(widget.data['end_date']);
+                        DateTime.parse('${widget.data.endDate}');
                         partyController.getStartDatePop(
                             context, startDate, endDate);
                       },
@@ -280,9 +281,9 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                     child: GestureDetector(
                       onTap: () {
                         DateTime startDate =
-                            DateTime.parse(widget.data['start_date']);
+                        DateTime.parse('${widget.data.startDate}');
                         DateTime endDate =
-                            DateTime.parse(widget.data['end_date']);
+                        DateTime.parse('${widget.data.endDate}');
                         if (partyController
                             .popular_start_date.text.isNotEmpty) {
                           partyController.getEndDatePop(
@@ -293,9 +294,9 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                         title: 'Popular End Date',
                         passGesture: () {
                           DateTime startDate =
-                              DateTime.parse(widget.data['start_date']);
+                          DateTime.parse('${widget.data.startDate}');
                           DateTime endDate =
-                              DateTime.parse(widget.data['end_date']);
+                          DateTime.parse('${widget.data.endDate}');
                           if (partyController
                               .popular_start_date.text.isNotEmpty) {
                             partyController.getEndDatePop(
@@ -391,7 +392,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                   else {
                     selectPlanBottom(
                       context: context, amount: '499', startDate: '${partyController
-                        .popular_start_date.text} ${widget.data['start_time']}', endDate: '${partyController
+                        .popular_start_date.text} ${widget.data.startTime}', endDate: '${partyController
                         .popular_end_date.text}');
                   }
                   },
@@ -470,16 +471,16 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                       WebViewContainer(url:'https://app.partypeople.in/easebuzz/easebuzz.php?api_name=initiate_payment'
                       '&amount=${double.parse(totalamount)}'
                   // '&amount=${double.parse('10')}'
-                      '&phone=${widget.data['phone_number']}'
+                      '&phone=${widget.data.phoneNumber}'
                       '&email=${partyController.email.value.text}'
-                      '&firstname=${widget.data['organization']}'
-                      '&country=${widget.data['country']}'
-                      '&state=${widget.data['state']}'
-                      '&city=${widget.data['city']}'
+                      '&firstname=${widget.data.organization}'
+                      '&country=${widget.data.country}'
+                      '&state=${widget.data.state}'
+                      '&city=${widget.data.city}'
                       '&order_id=${subscriptionController.subsOrderId}'
-                      '&zipcode=${widget.data['pincode']}'
+                      '&zipcode=${widget.data.pincode}'
                       '&usertype=Organization',
-                          partyId:widget.data['id'],
+                          partyId:'${widget.data.id}',
                       start_Date:startDate ,
                       end_Date:endDate),
                  );

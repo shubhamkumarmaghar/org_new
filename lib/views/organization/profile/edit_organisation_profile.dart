@@ -127,7 +127,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                   child: Text('Edit Profile',
                       style: TextStyle(
                         fontFamily: 'malgun',
-                        fontSize: 13.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.0,
                         color: Colors.white,
@@ -147,7 +147,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                         () => Stack(
                           children: [
                             SizedBox(
-                              height: 200,
+                              height: Get.height*0.25,
                               width: double.maxFinite,
                               child: controller.timeline.value != ''
                                   ? controller.isLoading.value == true
@@ -156,24 +156,32 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                                           radius: 15,
                                           color: Colors.black,
                                         ))
-                                      : Card(
-                                          child: CachedNetworkImageWidget(
-                                              imageUrl:
-                                                  controller.timeline.value,
-                                              width: Get.width,
-                                              height: 200,
-                                              fit: BoxFit.fill,
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      const Icon(
-                                                          Icons.error_outline),
-                                              placeholder: (context, url) =>
-                                                  const Center(
-                                                      child:
-                                                          CupertinoActivityIndicator(
-                                                              color:
-                                                                  Colors.black,
-                                                              radius: 15))))
+                                      : Card(shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15.0),
+                          bottomRight: Radius.circular(15.0),
+                          topLeft: Radius.circular(15.0),
+                          topRight: Radius.circular(15.0),
+                        ),),
+                                          child: ClipRRect(borderRadius: BorderRadius.circular(15),
+                                            child: CachedNetworkImageWidget(
+                                                imageUrl:
+                                                    controller.timeline.value,
+                                                width: Get.width,
+                                                height: Get.height*0.25,
+                                                fit: BoxFit.fill,
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(
+                                                            Icons.error_outline),
+                                                placeholder: (context, url) =>
+                                                    const Center(
+                                                        child:
+                                                            CupertinoActivityIndicator(
+                                                                color:
+                                                                    Colors.black,
+                                                                radius: 15))),
+                                          ))
                                   : Card(
                                       child: Lottie.asset(
                                         'assets/127619-photo-click.json',
@@ -215,7 +223,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
 
                     ///TODO: ADD CACHED IMAGE PLACEHOLDER
                     Positioned(
-                      bottom: 0,
+                      bottom: 5,
                       left: MediaQuery.of(context).size.width / 2.9,
                       child: GestureDetector(
                         onTap: () {

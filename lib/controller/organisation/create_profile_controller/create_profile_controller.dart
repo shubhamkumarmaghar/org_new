@@ -281,6 +281,7 @@ class CreteOrganisationProfileController extends GetxController {
       name.text = jsonDecode(response.body)['data'][0]['name'];
       branches.text = jsonDecode(response.body)['data'][0]['branch'] ?? '';
       description.text = jsonDecode(response.body)['data'][0]['description'];
+      fullAddress.text = jsonDecode(response.body)['data'][0]['description'];
       timeline.value =
           "${jsonDecode(response.body)['data'][0]['timeline_pic']}";
       profile.value = "${jsonDecode(response.body)['data'][0]['profile_pic']}";

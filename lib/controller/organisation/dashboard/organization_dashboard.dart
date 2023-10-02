@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+
+import '../../../model/partyModel/partyDataModel.dart';
 
 class OrganizationDashboardController extends GetxController {
   //TODO: Implement OrganizationProfileNewController
@@ -37,13 +40,14 @@ class OrganizationDashboardController extends GetxController {
   RxInt lengthOfTommParties = 0.obs;
   RxInt lengthOfUpcomingParties = 0.obs;
   RxString phoneNumber = ''.obs;
-  dynamic jsonPartyOgranisationDataToday = {}.obs;
 
-  dynamic jsonPartyOgranisationDataTomm = {}.obs;
+  RxList<Party> jsonPartyOrganisationDataToday = <Party>[].obs;
 
-  dynamic jsonPartyPopularData = {}.obs;
+  RxList<Party> jsonPartyOrganisationDataTomm = <Party>[].obs;
 
-  dynamic jsonPartyOgranisationDataUpcomming = {}.obs;
+  RxList<Party> jsonPartyOgranisationDataUpcomming = <Party>[].obs;
+
+  RxList<Party> jsonPartyPopularData = <Party>[].obs;
 
   RxInt popularPartyLength = 0.obs;
   RxBool isLoading = false.obs;
@@ -54,9 +58,9 @@ class OrganizationDashboardController extends GetxController {
     super.onInit();
     getAPIOverview();
 
-    Timer.periodic(Duration(seconds: 3), (timer) {
+    /*Timer.periodic(Duration(seconds: 3), (timer) {
       getAPIOverview();
-    });
+    });*/
   }
 
   Future<void> getAPIOverview() async {
@@ -126,6 +130,7 @@ class OrganizationDashboardController extends GetxController {
 
   Future<void> getPartyByDate() async {
     try {
+      log('tokennnnnnnnnnnnn ${GetStorage().read('token')}');
       http.Response response = await http.post(
         Uri.parse(
             'https://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
@@ -135,13 +140,14 @@ class OrganizationDashboardController extends GetxController {
         },
         headers: {'x-access-token': '${GetStorage().read('token')}'},
       );
+
       dynamic decodedData = jsonDecode(response.body);
       print(decodedData);
 
       // Initialize lists to store parties
-      List<dynamic> todayParties = [];
-      List<dynamic> tomorrowParties = [];
-      List<dynamic> upcomingParties = [];
+      List<Party> todayParties = [];
+      List<Party> tomorrowParties = [];
+      List<Party> upcomingParties = [];
 
       // Get current date
       DateTime now = DateTime.now();
@@ -157,13 +163,18 @@ class OrganizationDashboardController extends GetxController {
           return startDateA.compareTo(startDateB);
         });
         for (var party in allParties) {
+          log('gkjhgh');
           DateTime startDate = DateTime.parse(party['start_date']);
+          log('gkjhgh  ${startDate.toString()}');
+          log(party.toString());
+          Party parsedParty = Party.fromJson(party);
+          log('gkjhgh  ${parsedParty.startDate}');
           if (startDate.isAtSameMomentAs(today)) {
-            todayParties.add(party);
+            todayParties.add(parsedParty);
           } else if (startDate.isAtSameMomentAs(tomorrow)) {
-            tomorrowParties.add(party);
+            tomorrowParties.add(parsedParty);
           } else if (startDate.isAfter(tomorrow)) {
-            upcomingParties.add(party);
+            upcomingParties.add(parsedParty);
           }
         }
       }
@@ -178,11 +189,11 @@ class OrganizationDashboardController extends GetxController {
       print('Upcoming parties:');
       print(upcomingParties.length);
 
-      jsonPartyOgranisationDataToday = todayParties;
+      jsonPartyOrganisationDataToday.value = todayParties;
       lengthOfTodayParties.value = todayParties.length;
-      jsonPartyOgranisationDataTomm = tomorrowParties;
+      jsonPartyOrganisationDataTomm.value = tomorrowParties;
       lengthOfTommParties.value = tomorrowParties.length;
-      jsonPartyOgranisationDataUpcomming = upcomingParties;
+      jsonPartyOgranisationDataUpcomming.value = upcomingParties;
       lengthOfUpcomingParties.value = upcomingParties.length;
 
       await http.post(
@@ -214,10 +225,17 @@ class OrganizationDashboardController extends GetxController {
     } catch (e) {
       print('Error decoding JSON: $e');
     }
+    List<Party> popularParties = [];
     if (jsonDecodedData['data'] != null) {
       if (jsonDecodedData['data'].length != 0) {
-        jsonPartyPopularData = jsonDecodedData['data'];
-        popularPartyLength.value = jsonDecodedData['data'].length;
+        List<dynamic> allPopularParties = jsonDecodedData['data'];
+        jsonPartyPopularData.clear();
+        for(var party in allPopularParties)
+          {
+            popularParties.add(Party.fromJson(party));
+          }
+        jsonPartyPopularData.value = popularParties;
+        popularPartyLength.value = jsonPartyPopularData.length;
       }
     }
   }

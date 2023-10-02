@@ -8,13 +8,14 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:partypeoplebusiness/views/login_user/login_screen.dart';
 import 'package:partypeoplebusiness/views/organization/profile/edit_organisation_profile.dart';
-import 'package:partypeoplebusiness/views/organization/side_drawer/all_parties_history.dart';
+import 'package:partypeoplebusiness/views/partyhistroy/all_parties_history.dart';
 import 'package:partypeoplebusiness/views/organization/side_drawer/settings_view.dart';
 import 'package:partypeoplebusiness/views/organization/side_drawer/verification_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../organization_transction_report/view/transction_screen.dart';
+import '../../../widgets/logout_dialouge.dart';
 import '../../faq_screen.dart';
 
 // class DrawerView extends GetView<DrawerController2> {
@@ -61,12 +62,15 @@ class _DrawerViewState extends State<DrawerView> {
         body: Stack(
           children: [
             Container(
+              margin: EdgeInsets.all(Get.width*0.025),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
+
               child: ListView(children: [
                 widget.imageApproval != '1'
                     ? Stack(
                         children: [
+
                           CoverPhotoAndProfileWidget(
                               coverPhotoUrl: widget.timeLineImage,
                               profilePhotoUrl: widget.profileImageView),
@@ -140,9 +144,10 @@ class _DrawerViewState extends State<DrawerView> {
                   title: 'Logout',
                   icon: Icons.login_outlined,
                   onTap: () {
-                    GetStorage().remove('token');
-                    GetStorage().remove('loggedIn');
-                    Get.offAll(LoginView());
+                   // GetStorage().remove('token');
+                    //GetStorage().remove('loggedIn');
+                    showLogoutAlertDialog(context);
+                   // Get.offAll(LoginView());
                   },
                 ),
               ]),
@@ -233,8 +238,10 @@ class CoverPhotoAndProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200.0,
+
+      height: Get.height*0.28,
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Get.width*0.055),
         image: DecorationImage(
           image: CachedNetworkImageProvider(coverPhotoUrl),
           fit: BoxFit.cover,
@@ -245,8 +252,9 @@ class CoverPhotoAndProfileWidget extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              width: 100.0,
-              height: 100.0,
+              width: Get.width*0.26,
+              height: Get.width*0.26,
+              margin: EdgeInsets.only(bottom: Get.width*0.009),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(

@@ -12,6 +12,7 @@ import 'package:partypeoplebusiness/controller/organisation/dashboard/organizati
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 
 import '../constants/statecity/model/state_model.dart';
+import '../model/partyModel/partyDataModel.dart';
 
 class PartyController extends GetxController {
   List<StateName> stateName = [] ;
@@ -58,7 +59,7 @@ class PartyController extends GetxController {
   RxBool isPopular = false.obs;
   var partyStatusChange = "".obs;
 
-  var getPrefiledData;
+  late Party getPrefiledData;
   RxBool isEditable = false.obs;
 
   @override
@@ -275,7 +276,6 @@ class PartyController extends GetxController {
       'x-access-token': '${GetStorage().read('token')}'
       // 'Cookie': 'ci_session=f72b54d682c45ebf19fcc0fd54cef39508588d0c'
     };
-log('kkkkkkkkkkkkkkkkkkkkkkk $city, $state, India');
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://app.partypeople.in/v1/party/update'));
     request.fields.addAll({
@@ -311,7 +311,7 @@ log('kkkkkkkkkkkkkkkkkkkkkkk $city, $state, India');
       'stag': stagPrice.text,
       'couples': couplesPrice.text,
       'others': othersPrice.text,
-      'party_id': '${getPrefiledData['id']}',
+      'party_id': '${getPrefiledData.id}',
       'cover_photo': timeline.value
       // 'organization_id': '1'
     });
@@ -355,6 +355,8 @@ log('kkkkkkkkkkkkkkkkkkkkkkk $city, $state, India');
   OrganizationDashboardController organisationProfileController =
       Get.put(OrganizationDashboardController());
 
+  // work with firebase
+/*
   void savePartyPopular(String partyId, String popular_start_date,
       String popular_end_date, var data) async {
     // Get the Firestore instance.
@@ -400,6 +402,7 @@ log('kkkkkkkkkkkkkkkkkkkkkkk $city, $state, India');
     // Print a message to the console.
     print('Party saved successfully!');
   }
+*/
 
   sendRequst() async {
     isLoading.value = true;

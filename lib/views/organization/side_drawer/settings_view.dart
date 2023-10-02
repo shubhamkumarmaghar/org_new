@@ -85,12 +85,12 @@ class _SettingsViewState extends State<SettingsView> {
     scheme: 'mailto',
     path: 'partypeople03112022@gmail.com',
     query:
-        'subject=Contact Party People&body=App Version 3.23', //add subject and body here
+        'subject=Contact Party People&body=', //add subject and body here
   );
 
-  final Uri linkForTerms = Uri.parse('https://www.partypeople.in/termss_and_condotion');
+  final Uri linkForTerms = Uri.parse('https://partypeople.in/terms_and_condotion');
   final Uri linkForAbout = Uri.parse('https://partypeople.in/about_us');
-  final Uri linkForPrivacy = Uri.parse('https://www.partypeople.in/privacy_policy');
+  final Uri linkForPrivacy = Uri.parse('https://partypeople.in/privacy_policy');
 
   bool lockAppSwitchVal = true;
   bool like = true;
@@ -113,8 +113,8 @@ class _SettingsViewState extends State<SettingsView> {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               colorScheme: ColorScheme.fromSwatch().copyWith(
-                primary: Colors.redAccent,
-                secondary: Colors.redAccent,
+                primary: Colors.red.shade900,
+                secondary: Colors.red.shade900,
               ),
             ),
             home: Scaffold(
@@ -128,12 +128,12 @@ class _SettingsViewState extends State<SettingsView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                   /*   Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text("Post Approval", style: headingStyle),
                         ],
-                      ),
+                      ),*/
                       ListTile(
                         onTap: () {
                           showAlertDialog(context);
@@ -149,12 +149,12 @@ class _SettingsViewState extends State<SettingsView> {
                         ),
                       ),
                       const Divider(),
-                      Row(
+                     /* Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text("Misc", style: headingStyle),
                         ],
-                      ),
+                      ),*/
                       ListTile(
                         onTap: () async {
                           var url = linkForTerms.toString();
@@ -164,7 +164,7 @@ class _SettingsViewState extends State<SettingsView> {
                             throw 'Could not launch $url';
                           }
                         },
-                        leading: const Icon(Icons.file_open_outlined),
+                        leading: const Icon(Icons.file_open_outlined,color: Colors.red,),
                         title: const Text("Terms of Service"),
                       ),
                       const Divider(),
@@ -177,7 +177,7 @@ class _SettingsViewState extends State<SettingsView> {
                             throw 'Could not launch $url';
                           }
                         },
-                        leading: const Icon(Icons.file_copy_outlined),
+                        leading: const Icon(Icons.file_copy_outlined,color: Colors.red,),
                         title: const Text("Contact Us"),
                       ),
                       const Divider(),
@@ -190,7 +190,7 @@ class _SettingsViewState extends State<SettingsView> {
                             throw 'Could not launch $url';
                           }
                         },
-                        leading: const Icon(Icons.file_open_outlined),
+                        leading: const Icon(Icons.file_open_outlined,color: Colors.red,),
                         title: const Text("About us"),
                       ),
                       const Divider(),
@@ -203,7 +203,7 @@ class _SettingsViewState extends State<SettingsView> {
                             throw 'Could not launch $url';
                           }
                         },
-                        leading: const Icon(Icons.file_copy_outlined),
+                        leading: const Icon(Icons.file_copy_outlined,color: Colors.red,),
                         title: const Text("Privacy Policy"),
                       ),
                     ],

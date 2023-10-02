@@ -11,6 +11,7 @@ import 'package:partypeoplebusiness/constants/cached_image_placeholder.dart';
 import 'package:partypeoplebusiness/controller/party_controller.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../model/partyModel/partyDataModel.dart';
 import '../../party/party_amenities.dart';
 import '../subscription/views/subscription_view.dart';
 
@@ -23,7 +24,7 @@ class Amenity {
 
 class PartyPreview extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
-  var data;
+  Party data;
 
   bool isPopularParty;
   bool isHistory;
@@ -66,8 +67,9 @@ class _PartyPreviewState extends State<PartyPreview> {
   PartyController controller = Get.put(PartyController());
 
   void getSelectedID() {
-    for (var i = 0; i < widget.data['party_amenitie'].length; i++) {
-      var amenityName = widget.data['party_amenitie'][i]['name'];
+    int? len = widget.data.partyAmenitie?.length;
+    for (var i = 0; i < len!; i++) {
+      var amenityName = widget.data.partyAmenitie?[i].name;
       print(amenityName);
       setState(() {
         _categories.forEach((category) {
@@ -88,7 +90,7 @@ class _PartyPreviewState extends State<PartyPreview> {
   @override
   void initState() {
     _fetchData();
-    controller.partyId.value = widget.data['id'];
+    controller.partyId.value = widget.data.id!;
     super.initState();
   }
 
@@ -104,7 +106,7 @@ class _PartyPreviewState extends State<PartyPreview> {
             const SizedBox(
               height: 15,
             ),
-            widget.data['image_status'] == '1'
+            widget.data.imageStatus == '1'
                 ? Container(
                     padding: EdgeInsets.zero,
                     height: 200,
@@ -113,7 +115,7 @@ class _PartyPreviewState extends State<PartyPreview> {
                     ),
                     width: Get.width,
                     child: CachedNetworkImageWidget(
-                        imageUrl: '${widget.data['cover_photo']}',
+                        imageUrl: '${widget.data.coverPhoto}',
                         width: Get.width,
                         height: 160,
                         fit: BoxFit.cover,
@@ -138,7 +140,7 @@ class _PartyPreviewState extends State<PartyPreview> {
                       imageFilter:
                           ui.ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
                       child: CachedNetworkImageWidget(
-                          imageUrl: '${widget.data['cover_photo']}',
+                          imageUrl: '${widget.data.coverPhoto}',
                           width: Get.width,
                           height: 160,
                           fit: BoxFit.fill,
@@ -158,7 +160,7 @@ class _PartyPreviewState extends State<PartyPreview> {
             ),
             Center(
               child: Text(
-                "${widget.data['title']}".capitalizeFirst!,
+                "${widget.data.title}".capitalizeFirst!,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                     fontFamily: 'malgun',
@@ -172,7 +174,7 @@ class _PartyPreviewState extends State<PartyPreview> {
             ),
             Center(
               child: Text(
-                "${widget.data['description']}".capitalizeFirst!,
+                "${widget.data.description}".capitalizeFirst!,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: 'malgun',
@@ -189,64 +191,64 @@ class _PartyPreviewState extends State<PartyPreview> {
                 ? Container()
                 : widget.isPopularParty == false
                     ? BoostButton(
-                        color: widget.data['approval_status'] != '1'
+                        color: widget.data.approvalStatus != '1'
                             ? Colors.grey.shade300
                             : Colors.purple.shade900,
                         label: 'Boost Post',
                         onPressed: () {
-                          if (widget.data['approval_status'] != '1') {
+                          if (widget.data.approvalStatus != '1') {
                           } else {
                             Get.to(SubscriptionView(
-                                id: widget.data['id'], data: widget.data));
+                                id: '${widget.data.id}', data: widget.data));
                           }
                         })
                     : Container(),
             const Divider(),
-            widget.data['pr_start_date'] != null
+            widget.data.prStartDate != null
                 ? CustomListTile(
                     icon: Icons.calendar_month,
                     title: "Popular Party Dates",
                     subtitle:
-                        "${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['pr_start_date']))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['pr_end_date']))}",
+                        "${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.data.prStartDate}'))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.data.prEndDate}'))}",
                   )
                 : Container(),
 
            CustomListTile(
               icon: Icons.location_on_rounded,
               title: "Party Address",
-              subtitle:widget.data['latitude'] + " , " + widget.data['longitude'])
+              subtitle:widget.data.latitude! + " , " + widget.data.longitude!)
                 ,
             CustomListTile(
               icon: Icons.calendar_month,
               title: "Party Start & End Dates",
               subtitle:
-                  "${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['start_date']))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse(widget.data['end_date']))}",
+                  "${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.data.startDate}'))} to ${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.data.endDate}'))}",
             ),
             CustomListTile(
               icon: Icons.punch_clock_sharp,
               title: "Party Timings",
               subtitle:
-                  "${widget.data['start_time']} to ${widget.data['end_time']}",
+                  "${widget.data.startTime} to ${widget.data.endTime}",
             ),
             CustomListTile(
               icon: Icons.favorite,
               title: "Party Likes",
-              subtitle: "${widget.data['like']} Likes",
+              subtitle: "${widget.data.like} Likes",
             ),
             CustomListTile(
               icon: Icons.remove_red_eye_sharp,
               title: "Party Views",
-              subtitle: "${widget.data['view']} Views",
+              subtitle: "${widget.data.view} Views",
             ),
             CustomListTile(
               icon: Icons.group_add,
               title: "Party Goings",
-              subtitle: "${widget.data['ongoing']} Goings",
+              subtitle: "${widget.data.ongoing} Goings",
             ),
             CustomListTile(
               icon: Icons.supervised_user_circle_outlined,
               title: "Gender Allowed",
-              subtitle: "${widget.data['gender']}"
+              subtitle: "${widget.data.gender}"
                   .replaceAll('[', '')
                   .replaceAll(']', '')
                   .capitalizeFirst!,
@@ -254,23 +256,23 @@ class _PartyPreviewState extends State<PartyPreview> {
             CustomListTile(
               icon: Icons.phone,
               title: "Party Contact Number",
-              subtitle: "${widget.data['phone_number']}",
+              subtitle: "${widget.data.phoneNumber}",
             ),
             CustomListTile(
               icon: Icons.group,
               title: "Age Allowed Between",
               subtitle:
-                  "${widget.data['start_age']} - ${widget.data['end_age']} ",
+                  "${widget.data.startAge} - ${widget.data.endAge} ",
             ),
             CustomListTile(
               icon: Icons.warning,
               title: "Persons Limit",
-              subtitle: "${widget.data['person_limit']}",
+              subtitle: "${widget.data.personLimit}",
             ),
             CustomListTile(
               icon: Icons.local_offer,
               title: "Offers",
-              subtitle: "${widget.data['offers']}",
+              subtitle: "${widget.data.offers}",
             ),
             SizedBox(
               height: 10,
@@ -345,38 +347,38 @@ class _PartyPreviewState extends State<PartyPreview> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            widget.data['ladies'] == '0'
+                            widget.data.ladies == '0'
                                 ? Text(
                                     "  - NA",
                                     style: TextStyle(color: Colors.white),
                                   )
                                 : Text(
-                                    "  - ₹ ${widget.data['ladies']}",
+                                    "  - ₹ ${widget.data.ladies}",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                            widget.data['couples'] == '0'
+                            widget.data.couples == '0'
                                 ? Text(
                                     "  - NA",
                                     style: TextStyle(color: Colors.white),
                                   )
                                 : Text(
-                                    "  - ₹ ${widget.data['couples']}",
+                                    "  - ₹ ${widget.data.couples}",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                            widget.data['stag'] == '0'
+                            widget.data.stag == '0'
                                 ? Text(
                                     "  - NA",
                                     style: TextStyle(color: Colors.white),
                                   )
                                 : Text(
-                                    "  - ₹ ${widget.data['stag']}",
+                                    "  - ₹ ${widget.data.stag}",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                            widget.data['others'] == '0'
+                            widget.data.others == '0'
                                 ? Text("  - NA",
                                     style: TextStyle(color: Colors.white))
                                 : Text(
-                                    "  - ₹ ${widget.data['others']}",
+                                    "  - ₹ ${widget.data.others}",
                                     style: TextStyle(color: Colors.white),
                                   ),
                           ],
