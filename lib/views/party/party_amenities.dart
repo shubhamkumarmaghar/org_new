@@ -129,7 +129,7 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
     _fetchData();
   }
 
-  @override
+/*  @override
   void dispose() {
     controller.timeline.value = '';
     controller.title.text = '';
@@ -149,6 +149,7 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
     controller.couplesPrice.text = '';
     super.dispose();
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +158,9 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
         title: Text(
           'Select Parties Amenities',
           style: TextStyle(fontSize: 13.sp),
-        ),
+        ),leading: GestureDetector(onTap:(){
+          Navigator.pop(context);},
+          child: Icon(Icons.arrow_back,)),
       ),
       body: _categoryLists.isEmpty
           ? Container(
@@ -226,7 +229,14 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
                             alignment: Alignment.center,
                             child: AmenitiesButton(() {
                               if (controller.isEditable.value == true) {
-                                controller.sendEditParty();
+                                if(controller.isRepostParty.value == true)
+                                  {
+                                    controller.sendRequst();
+                                  }
+                                else{
+                                  controller.sendEditParty();
+                                }
+
                               } else {
                                 controller.sendRequst();
                               }
@@ -272,7 +282,16 @@ class _AmenitiesButtonState extends State<AmenitiesButton> {
         color: Colors.white,
       ),
       label: controller.isEditable.value == true
-          ? const Text(
+          ? controller.isRepostParty.value == true ?
+      const Text(
+        'Repost Party',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ):
+      const Text(
         'Update Party',
         style: TextStyle(
           fontSize: 16,

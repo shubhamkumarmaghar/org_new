@@ -428,7 +428,7 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                               Get.snackbar(
                                   'Full Address', 'Enter your full address ');
                             } else {
-                              controller.addOrgnition();
+                              controller.addOrganization();
                             }
                           },
                           style: ElevatedButton.styleFrom(

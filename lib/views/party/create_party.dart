@@ -23,6 +23,7 @@ import '../../constants/cached_image_placeholder.dart';
 import '../../constants/statecity/model/state_model.dart';
 import '../../controller/api_heler_class.dart';
 import '../../controller/organisation/create_profile_controller/select_photo_options_screen.dart';
+import '../../services/services.dart';
 
 //
 // class AddOrganizationsEvent2View
@@ -49,6 +50,7 @@ class _CreatePartyState extends State<CreateParty> {
 
 
   DefaultController defaultController = Get.put(DefaultController());
+  PartyController controller = Get.put(PartyController());
 
   String getRandomString() {
     DateTime now = DateTime.now();
@@ -59,9 +61,9 @@ class _CreatePartyState extends State<CreateParty> {
   Future<String?> savePhotoToFirebase(
       String tokenId, File photo, String imageName) async {
     try {
-      setState(() {
+
         controller.isLoading.value = true;
-      });
+
       await FirebaseAuth.instance.signInAnonymously();
 
       // Initialize Firebase Storage
@@ -74,13 +76,10 @@ class _CreatePartyState extends State<CreateParty> {
 
       // Upload the photo to Firebase Storage
       await photoRef.putFile(photo);
-
       // Get the download URL for the photo
       String downloadURL = await photoRef.getDownloadURL();
-      setState(() {
         controller.timeline.value = downloadURL;
         controller.isLoading.value = false;
-      });
       return downloadURL;
     } catch (e) {
       return null;
@@ -93,7 +92,10 @@ class _CreatePartyState extends State<CreateParty> {
       if (image == null) return;
       File? img = File(image.path);
       img = await _cropImage(imageFile: img);
+      controller.image_b=img;
+    //  uploadImage(type: '2',imgFile: img,partyId: controller.partyId.value);
       setState(() {
+
         savePhotoToFirebase(
                 '${GetStorage().read('token')}', img!, 'Party New Event')
             .then((value) {
@@ -140,15 +142,26 @@ class _CreatePartyState extends State<CreateParty> {
     );
   }
 
-  PartyController controller = Get.put(PartyController());
 
   fillFieldPreFilled() async {
     controller.timeline.value = '${controller.getPrefiledData.coverPhoto}';
     controller.title.text = controller.getPrefiledData.title!;
     controller.description.text = controller.getPrefiledData.description!;
     controller.mobileNumber.text = controller.getPrefiledData.phoneNumber!;
-    controller.startDate.text = controller.getPrefiledData.startDate!;
-    controller.endDate.text = controller.getPrefiledData.endDate!;
+    if(controller.isRepostParty.value == true){
+      var todayDate = DateTime.now().toString().split(" ");
+      var tomarrowDate = DateTime.now().add(Duration(days: 1)).toString().split(" ");
+      var todayDate1 = todayDate[0].split("-");
+      var todayDate2 = "${todayDate1[2]}-${todayDate1[1]}-${todayDate1[0]}";
+      controller.startDate.text = todayDate2;
+      var tomarrowDate1 = tomarrowDate[0].split("-");
+      var tomarrowDate2 = "${tomarrowDate1[2]}-${tomarrowDate1[1]}-${tomarrowDate1[0]}";
+      controller.endDate.text = tomarrowDate2;
+    }
+    else{
+      controller.startDate.text = controller.getPrefiledData.startDate!;
+      controller.endDate.text = controller.getPrefiledData.endDate!;
+    }
     controller.startTime.text = controller.getPrefiledData.startTime!;
     controller.endTime.text = controller.getPrefiledData.endTime!;
     controller.peopleLimit.text = controller.getPrefiledData.personLimit!;
@@ -162,6 +175,7 @@ class _CreatePartyState extends State<CreateParty> {
     controller.pincode.text = controller.getPrefiledData.pincode!;
     controller.location.text = controller.getPrefiledData.latitude!;
     controller.state.value = controller.getPrefiledData.state!;
+    controller.city.value = controller.getPrefiledData.city!;
 
   }
 
@@ -185,6 +199,8 @@ class _CreatePartyState extends State<CreateParty> {
       controller.couplesPrice.text = '';
       controller.pincode.text='';
       controller.location.text='';
+      controller.city.value='';
+      controller.state.value='';
     });
   }
 
@@ -260,7 +276,7 @@ class _CreatePartyState extends State<CreateParty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar( backgroundColor: Colors.red.shade900,
           title: Text(
             "Host New Event",
             style: TextStyle(fontSize: 13.sp),
@@ -281,7 +297,7 @@ class _CreatePartyState extends State<CreateParty> {
                     children: [
                       Row(
                         children: [
-                          Image.asset('assets/mice.png'),
+                          Image.asset('assets/mice.png',),
                           Text(
                             'Host New Event',
                             style: TextStyle(
@@ -304,88 +320,98 @@ class _CreatePartyState extends State<CreateParty> {
                           _showSelectPhotoOptionsProfile(context);
                         },
                         child: Obx(
-                          () => Stack(
-                            children: [
-                              controller.isLoading.value == false
-                                  ? Container(
-                                      height: 160,
-                                      width: double.maxFinite,
-                                      child: controller.timeline.value != ''
-                                          ? Card(
-                                              child: CachedNetworkImageWidget(
-                                                  imageUrl:
-                                                      controller.timeline.value,
-                                                  width: Get.width,
-                                                  height: 160,
-                                                  fit: BoxFit.fill,
-                                                  errorWidget: (context, url,
-                                                          error) =>
-                                                      const Center(
-                                                        child:
-                                                            CupertinoActivityIndicator(
-                                                          radius: 15,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                  placeholder: (context, url) =>
-                                                      const Center(
-                                                          child:
-                                                              CupertinoActivityIndicator(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  radius: 15))))
-                                          : Card(
-                                              child: Lottie.asset(
-                                                'assets/127619-photo-click.json',
-                                              ),
-                                            ),
-                                    )
-                                  : Container(
-                                      child: const Center(
-                                        child: CupertinoActivityIndicator(
-                                          radius: 15,
-                                          color: Colors.black,
-                                        ),
-                                      ),
+                          () {
+                            return Stack(
+                              children: [
+                                controller.isLoading.value == false
+                                    ? Container(
+                                  height: Get.height*0.25,
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: controller.timeline.value.isNotEmpty
+                                      ? Card(shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.0),
                                     ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  child: IconButton(
-                                    onPressed: () {
-                                      defaultController
-                                          .defaultControllerType.value = 2;
-                                      _showSelectPhotoOptionsProfile(context);
-                                    },
-                                    icon: const Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
+                                  ),clipBehavior: Clip.hardEdge,
+                                     
+                                      child: CachedNetworkImageWidget(
+                                          imageUrl:
+                                          controller.timeline.value,
+                                          width: Get.width,
+                                          height: Get.height*0.25,
+                                          fit: BoxFit.fill,
+                                          errorWidget: (context, url,
+                                              error) =>
+                                          const Center(
+                                            child:
+                                            CupertinoActivityIndicator(
+                                              radius: 15,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          placeholder: (context, url) =>
+                                          const Center(
+                                              child:
+                                              CupertinoActivityIndicator(
+                                                  color: Colors
+                                                      .black,
+                                                  radius: 15))))
+                                      : Card(
+                                    child: Lottie.asset(
+                                      'assets/127619-photo-click.json',
+                                    ),
+                                  ),
+                                )
+                                    : Container(
+                                  child: const Center(
+                                    child: CupertinoActivityIndicator(
+                                      radius: 15,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: 10,
-                                right: 10,
-                                child: Container(
-                                    height: 30,
-                                    width: 30,
-                                    child: const Icon(
-                                      size: 30,
-                                      Icons.camera_alt,
-                                      color: Colors.red,
-                                    )),
-                              ),
-                            ],
-                          ),
-                        ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    child: IconButton(
+                                      onPressed: () {
+                                        defaultController
+                                            .defaultControllerType.value = 2;
+                                        _showSelectPhotoOptionsProfile(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.camera_alt,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 10,
+                                  right: 10,
+                                  child: Container(
+                                      height: 30,
+                                      width: 30,
+                                      child: Icon(
+                                        size: 30,
+                                        Icons.camera_alt,
+                                        color: Colors.red.shade900,
+                                      )),
+                                ),
+                              ],
+                            );
+
+                          }),
                       ),
                     ],
                   ),
                   const SizedBox(
                     height: 20,
                   ),
+                  textAddMedia(),
                   TextFieldWithTitle(
                     title: 'Party Title',
                     controller: controller.title,
@@ -625,7 +651,7 @@ class _CreatePartyState extends State<CreateParty> {
                     ),
                   ),
                   Container(
-                   // width: 300,
+
                     padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14),
                       child: DropdownButtonFormField<String>(
                          decoration: InputDecoration(
@@ -841,7 +867,7 @@ class _CreatePartyState extends State<CreateParty> {
                     child: Text(
                       'Who can join',
                       style: TextStyle(
-                        fontSize: 15.sp,
+                        fontSize: 13.sp,
                         fontFamily: 'malgun',
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -918,6 +944,176 @@ class _CreatePartyState extends State<CreateParty> {
             ),
           ),
         ));
+
+
+  }
+  Widget textAddMedia(){
+    return Container(height: Get.height*0.15,
+      width: Get.width,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              onTap: () {
+                defaultController.defaultControllerType.value = 2;
+                _showSelectPhotoOptionsProfile(context);
+              },
+              child: Obx(
+                      () {
+                    return Stack(
+                      children: [
+                        controller.isLoading.value == false
+                            ? Container(
+                          height: Get.height*0.15,
+                          width: Get.height*0.2,
+                          child: controller.timeline.value.isNotEmpty
+                              ? Card(shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15.0),
+                              topLeft: Radius.circular(15.0),
+                              bottomLeft: Radius.circular(15.0),
+                            ),
+                          ),clipBehavior: Clip.hardEdge,
+
+                              child: CachedNetworkImageWidget(
+                                  imageUrl:
+                                  controller.timeline.value,
+                                  width: Get.height*0.12,
+                                  height: Get.height*0.12,
+                                  fit: BoxFit.fill,
+                                  errorWidget: (context, url,
+                                      error) =>
+                                  const Center(
+                                    child:
+                                    CupertinoActivityIndicator(
+                                      radius: 15,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  placeholder: (context, url) =>
+                                  const Center(
+                                      child:
+                                      CupertinoActivityIndicator(
+                                          color: Colors
+                                              .black,
+                                          radius: 15))))
+                              : Card(
+                            child: Lottie.asset(
+                              'assets/127619-photo-click.json',
+                            ),
+                          ),
+                        )
+                            : Container(
+                          child: const Center(
+                            child: CupertinoActivityIndicator(
+                              radius: 15,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            child: IconButton(
+                              onPressed: () {
+                                defaultController
+                                    .defaultControllerType.value = 2;
+                               // _showSelectPhotoOptionsProfile(context);
+                              },
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+
+                  }),
+            ),
+            GestureDetector(
+              onTap: () {
+                defaultController.defaultControllerType.value = 2;
+                _showSelectPhotoOptionsProfile(context);
+              },
+              child: Obx(
+                      () {
+                    return Stack(
+                      children: [
+                        controller.isLoading.value == false
+                            ? Container(
+                          height: Get.height*0.15,
+                          width: Get.height*0.2,
+                          child: controller.timeline.value.isNotEmpty
+                              ? Card(shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15.0),
+                              topLeft: Radius.circular(15.0),
+                              bottomLeft: Radius.circular(15.0),
+                            ),
+                          ),clipBehavior: Clip.hardEdge,
+
+                              child: CachedNetworkImageWidget(
+                                  imageUrl:
+                                  controller.timeline.value,
+                                  width: Get.height*0.12,
+                                  height: Get.height*0.12,
+                                  fit: BoxFit.fill,
+                                  errorWidget: (context, url,
+                                      error) =>
+                                  const Center(
+                                    child:
+                                    CupertinoActivityIndicator(
+                                      radius: 15,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  placeholder: (context, url) =>
+                                  const Center(
+                                      child:
+                                      CupertinoActivityIndicator(
+                                          color: Colors
+                                              .black,
+                                          radius: 15))))
+                              : Card(
+                            child: Lottie.asset(
+                              'assets/127619-photo-click.json',
+                            ),
+                          ),
+                        )
+                            : Container(
+                          child: const Center(
+                            child: CupertinoActivityIndicator(
+                              radius: 15,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            child: IconButton(
+                              onPressed: () {
+                                defaultController
+                                    .defaultControllerType.value = 2;
+                              //  _showSelectPhotoOptionsProfile(context);
+                              },
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+
+                  }),
+            ),
+          ]
+      ),);
   }
 }
 
@@ -940,6 +1136,7 @@ class _OptionSelectorState extends State<OptionSelector> {
         children: [
           GroupButton(
             isRadio: false,
+
             onSelected: (string, index, isSelected) {
               setState(() {
                 if (isSelected) {
@@ -947,7 +1144,6 @@ class _OptionSelectorState extends State<OptionSelector> {
                 } else {
                   controller.genderList.remove(string);
                 }
-
                 showLadiesFees = false;
                 showStagFees = false;
                 showCoupleFees = false;
@@ -966,6 +1162,7 @@ class _OptionSelectorState extends State<OptionSelector> {
                 }
               });
             },
+            options: GroupButtonOptions(borderRadius: BorderRadius.circular(10),selectedColor: Colors.red.shade900),
             buttons: [
               "Stag",
               "Ladies",

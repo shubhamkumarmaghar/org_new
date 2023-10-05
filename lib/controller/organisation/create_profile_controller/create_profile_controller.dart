@@ -223,7 +223,7 @@ class CreteOrganisationProfileController extends GetxController {
     print('Checking amenities bool ::: ${editingOrg.value}');
   }
 
-  Future<void> addOrgnition() async {
+  Future<void> addOrganization() async {
     isLoading.value = true;
     var headers = {
       'x-access-token': '${GetStorage().read('token')}',
@@ -244,7 +244,7 @@ class CreteOrganisationProfileController extends GetxController {
       'description': description.text,
       'branch': branches.text == '' ? "No Branches" : branches.text,
       'name': name.text.toUpperCase(),
-      'latitude': '${fullAddress.text}, $city, $state, $county',
+      'latitude': '${fullAddress.text}',
       'longitude': '${fullAddress.text}, $city, $state, $county',
       'type': '1',
       'profile_pic': '$profile',
@@ -281,7 +281,7 @@ class CreteOrganisationProfileController extends GetxController {
       name.text = jsonDecode(response.body)['data'][0]['name'];
       branches.text = jsonDecode(response.body)['data'][0]['branch'] ?? '';
       description.text = jsonDecode(response.body)['data'][0]['description'];
-      fullAddress.text = jsonDecode(response.body)['data'][0]['description'];
+      fullAddress.text = jsonDecode(response.body)['data'][0]['latitude'];
       timeline.value =
           "${jsonDecode(response.body)['data'][0]['timeline_pic']}";
       profile.value = "${jsonDecode(response.body)['data'][0]['profile_pic']}";
@@ -319,7 +319,6 @@ class CreteOrganisationProfileController extends GetxController {
       'profile_pic': profile.value,
       'timeline_pic': timeline.value,
     });
-
     try {
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();

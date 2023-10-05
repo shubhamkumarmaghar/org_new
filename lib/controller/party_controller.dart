@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -19,17 +20,21 @@ class PartyController extends GetxController {
   List<StateName> cityName = [] ;
   var isComplet = false.obs;
   RxInt numberOfDays = 1.obs;
-  var isLoading = false.obs;
+  RxBool isLoading = false.obs;
   TextEditingController pincode = TextEditingController();
   RxList selectedAmenities = [].obs;
   static final count = false.obs;
   static var address = "";
+  File? image_a;
+  File? image_b;
+  File? cover_img;
 
   var date = TextEditingController();
   var mobileNumber = TextEditingController();
   final title = TextEditingController();
   var name = '';
-  var genderList = [];
+
+  List genderList = [];
   RxString timeline = ''.obs;
   var email = TextEditingController();
   final description = TextEditingController();
@@ -53,14 +58,15 @@ class PartyController extends GetxController {
   final othersPrice = TextEditingController();
   final offersText = TextEditingController();
   var county = ''.obs;
-  var state = ''.obs;
-  var city = ''.obs;
+  var state = 'Select State'.obs;
+  var city = 'Select City'.obs;
   RxString partyId= ''.obs;
   RxBool isPopular = false.obs;
   var partyStatusChange = "".obs;
 
   late Party getPrefiledData;
   RxBool isEditable = false.obs;
+  RxBool isRepostParty = false.obs;
 
   @override
   void dispose() {
@@ -82,6 +88,8 @@ class PartyController extends GetxController {
     couplesPrice.text = '';
     email.text='';
     partyId.value = '';
+    state.value = '';
+    city.value = '';
     super.dispose();
   }
 
@@ -410,7 +418,8 @@ class PartyController extends GetxController {
       'x-access-token': '${GetStorage().read('token')}'
       // 'Cookie': 'ci_session=f72b54d682c45ebf19fcc0fd54cef39508588d0c'
     };
-
+    Set<String> listGender = {};
+  //  listGender.addAll(genderList);
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://app.partypeople.in/v1/party/add'));
     request.fields.addAll({
@@ -447,9 +456,11 @@ class PartyController extends GetxController {
       'couples': couplesPrice.text,
       'others': othersPrice.text,
       'cover_photo': timeline.value
-
     });
 
+    final data = await http.MultipartFile.fromPath('image_b',image_b?.path??File('').path,);
+    log('ddddd ${data.contentType} - ${data.field} - ${data.filename}');
+    request.files.addAll([data]);
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {

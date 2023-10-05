@@ -32,7 +32,7 @@ class PartyHistoryController extends GetxController{
         },
         body: {
           'organization_id': '${dashboardController.organisationID.value}',
-          'status': '0',
+          'status': '6',
         },
       );
       log('abcd ${jsonDecode(response.body)}');

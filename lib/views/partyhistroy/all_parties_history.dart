@@ -13,7 +13,9 @@ import 'package:partypeoplebusiness/views/partyhistroy/party_history_controller/
 import 'package:sizer/sizer.dart';
 
 import '../../model/partyModel/partyDataModel.dart';
+import '../../widgets/payment_response_view.dart';
 import '../organization/party_preview/party_preview_screen_new.dart';
+import '../party/create_party.dart';
 
 class AllPartiesHistory extends StatefulWidget {
   const AllPartiesHistory({Key? key}) : super(key: key);
@@ -139,6 +141,7 @@ class _AllPartiesHistoryState extends State<AllPartiesHistory> {
                       ));
                     },
                     child: CustomListTile(
+                      party: controller.allParties[index],
                       endTime: '${controller.allParties[index].endTime}',
                       startTime: '${controller.allParties[index].startTime}',
                       endDate: '${controller.allParties[index].endDate}',
@@ -163,6 +166,7 @@ class _AllPartiesHistoryState extends State<AllPartiesHistory> {
 }
 
 class CustomListTile extends StatelessWidget {
+  final Party party;
   final String title;
   final String subtitle;
   final String leadingImage;
@@ -176,6 +180,7 @@ class CustomListTile extends StatelessWidget {
   final String city;
 
   CustomListTile({
+    required this.party,
     required this.title,
     required this.startTime, // pass start time to constructor
     required this.endTime, // pass end time to constructor
@@ -260,9 +265,9 @@ class CustomListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10.0),
-            Container(
+            Stack(children: [Container(
               width: MediaQuery.of(context).size.width * 0.25,
-              height: MediaQuery.of(context).size.height * 0.12,
+              height: MediaQuery.of(context).size.height * 0.13,
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(10),
@@ -273,7 +278,34 @@ class CustomListTile extends StatelessWidget {
                   fit: BoxFit.fill,
                 ),
               ),
-            )
+            ),
+       Positioned(bottom: 0,child: GestureDetector(onTap: (){
+    partyController.isEditable.value = true;
+    partyController.getPrefiledData = party;
+    partyController.isPopular.value = false;
+    partyController.isRepostParty.value = true;
+    Get.to(
+    CreateParty(isPopular: false)
+    );
+    },
+    child: Container(
+                  alignment: Alignment.center,
+                  height: Get.width*.07,
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  decoration: BoxDecoration(color: Colors.red.shade200,
+                    borderRadius:BorderRadius.only(
+                      bottomRight: Radius.circular(10),
+                      ),
+                  ),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(Icons.refresh),
+                      Text('Repost',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.w600)),
+                    ],
+                  ),),
+       ) ),
+            ],
+            ),
           ],
         ),
       ),
