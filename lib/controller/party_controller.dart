@@ -25,9 +25,10 @@ class PartyController extends GetxController {
   RxList selectedAmenities = [].obs;
   static final count = false.obs;
   static var address = "";
-  File? image_a;
-  File? image_b;
-  File? cover_img;
+  RxInt photoSelectNo = 0.obs;
+  File image_c =File('');
+  File image_b = File('');
+  File cover_img = File('');
 
   var date = TextEditingController();
   var mobileNumber = TextEditingController();
@@ -36,6 +37,8 @@ class PartyController extends GetxController {
 
   List genderList = [];
   RxString timeline = ''.obs;
+  RxString imageB = ''.obs;
+  RxString imageC = ''.obs;
   var email = TextEditingController();
   final description = TextEditingController();
   final startDate = TextEditingController();
@@ -71,6 +74,11 @@ class PartyController extends GetxController {
   @override
   void dispose() {
     timeline.value = '';
+    imageB.value='';
+    imageC.value='';
+    image_b = File('');
+    image_c = File('');
+    cover_img = File('');
     title.text = '';
     description.text = '';
     mobileNumber.text = '';
@@ -455,10 +463,12 @@ class PartyController extends GetxController {
       'stag': stagPrice.text,
       'couples': couplesPrice.text,
       'others': othersPrice.text,
-      'cover_photo': timeline.value
+      'cover_photo': timeline.value,
+      'image_b':imageB.value,
+      'image_c':imageC.value,
     });
 
-    final data = await http.MultipartFile.fromPath('image_b',image_b?.path??File('').path,);
+    final data = await http.MultipartFile.fromPath('image_b',image_b.path,);
     log('ddddd ${data.contentType} - ${data.field} - ${data.filename}');
     request.files.addAll([data]);
     request.headers.addAll(headers);

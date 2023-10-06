@@ -36,6 +36,8 @@ class Party {
   String? title;
   String? description;
   String? coverPhoto;
+  String? imageB;
+  String? imageC;
   String? startDate;
   String? endDate;
   String? startTime;
@@ -86,6 +88,8 @@ class Party {
         this.title,
         this.description,
         this.coverPhoto,
+        this.imageB,
+        this.imageC,
         this.startDate,
         this.endDate,
         this.startTime,
@@ -136,6 +140,8 @@ class Party {
     title = json['title'];
     description = json['description'];
     coverPhoto = json['cover_photo'];
+    imageB = json['image_b'];
+    imageC = json['image_c'];
     startDate = json['start_date'];
     endDate = json['end_date'];
     startTime = json['start_time'];
@@ -193,6 +199,8 @@ class Party {
     data['title'] = this.title;
     data['description'] = this.description;
     data['cover_photo'] = this.coverPhoto;
+    data['image_b'] = this.imageB;
+    data['image_c'] = this.imageC;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
     data['start_time'] = this.startTime;

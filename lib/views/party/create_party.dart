@@ -92,16 +92,27 @@ class _CreatePartyState extends State<CreateParty> {
       if (image == null) return;
       File? img = File(image.path);
       img = await _cropImage(imageFile: img);
-      controller.image_b=img;
+      if(controller.photoSelectNo.value == 0)
+        {
+          controller.cover_img=img!;
+        }
+      if(controller.photoSelectNo.value == 1)
+      {
+        controller.image_b=img!;
+      }
+      if(controller.photoSelectNo.value == 2)
+      {
+        controller.image_c=img!;
+      }
     //  uploadImage(type: '2',imgFile: img,partyId: controller.partyId.value);
       setState(() {
 
-        savePhotoToFirebase(
+      /*  savePhotoToFirebase(
                 '${GetStorage().read('token')}', img!, 'Party New Event')
             .then((value) {
           controller.timeline.value = value!;
           controller.isLoading.value = false;
-        });
+        });*/
 
         Navigator.of(context).pop();
       });
@@ -145,6 +156,9 @@ class _CreatePartyState extends State<CreateParty> {
 
   fillFieldPreFilled() async {
     controller.timeline.value = '${controller.getPrefiledData.coverPhoto}';
+    controller.imageB.value = '${controller.getPrefiledData.imageB}';
+    controller.imageC.value = '${controller.getPrefiledData.imageC}';
+    log('abcde ${controller.timeline.value} ,${controller.imageB.value}  ,${controller.imageC.value} ');
     controller.title.text = controller.getPrefiledData.title!;
     controller.description.text = controller.getPrefiledData.description!;
     controller.mobileNumber.text = controller.getPrefiledData.phoneNumber!;
@@ -182,6 +196,11 @@ class _CreatePartyState extends State<CreateParty> {
   nonField() {
     setState(() {
       controller.timeline.value = '';
+      controller.imageB.value = '';
+      controller.imageC.value ='';
+      controller.image_b = File('');
+      controller.image_c = File('');
+      controller.cover_img = File('');
       controller.title.text = '';
       controller.description.text = '';
       controller.mobileNumber.text = '';
@@ -250,6 +269,11 @@ class _CreatePartyState extends State<CreateParty> {
   @override
   void dispose() {
     controller.timeline.value = '';
+    controller.imageC.value='';
+    controller.imageB.value='';
+    controller.image_b = File('');
+    controller.image_c = File('');
+    controller.cover_img = File('');
     controller.title.text = '';
     controller.description.text = '';
     controller.mobileNumber.text = '';
@@ -317,6 +341,7 @@ class _CreatePartyState extends State<CreateParty> {
                       GestureDetector(
                         onTap: () {
                           defaultController.defaultControllerType.value = 2;
+                          controller.photoSelectNo.value = 0;
                           _showSelectPhotoOptionsProfile(context);
                         },
                         child: Obx(
@@ -334,11 +359,10 @@ class _CreatePartyState extends State<CreateParty> {
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15.0),
                                     ),
-                                  ),clipBehavior: Clip.hardEdge,
-                                     
+                                  ),
+                                      clipBehavior: Clip.hardEdge,
                                       child: CachedNetworkImageWidget(
-                                          imageUrl:
-                                          controller.timeline.value,
+                                          imageUrl: controller.timeline.value,
                                           width: Get.width,
                                           height: Get.height*0.25,
                                           fit: BoxFit.fill,
@@ -357,11 +381,22 @@ class _CreatePartyState extends State<CreateParty> {
                                               CupertinoActivityIndicator(
                                                   color: Colors
                                                       .black,
-                                                  radius: 15))))
-                                      : Card(
+                                                  radius: 15)
+                                          )
+                                      )
+                                  )
+                                      : controller.cover_img.path.isEmpty ?
+                                  Card(
                                     child: Lottie.asset(
                                       'assets/127619-photo-click.json',
                                     ),
+                                  ):Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(15.0),
+                                        ),
+                                      ),clipBehavior: Clip.hardEdge,
+                                    child: Image.file(controller.cover_img)
                                   ),
                                 )
                                     : Container(
@@ -380,6 +415,7 @@ class _CreatePartyState extends State<CreateParty> {
                                       onPressed: () {
                                         defaultController
                                             .defaultControllerType.value = 2;
+                                        controller.photoSelectNo.value = 0;
                                         _showSelectPhotoOptionsProfile(context);
                                       },
                                       icon: const Icon(
@@ -651,7 +687,6 @@ class _CreatePartyState extends State<CreateParty> {
                     ),
                   ),
                   Container(
-
                     padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14),
                       child: DropdownButtonFormField<String>(
                          decoration: InputDecoration(
@@ -955,6 +990,7 @@ class _CreatePartyState extends State<CreateParty> {
             GestureDetector(
               onTap: () {
                 defaultController.defaultControllerType.value = 2;
+                controller.photoSelectNo.value = 1;
                 _showSelectPhotoOptionsProfile(context);
               },
               child: Obx(
@@ -965,18 +1001,18 @@ class _CreatePartyState extends State<CreateParty> {
                             ? Container(
                           height: Get.height*0.15,
                           width: Get.height*0.2,
-                          child: controller.timeline.value.isNotEmpty
+                          child: controller.imageB.value.isNotEmpty
                               ? Card(shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(15.0),
                               topLeft: Radius.circular(15.0),
                               bottomLeft: Radius.circular(15.0),
                             ),
-                          ),clipBehavior: Clip.hardEdge,
-
+                          ),
+                              clipBehavior: Clip.hardEdge,
                               child: CachedNetworkImageWidget(
                                   imageUrl:
-                                  controller.timeline.value,
+                                  controller.imageB.value,
                                   width: Get.height*0.12,
                                   height: Get.height*0.12,
                                   fit: BoxFit.fill,
@@ -996,10 +1032,18 @@ class _CreatePartyState extends State<CreateParty> {
                                           color: Colors
                                               .black,
                                           radius: 15))))
-                              : Card(
+                              : controller.image_b.path.isEmpty ?
+                          Card(
                             child: Lottie.asset(
                               'assets/127619-photo-click.json',
                             ),
+                          ):Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15.0),
+                                ),
+                              ),clipBehavior: Clip.hardEdge,
+                              child: Image.file(controller.image_b)
                           ),
                         )
                             : Container(
@@ -1035,6 +1079,7 @@ class _CreatePartyState extends State<CreateParty> {
             GestureDetector(
               onTap: () {
                 defaultController.defaultControllerType.value = 2;
+                controller.photoSelectNo.value = 2;
                 _showSelectPhotoOptionsProfile(context);
               },
               child: Obx(
@@ -1045,7 +1090,7 @@ class _CreatePartyState extends State<CreateParty> {
                             ? Container(
                           height: Get.height*0.15,
                           width: Get.height*0.2,
-                          child: controller.timeline.value.isNotEmpty
+                          child: controller.imageB.value.isNotEmpty
                               ? Card(shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(15.0),
@@ -1053,10 +1098,8 @@ class _CreatePartyState extends State<CreateParty> {
                               bottomLeft: Radius.circular(15.0),
                             ),
                           ),clipBehavior: Clip.hardEdge,
-
                               child: CachedNetworkImageWidget(
-                                  imageUrl:
-                                  controller.timeline.value,
+                                  imageUrl: controller.imageC.value,
                                   width: Get.height*0.12,
                                   height: Get.height*0.12,
                                   fit: BoxFit.fill,
@@ -1076,10 +1119,18 @@ class _CreatePartyState extends State<CreateParty> {
                                           color: Colors
                                               .black,
                                           radius: 15))))
-                              : Card(
+                              : controller.image_c.path.isEmpty ?
+                          Card(
                             child: Lottie.asset(
                               'assets/127619-photo-click.json',
                             ),
+                          ):Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15.0),
+                                ),
+                              ),clipBehavior: Clip.hardEdge,
+                              child: Image.file(controller.image_c)
                           ),
                         )
                             : Container(
