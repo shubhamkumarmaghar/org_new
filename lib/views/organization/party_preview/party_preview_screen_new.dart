@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:math';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:sizer/sizer.dart';
 
+import '../../../constants/const_strings.dart';
 import '../../../controller/party_controller.dart';
 import '../../../model/partyModel/partyDataModel.dart';
 import '../../party/party_amenities.dart';
@@ -37,14 +39,32 @@ class PartyPreviewScreen extends StatefulWidget {
 }
 
 class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
+  
   String join = 'Join';
   List<Category> _categories = [];
+  final List partyImages =[];
   final List<CategoryList> _categoryLists = [];
   List selectedAmenities = [];
   PartyController controller = Get.put(PartyController());
+  
+  void getpartyImages()
+  {
+    if(widget.party.coverPhoto!=null){
+      partyImages.add(widget.party.coverPhoto);
+    }
+    if(widget.party.imageB!=null){
+      partyImages.add(widget.party.imageB);
+    }
+    if(widget.party.imageC!=null){
+      partyImages.add(widget.party.imageC);
+    }
+    partyImages.forEach((element) {
+      print(element.toString());
+    });
+  }
   Future<void> _fetchData() async {
     http.Response response = await http.get(
-      Uri.parse('https://app.partypeople.in/v1/party/party_amenities'),
+      Uri.parse(API.partyAmenities),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final data = jsonDecode(response.body);
@@ -87,6 +107,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
   @override
   void initState() {
     _fetchData();
+    getpartyImages();
     print(" ${widget.party.toJson()}");
     super.initState();
   }
@@ -115,86 +136,47 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                 Stack(children: [
                   if (widget.party.imageStatus == '1')
                     Card(elevation: 5,
+                    clipBehavior:Clip.hardEdge ,
                     margin: EdgeInsets.only(bottom: 25),
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(15.0),),
-                    child:  Container(
-                    //backgroundColor: Colors.grey.shade100,
-                    height: Get.height*0.295,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      image:DecorationImage( image: NetworkImage('${widget.party.coverPhoto}'),fit: BoxFit.cover ),
-                    ),
-                    width: Get.width,
-                    /* child: Image.network(
-                      widget.party.coverPhoto,
-                      width: Get.width,
-                      height: 250,
-                      fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.black,
-                          ),
-                        );
-                      },
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.black,
-                          ),
-                        );
-                      },
-                    ), */
-                    ),
-                ) else Card(elevation: 5,
+                      borderRadius: BorderRadius.circular(15.0),),
+                    child:
+                    CarouselSlider(items: partyImages.map((element) =>
+                        customImageSlider(partyPhotos: element, imageStatus: '${widget.party.imageStatus}') ).toList(),
+                      options: CarouselOptions(
+                        height: Get.height * 0.295,
+                        // enlargeCenterPage: true,
+                        autoPlay: true,
+                        //aspectRatio: 16 / 9,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enableInfiniteScroll: true,
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      ),),
+                    
+                ) 
+                  else Card(elevation: 5,
                       margin: EdgeInsets.only(bottom: 25),
+                  clipBehavior: Clip.hardEdge,
                   shape: RoundedRectangleBorder(
                       borderRadius:
                       BorderRadius.circular(15.0),),
-                  child: Container(
-                    padding: EdgeInsets.zero,
-                    height: Get.height*0.295,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      image:DecorationImage( image: NetworkImage('${widget.party.coverPhoto}'),fit: BoxFit.cover ),
-                    ),
-                    width: Get.width,
-                    /* child: Image.network(
-                    widget.party.coverPhoto,
-                    width: Get.width,
-                    height: 250,
-                    fit: BoxFit.fill,
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      );
-                    },
-                ),
-                      */
-                  ),
+                  child:  CarouselSlider(
+                    items: partyImages.map((element) =>
+                      customImageSlider(partyPhotos: element, imageStatus: '${widget.party.imageStatus}') ).toList(),
+                    options: CarouselOptions(
+                      height: Get.height * 0.295,
+                      // enlargeCenterPage: true,
+                      autoPlay: true,
+                      //aspectRatio: 16 / 9,
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enableInfiniteScroll: true,
+                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      viewportFraction: 1
+
+                    ),),
                     ),
                 ],),
+
                 if (widget.isPopularParty == false)
                   const SizedBox(
                     height: 15,
@@ -585,6 +567,46 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
         ),)
       ]),
     );
+  }
+  
+  Widget customImageSlider({
+    required String partyPhotos, required String imageStatus
+}
+      ){
+    return
+       Container(
+          height: Get.height*0.295,
+          decoration: BoxDecoration(
+           // borderRadius: BorderRadius.circular(15),
+            image:DecorationImage( image: NetworkImage(partyPhotos),fit: BoxFit.fill),
+          ),
+          width: Get.width,
+          /* child: Image.network(
+                        widget.party.coverPhoto,
+                        width: Get.width,
+                        height: 250,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                          );
+                        },
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                          );
+                        },
+                      ), */
+        );
   }
 }
 

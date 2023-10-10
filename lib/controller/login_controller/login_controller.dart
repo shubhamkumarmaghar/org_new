@@ -31,7 +31,7 @@ class LoginController extends GetxController {
       });
 
       http.Response response = await http
-          .post(Uri.parse('https://app.partypeople.in/v1/account/login'), body: {
+          .post(Uri.parse(API.login), body: {
         'phone': mobileNumber.text,
         'username': username.text,
         'device_token': deviceToken.value,
@@ -63,7 +63,7 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       http.Response response = await http.post(
-          Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
+          Uri.parse(API.organizationDetails),
           headers: {
             'x-access-token': '${GetStorage().read('token')}',
           });
@@ -89,7 +89,7 @@ class LoginController extends GetxController {
     isLoading.value = true;
     http.Response response = await http.post(
         Uri.parse(
-          '${apiUrlString}account/otp_verify',
+          API.otp,
         ),
         body: {
           'otp': otpValue,

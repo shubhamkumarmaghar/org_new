@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:partypeoplebusiness/services/myhttp_overrides.dart';
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 import 'package:partypeoplebusiness/views/splash_screen/splash_screen_view.dart';
 import 'package:sizer/sizer.dart';
@@ -36,6 +39,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global =  MyHttpOverrides();
   await Firebase.initializeApp();
   GetStorage.init();
 
@@ -99,8 +103,10 @@ class _MyAppState extends State<MyApp> {
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
             title: 'Party People Business',
+
             theme: ThemeData(
               primarySwatch: Colors.red,
+              fontFamily:'PlusJakartaSans'
             ),
             home:  SplashScreenMain());
       },

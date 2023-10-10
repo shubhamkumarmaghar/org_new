@@ -37,7 +37,7 @@ class _AllPartiesHistoryState extends State<AllPartiesHistory> {
     try {
       http.Response response = await http.post(
         Uri.parse(
-            'https://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
+            API.getPartyById),
         headers: {
           'x-access-token': '${GetStorage().read('token')}',
         },

@@ -95,14 +95,32 @@ class _CreatePartyState extends State<CreateParty> {
       if(controller.photoSelectNo.value == 0)
         {
           controller.cover_img=img!;
+          if(controller.isEditable.value == true){
+            String url = await uploadImage(type: '2',imgFile: controller.cover_img,id: controller.partyId.value,imageKey: 'cover_photo');
+            if(url.isNotEmpty){
+              controller.timeline.value = url;
+            }
+          }
         }
       if(controller.photoSelectNo.value == 1)
       {
         controller.image_b=img!;
+        if(controller.isEditable.value == true){
+          String url = await uploadImage(type: '2',imgFile: controller.image_b,id: controller.partyId.value,imageKey: 'image_b');
+          if(url.isNotEmpty){
+            controller.imageB.value = url;
+          }
+        }
       }
       if(controller.photoSelectNo.value == 2)
       {
         controller.image_c=img!;
+        if(controller.isEditable.value == true){
+          String url = await uploadImage(type: '2',imgFile: controller.image_c,id: controller.partyId.value,imageKey: 'image_c');
+          if(url.isNotEmpty){
+            controller.imageC.value = url;
+          }
+        }
       }
     //  uploadImage(type: '2',imgFile: img,partyId: controller.partyId.value);
       setState(() {
@@ -162,6 +180,8 @@ class _CreatePartyState extends State<CreateParty> {
     controller.title.text = controller.getPrefiledData.title!;
     controller.description.text = controller.getPrefiledData.description!;
     controller.mobileNumber.text = controller.getPrefiledData.phoneNumber!;
+    controller.genderList = controller.getPrefiledData.gender.toString().split(',');
+    controller.genderList.forEach((element) {log('qqqqq $element');});
     if(controller.isRepostParty.value == true){
       var todayDate = DateTime.now().toString().split(" ");
       var tomarrowDate = DateTime.now().add(Duration(days: 1)).toString().split(" ");
@@ -176,6 +196,7 @@ class _CreatePartyState extends State<CreateParty> {
       controller.startDate.text = controller.getPrefiledData.startDate!;
       controller.endDate.text = controller.getPrefiledData.endDate!;
     }
+
     controller.startTime.text = controller.getPrefiledData.startTime!;
     controller.endTime.text = controller.getPrefiledData.endTime!;
     controller.peopleLimit.text = controller.getPrefiledData.personLimit!;
@@ -190,7 +211,7 @@ class _CreatePartyState extends State<CreateParty> {
     controller.location.text = controller.getPrefiledData.latitude!;
     controller.state.value = controller.getPrefiledData.state!;
     controller.city.value = controller.getPrefiledData.city!;
-
+    controller.partyId.value = controller.getPrefiledData.id!;
   }
 
   nonField() {
@@ -354,7 +375,7 @@ class _CreatePartyState extends State<CreateParty> {
                                   width: double.maxFinite,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: controller.timeline.value.isNotEmpty
+                                  child: (controller.timeline.value.isNotEmpty ) && controller.cover_img.path.isEmpty
                                       ? Card(shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15.0),
@@ -395,7 +416,8 @@ class _CreatePartyState extends State<CreateParty> {
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(15.0),
                                         ),
-                                      ),clipBehavior: Clip.hardEdge,
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
                                     child: Image.file(controller.cover_img)
                                   ),
                                 )
@@ -1001,7 +1023,7 @@ class _CreatePartyState extends State<CreateParty> {
                             ? Container(
                           height: Get.height*0.15,
                           width: Get.height*0.2,
-                          child: controller.imageB.value.isNotEmpty
+                          child: controller.imageB.value.isNotEmpty && controller.image_b.path.isEmpty
                               ? Card(shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(15.0),
@@ -1090,7 +1112,7 @@ class _CreatePartyState extends State<CreateParty> {
                             ? Container(
                           height: Get.height*0.15,
                           width: Get.height*0.2,
-                          child: controller.imageB.value.isNotEmpty
+                          child: (controller.imageC.value.isNotEmpty || controller.imageC.value=='null') && controller.image_c.path.isEmpty
                               ? Card(shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(15.0),
@@ -1271,7 +1293,9 @@ class AmenitiesButton extends StatelessWidget {
         String emptyFieldTitle = '';
         String emptyFieldMessage = '';
         List<Map<String, String>> fieldsToValidate = [
-          {'Party Image': controller.timeline.value},
+          {
+            'Party Image': controller.cover_img.path.isEmpty?controller.timeline.value:controller.cover_img.path
+          },
           {'Party Title': controller.title.text},
           {'Party Description': controller.description.text},
           {'Party Start Date': controller.startDate.text},
@@ -1297,7 +1321,7 @@ class AmenitiesButton extends StatelessWidget {
           Get.snackbar(emptyFieldTitle, emptyFieldMessage);
           return;
         }
-        if(controller.timeline.value.isEmpty){
+        if(controller.cover_img.path.isEmpty && controller.timeline.value.isEmpty) {
           Get.snackbar("Error ", "Cover Image should not be empty");
           return;
         }

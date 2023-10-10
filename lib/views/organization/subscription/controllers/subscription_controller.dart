@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 
+import '../../../../constants/const_strings.dart';
 import 'subscription_model.dart';
 
 class SubscriptionController extends GetxController {
@@ -22,7 +23,7 @@ class SubscriptionController extends GetxController {
   ///Call this function if payment was successfull
   oderIdPlaced(String partyID, String startDate, String endDate) async {
     http.Response response = await http.post(
-        Uri.parse('https://app.partypeople.in/v1/order/create_order'),
+        Uri.parse(API.createOrder),
         body: {
           'party_id': partyID,
           'amount': '499',
@@ -44,7 +45,7 @@ class SubscriptionController extends GetxController {
     String value ='0';
     try {
       final response = await http.post(Uri.parse(
-          'https://app.partypeople.in/v1/subscription/organiztion_user_subscriptions_purchase'),
+          API.orgUserSubscriptionPurchase),
           headers: <String, String>{
             'x-access-token': '${GetStorage().read('token')}',
           },
@@ -60,7 +61,7 @@ class SubscriptionController extends GetxController {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
         if (jsonResponse['status'] == 1 && jsonResponse['message'].contains(
-            'Subscription plan puarchase successfully.')) {
+            'Subscription plan purchase successfully.')) {
           subsOrderId = jsonResponse['subscription_purchase_id'];
           log(' subs id : $subsOrderId');
           update();
@@ -94,7 +95,7 @@ class SubscriptionController extends GetxController {
     try {
       log('$subsId  $paymentStatus ');
       final response = await http.post(Uri.parse(
-          'https://app.partypeople.in/v1/subscription/user_subscription_plan_status_update'),
+          API.userSubscriptionPlanStatusUpdate),
           headers: <String, String>{
             'x-access-token': '${GetStorage().read('token')}',
           },

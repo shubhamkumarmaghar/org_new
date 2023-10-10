@@ -13,7 +13,9 @@ import 'package:partypeoplebusiness/default_controller.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../constants/cached_image_placeholder.dart';
+import '../../../constants/const_strings.dart';
 import '../../../controller/organisation/create_profile_controller/create_profile_controller.dart';
+import 'add_profile_images.dart';
 
 class EditOrganisationProfile extends StatefulWidget {
   const EditOrganisationProfile({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
 
     // Get organization details
     final organizationResponse = await http.post(
-      Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
+      Uri.parse(API.organizationDetails),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final organizationData = await jsonDecode(organizationResponse.body)['data']
@@ -72,7 +74,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
 
     // Get all amenities
     final amenitiesResponse = await http.get(
-      Uri.parse('https://app.partypeople.in/v1/party/organization_amenities'),
+      Uri.parse(API.orgAmenities),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final amenitiesData = await jsonDecode(amenitiesResponse.body)['data'];
@@ -146,9 +148,11 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                       child: Obx(
                         () => Stack(
                           children: [
-                            SizedBox(
+                            Container(
                               height: Get.height*0.25,
                               width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10)),
                               child: controller.timeline.value != ''
                                   ? controller.isLoading.value == true
                                       ? const Center(
@@ -156,14 +160,15 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                                           radius: 15,
                                           color: Colors.black,
                                         ))
-                                      : Card(shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
+                                      : Card(
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(15.0),
                           bottomRight: Radius.circular(15.0),
                           topLeft: Radius.circular(15.0),
                           topRight: Radius.circular(15.0),
                         ),),
-                                          child: ClipRRect(borderRadius: BorderRadius.circular(15),
+                                            child: ClipRRect(borderRadius: BorderRadius.circular(15),
                                             child: CachedNetworkImageWidget(
                                                 imageUrl:
                                                     controller.timeline.value,
@@ -265,6 +270,31 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Get.to( AddImageProfile());
+                  },
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      width: Get.width*0.25,
+                      margin: EdgeInsets.only(right: 28),
+                      alignment: Alignment.center,
+                      height: Get.width*0.08,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                      color: Colors.orange),
+                      child: Text('Add Images',
+                        style: TextStyle(fontSize: 13.sp,
+                          color: Colors.white,
+                            fontWeight: FontWeight.w600
+                        ),),
+                    ),
+                  ),
+                ),
+
                 TextFieldWithTitle(
                   title: 'Organization Name *',
                   controller: controller.name,
@@ -485,7 +515,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                             } else if (controller
                                 .selectedAmenitiesListID.isEmpty) {
                               Get.snackbar(
-                                  'Amenities', 'Select atleast 1 Amenities');
+                                  'Amenities', 'Select at least 1 Amenities');
                             } else if (controller.timeline.isEmpty) {
                               Get.snackbar('Cover Photo', 'Select Cover Photo');
                             } else if (controller.profile.isEmpty) {

@@ -419,7 +419,7 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                             } else if (controller
                                 .selectedAmenitiesListID.isEmpty) {
                               Get.snackbar(
-                                  'Amenities', 'Select atleast 1 Amenities');
+                                  'Amenities', 'Select at least 1 Amenities');
                             } else if (controller.timeline.isEmpty) {
                               Get.snackbar('Cover Photo', 'Select Cover Photo');
                             } else if (controller.profile.isEmpty) {

@@ -21,6 +21,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
+import '../../../constants/const_strings.dart';
 import '../../../controller/organisation/dashboard/organization_dashboard.dart';
 import '../../../model/partyModel/partyDataModel.dart';
 import '../../notification/notification_screen.dart';
@@ -46,7 +47,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
   readNotificationCount() async {
     http.Response response = await http.post(
         Uri.parse(
-            'https://app.partypeople.in/v1/party/notification_read_status_update'),
+            API.readNotification),
         headers: {'x-access-token': '${GetStorage().read('token')}'});
 
     print('Notification count read ::${response.body}');
@@ -768,6 +769,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                           partyController
                                                                               .isEditable
                                                                               .value = true;
+                                                                          partyController.isRepostParty.value = false;
                                                                           partyController.getPrefiledData =
                                                                               controller.jsonPartyPopularData[index];
                                                                           partyController
@@ -1202,6 +1204,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                               partyController
                                                                   .isEditable
                                                                   .value = true;
+                                                              partyController.isRepostParty.value = false;
                                                               partyController
                                                                       .getPrefiledData =
                                                                   controller
@@ -1480,6 +1483,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                               onTap: () {
                                                 partyController
                                                     .isEditable.value = true;
+                                                partyController.isRepostParty.value = false;
                                                 partyController
                                                         .getPrefiledData =
                                                     widget.jsonPartyData[index];
@@ -1553,6 +1557,7 @@ class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
                                   child: GestureDetector(
                                     onTap: () {
                                       partyController.isEditable.value = true;
+                                      partyController.isRepostParty.value = false;
                                       partyController.getPrefiledData =
                                           widget.jsonPartyData[index];
                                       partyController.partyId.value = partyController.getPrefiledData.id!;

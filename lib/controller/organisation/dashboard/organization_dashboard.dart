@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
+import '../../../constants/const_strings.dart';
 import '../../../model/partyModel/partyDataModel.dart';
 
 class OrganizationDashboardController extends GetxController {
@@ -30,6 +31,10 @@ class OrganizationDashboardController extends GetxController {
   RxString partyView = ''.obs;
   RxString partyOngoing = ''.obs;
   RxString timelinePic = ''.obs;
+  RxString profileImgB =''.obs;
+  RxString profileImgC =''.obs;
+  RxString profileImgD =''.obs;
+  RxString profileImgE =''.obs;
   RxString organizationDesc = ''.obs;
   RxString latitude = ''.obs;
   RxString longitude = ''.obs;
@@ -67,7 +72,7 @@ class OrganizationDashboardController extends GetxController {
     isLoading.value = true;
     if (GetStorage().read('token') != null) {
       final response = await http.post(
-        Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
+        Uri.parse(API.organizationDetails),
         headers: {'x-access-token': '${GetStorage().read('token')}'},
       );
 
@@ -80,6 +85,10 @@ class OrganizationDashboardController extends GetxController {
           jsonDecode(response.body)['notification_count'].toString();
       timelinePic.value = data['timeline_pic'];
       circularDP.value = data['profile_pic'];
+      profileImgB.value = data['profile_pic_b'];
+      profileImgC.value = data['profile_pic_c'];
+      profileImgD.value = data['profile_pic_d'];
+      profileImgE.value = data['profile_pic_e'];
       likes.value = _formatNumber(data['like']);
       views.value = _formatNumber(data['view']);
       going.value = _formatNumber(data['ongoing']);
@@ -129,11 +138,12 @@ class OrganizationDashboardController extends GetxController {
   var formatter = DateFormat('yyyy-MM-dd');
 
   Future<void> getPartyByDate() async {
+    // status = 0 for all parties
     try {
       log('tokennnnnnnnnnnnn ${GetStorage().read('token')}');
       http.Response response = await http.post(
         Uri.parse(
-            'https://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
+            API.getPartyById),
         body: {
           'organization_id': organisationID.value.toString(),
           'status': '0'
@@ -198,7 +208,7 @@ class OrganizationDashboardController extends GetxController {
 
       await http.post(
         Uri.parse(
-            'https://app.partypeople.in/v1/order/update_ragular_papular_status'),
+            API.updateRegularPartiesStatus),
       );
 
       update();
@@ -208,9 +218,10 @@ class OrganizationDashboardController extends GetxController {
   }
 
   getOrganisationDetailsPopular() async {
+    //status = 5 for popular parties
     http.Response response = await http.post(
         Uri.parse(
-            'https://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
+            API.getPartyById),
         body: {
           'organization_id': organisationID.value.toString(),
           'status': '5'

@@ -26,7 +26,7 @@ class ProfilePreviewView extends StatefulWidget {
 class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   // DashbordController dashbordController = Get.find();
   List<MultiSelectCard> listOfAmenities = [];
-
+  List partyImages =[];
   getAmenities() async {
     setState(() {
       var jsonAddAmenitiesData =
@@ -45,6 +45,33 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
       }
     });
   }
+
+
+  void getpartyImages()
+  {
+    if(widget.organizationData['timeline_pic']!=null){
+      partyImages.add(widget.organizationData['timeline_pic']);
+    }
+    if(widget.organizationData['profile_pic_b']!=null){
+      partyImages.add(widget.organizationData['profile_pic_b']);
+    }
+    if(widget.organizationData['profile_pic_c']!=null){
+      partyImages.add(widget.organizationData['profile_pic_c']);
+    }
+    if(widget.organizationData['profile_pic_d']!=null){
+      partyImages.add(widget.organizationData['profile_pic_d']);
+    }
+    if(widget.organizationData['profile_pic_e']!=null){
+      partyImages.add(widget.organizationData['profile_pic_e']);
+    }
+    if(widget.organizationData['profile_pic']!=null){
+      partyImages.add(widget.organizationData['profile_pic']);
+    }
+    partyImages.forEach((element) {
+      print(element.toString());
+    });
+  }
+
 
   @override
   void initState() {
@@ -68,7 +95,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                   child: CachedNetworkImageWidget(
                     imageUrl: '${widget.organizationData['timeline_pic']}',
                     fit: BoxFit.fill,
-                    height: 180,
+                    height: Get.height*0.35,
                     width: Get.width,
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error_outline),
@@ -225,6 +252,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                     ),
                     OrganizationProfileButton(
                       onPressed: () {
+                        addOrganizationsEventController.isProfileEditable.value =true;
                         Get.to(const EditOrganisationProfile());
                       },
                     ),

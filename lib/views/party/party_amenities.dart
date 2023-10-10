@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:partypeoplebusiness/controller/party_controller.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../constants/const_strings.dart';
+
 class Category {
   String id;
   String name;
@@ -67,7 +69,7 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
 
   Future<void> _fetchData() async {
     http.Response response = await http.get(
-      Uri.parse('https://app.partypeople.in/v1/party/party_amenities'),
+      Uri.parse(API.partyAmenities),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final data = jsonDecode(response.body);

@@ -11,6 +11,7 @@ import 'package:partypeoplebusiness/constants/cached_image_placeholder.dart';
 import 'package:partypeoplebusiness/controller/party_controller.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../constants/const_strings.dart';
 import '../../../model/partyModel/partyDataModel.dart';
 import '../../party/party_amenities.dart';
 import '../subscription/views/subscription_view.dart';
@@ -44,7 +45,7 @@ class _PartyPreviewState extends State<PartyPreview> {
 
   Future<void> _fetchData() async {
     http.Response response = await http.get(
-      Uri.parse('https://app.partypeople.in/v1/party/party_amenities'),
+      Uri.parse(API.partyAmenities),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
     final data = jsonDecode(response.body);

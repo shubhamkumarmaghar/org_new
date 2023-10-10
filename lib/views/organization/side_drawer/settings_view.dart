@@ -10,6 +10,8 @@ import 'package:partypeoplebusiness/controller/organisation/dashboard/organizati
 import 'package:partypeoplebusiness/views/login_user/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../constants/const_strings.dart';
+
 class SettingsView extends StatefulWidget {
   const SettingsView({Key? key}) : super(key: key);
 
@@ -25,7 +27,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   deleteAccountAPICall() async {
     http.Response response = await http.post(
-        Uri.parse('https://app.partypeople.in/v1/party/delete_organization'),
+        Uri.parse(API.deleteOrganization),
         headers: {
           'x-access-token': '${GetStorage().read('token')}'
         },

@@ -15,15 +15,31 @@ import 'package:partypeoplebusiness/constants/const_strings.dart';
 import 'package:partypeoplebusiness/controller/organisation/create_profile_controller/select_photo_options_screen.dart';
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 
+import '../../../services/services.dart';
+
 class CreteOrganisationProfileController extends GetxController {
   //TODO: Implement AddOrganizationsEventController
   RxBool isLoading = false.obs;
+  RxBool isProfileEditable = false.obs;
   final description = TextEditingController();
   final fullAddress = TextEditingController();
   final name = TextEditingController();
   final branches = TextEditingController();
+  RxInt profilePhotoSelectNo = 0.obs;
+  File imageProfile_c =File('');
+  File imageProfile_b = File('');
+  File imageProfile_d = File('');
+  File imageProfile_e = File('');
+  File imageProfile = File('');
+  File coverProfile_img = File('');
   RxString timeline = ''.obs;
   RxString profile = ''.obs;
+  RxString profileB = ''.obs;
+  RxString profileE = ''.obs;
+  RxString profileC = ''.obs;
+  RxString profileD = ''.obs;
+
+  RxInt ProfilePhotoSelectNos = 0.obs;
   var county = ''.obs;
   RxString organisationID = ''.obs;
   var state = ''.obs;
@@ -63,12 +79,19 @@ class CreteOrganisationProfileController extends GetxController {
       if (image == null) return;
       File? img = File(image.path);
       img = await _cropImage(imageFile: img);
+        coverProfile_img=img!;
+        if(isProfileEditable == true){
+          String url = await uploadImage(type: '1',imgFile: coverProfile_img,id: organisationID.value,imageKey: 'timeline_pic');
+          if(url.isNotEmpty){
+            timeline.value = url;
+          }
+        }
 
-      savePhotoToFirebase('${GetStorage().read('token')}', img!, 'timeLine')
+    /*  savePhotoToFirebase('${GetStorage().read('token')}', img!, 'timeLine')
           .then((value) {
         timeline.value = value!;
         isLoading.value = false;
-      });
+      });*/
 
       Get.back();
     } on PlatformException {
@@ -82,17 +105,89 @@ class CreteOrganisationProfileController extends GetxController {
       if (image == null) return;
       File? img = File(image.path);
       img = await _cropImage(imageFile: img);
-
-      isLoading.value = true;
+      imageProfile=img!;
+      if(isProfileEditable == true){
+        String url = await uploadImage(type: '1',imgFile: imageProfile,id: organisationID.value,imageKey: 'profile_pic');
+        if(url.isNotEmpty){
+          profile.value = url;
+        }
+      }
+     /* isLoading.value = true;
       savePhotoToFirebase('${GetStorage().read('token')}', img!, 'profileImage')
           .then((value) {
         profile.value = value!;
-      });
+      });*/
       Get.back();
     } on PlatformException {
       Get.back();
     }
   }
+
+  _pickAllImageProfile(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source,imageQuality: 50);
+      if (image == null) return;
+      File? img = File(image.path);
+      img = await _cropImage(imageFile: img);
+      if(profilePhotoSelectNo == 1) {
+        imageProfile_b = img!;
+        if (isProfileEditable == true) {
+          String url = await uploadImage(type: '1',
+              imgFile: imageProfile_b,
+              id: organisationID.value,
+              imageKey: 'profile_pic_b');
+          if (url.isNotEmpty) {
+            profileB.value = url;
+          }
+        }
+      }
+      if(profilePhotoSelectNo == 2) {
+        imageProfile_c = img!;
+        if (isProfileEditable == true) {
+          String url = await uploadImage(type: '1',
+              imgFile: imageProfile_c,
+              id: organisationID.value,
+              imageKey: 'profile_pic_c');
+          if (url.isNotEmpty) {
+            profileC.value = url;
+          }
+        }
+      }
+      if(profilePhotoSelectNo == 3) {
+        imageProfile_d = img!;
+        if (isProfileEditable == true) {
+          String url = await uploadImage(type: '1',
+              imgFile: imageProfile_d,
+              id: organisationID.value,
+              imageKey: 'profile_pic_c');
+          if (url.isNotEmpty) {
+            profileD.value = url;
+          }
+        }
+      }
+      if(profilePhotoSelectNo == 4) {
+        imageProfile_e = img!;
+        if (isProfileEditable == true) {
+          String url = await uploadImage(type: '1',
+              imgFile: imageProfile_e,
+              id: organisationID.value,
+              imageKey: 'profile_pic_c');
+          if (url.isNotEmpty) {
+            profileE.value = url;
+          }
+        }
+      }
+      /* isLoading.value = true;
+      savePhotoToFirebase('${GetStorage().read('token')}', img!, 'profileImage')
+          .then((value) {
+        profile.value = value!;
+      });*/
+      Get.back();
+    } on PlatformException {
+      Get.back();
+    }
+  }
+
 
   Future<File?> _cropImage({required File imageFile}) async {
     CroppedFile? croppedImage =
@@ -151,6 +246,31 @@ class CreteOrganisationProfileController extends GetxController {
     );
   }
 
+  void showSelectPhotoOptionsProfileImages(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.28,
+          maxChildSize: 0.4,
+          minChildSize: 0.28,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SelectPhotoOptionsScreen(
+                onTap: _pickAllImageProfile,
+              ),
+            );
+          }),
+    );
+  }
+
   var jsonAddAmenitiesData;
   List<MultiSelectCard> ameList = [];
 
@@ -159,7 +279,7 @@ class CreteOrganisationProfileController extends GetxController {
 
     // Get organization details
     final organizationResponse = await http.post(
-      Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
+      Uri.parse(API.organizationDetails),
       headers: {
         'x-access-token': '${GetStorage().read('token')}',
       },
@@ -199,7 +319,7 @@ class CreteOrganisationProfileController extends GetxController {
     print("Token From Shared Preference :=> '${GetStorage().read('token')}");
     // Get all amenities
     final amenitiesResponse = await http.get(
-      Uri.parse('https://app.partypeople.in/v1/party/organization_amenities'),
+      Uri.parse(API.orgAmenities),
       headers: {
         'x-access-token': '${GetStorage().read('token')}',
       },
@@ -231,7 +351,7 @@ class CreteOrganisationProfileController extends GetxController {
     };
 
     var request = http.MultipartRequest(
-        'POST', Uri.parse('${apiUrlString}party/add_organization'));
+        'POST', Uri.parse(API.addOrganizationDetails));
     request.fields.addAll({
       'organization_amenitie_id': selectedAmenitiesListID
           .toString()
@@ -247,8 +367,10 @@ class CreteOrganisationProfileController extends GetxController {
       'latitude': '${fullAddress.text}',
       'longitude': '${fullAddress.text}, $city, $state, $county',
       'type': '1',
-      'profile_pic': '$profile',
-      'timeline_pic': '$timeline',
+      if(timeline.value.isNotEmpty && coverProfile_img.path.isEmpty)'timeline_pic': timeline.value??'',
+      if(profile.value.isNotEmpty && imageProfile.path.isEmpty)'profile_pic': profile.value??'',
+      //'profile_pic': '$profile',
+     // 'timeline_pic': '$timeline',
     });
 
     request.headers.addAll(headers);
@@ -273,7 +395,7 @@ class CreteOrganisationProfileController extends GetxController {
 
   getAPIOverview() async {
     http.Response response = await http.post(
-        Uri.parse('https://app.partypeople.in/v1/party/organization_details'),
+        Uri.parse(API.organizationDetails),
         headers: {'x-access-token': '${GetStorage().read('token')}'});
     organisationID.value = jsonDecode(response.body)['data'][0]['id'];
     if (jsonDecode(response.body)['data'] != null) {
@@ -288,7 +410,6 @@ class CreteOrganisationProfileController extends GetxController {
       update();
       refresh();
     }
-
     update();
     refresh();
   }
@@ -299,7 +420,7 @@ class CreteOrganisationProfileController extends GetxController {
     var headers = {'x-access-token': '${GetStorage().read('token')}'};
 
     var request = http.MultipartRequest('POST',
-        Uri.parse('https://app.partypeople.in/v1/party/update_organization'));
+        Uri.parse(API.updateOrganization));
     request.fields.addAll({
       'organization_amenitie_id': selectedAmenitiesListID
           .toString()

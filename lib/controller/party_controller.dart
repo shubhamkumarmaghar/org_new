@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:partypeoplebusiness/controller/organisation/dashboard/organization_dashboard.dart';
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 
+import '../constants/const_strings.dart';
 import '../constants/statecity/model/state_model.dart';
 import '../model/partyModel/partyDataModel.dart';
 
@@ -293,7 +294,7 @@ class PartyController extends GetxController {
       // 'Cookie': 'ci_session=f72b54d682c45ebf19fcc0fd54cef39508588d0c'
     };
     var request = http.MultipartRequest(
-        'POST', Uri.parse('https://app.partypeople.in/v1/party/update'));
+        'POST', Uri.parse(API.partyUpdate));
     request.fields.addAll({
       'title': title.text,
       'description': description.text,
@@ -328,7 +329,9 @@ class PartyController extends GetxController {
       'couples': couplesPrice.text,
       'others': othersPrice.text,
       'party_id': '${getPrefiledData.id}',
-      'cover_photo': timeline.value
+      'cover_photo': timeline.value,
+      'image_b':imageB.value??'',
+      'image_c':imageC.value??''
       // 'organization_id': '1'
     });
     request.headers.addAll(headers);
@@ -429,7 +432,7 @@ class PartyController extends GetxController {
     Set<String> listGender = {};
   //  listGender.addAll(genderList);
     var request = http.MultipartRequest(
-        'POST', Uri.parse('https://app.partypeople.in/v1/party/add'));
+        'POST', Uri.parse(API.partyAdd));
     request.fields.addAll({
       'title': title.text,
       'description': description.text,
@@ -463,14 +466,27 @@ class PartyController extends GetxController {
       'stag': stagPrice.text,
       'couples': couplesPrice.text,
       'others': othersPrice.text,
-      'cover_photo': timeline.value,
-      'image_b':imageB.value,
-      'image_c':imageC.value,
+      if(timeline.value.isNotEmpty && cover_img.path.isEmpty)'cover_photo': timeline.value??'',
+      if(imageB.value.isNotEmpty && image_b.path.isEmpty)'image_b':imageB.value??'',
+      if(imageC.value.isNotEmpty && image_c.path.isEmpty)'image_c':imageC.value??'',
     });
+   // List<dynamic> images = [];
+    if(cover_img.path.isNotEmpty){
+     final imga = await http.MultipartFile.fromPath('cover_photo',cover_img.path,);
+     request.files.add(imga);
+}
+    if(image_b.path.isNotEmpty){
+      final imgb = await http.MultipartFile.fromPath('image_b',image_b.path,);
+      request.files.add(imgb);
+    }
+    if(image_c.path.isNotEmpty) {
+      final imgc = await http.MultipartFile.fromPath('image_c', image_c.path,);
+      request.files.add(imgc);
+    }
+    //log('ddddd ${imga.contentType} - ${imga.field} - ${imga.filename}');
+   // request.files.addAllIf(( http.MultipartFile item)=>item.field.isNotEmpty, [imga,imgb,imgc]);
+   // request.files.addAll([]);
 
-    final data = await http.MultipartFile.fromPath('image_b',image_b.path,);
-    log('ddddd ${data.contentType} - ${data.field} - ${data.filename}');
-    request.files.addAll([data]);
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -520,7 +536,7 @@ class PartyController extends GetxController {
 
    Future<void> getStateData() async {
     final response = await http.post(
-      Uri.parse('https://app.partypeople.in/v1/home/states'),
+      Uri.parse(API.getStates),
       headers: <String, String>{
         'x-access-token': '${GetStorage().read('token')}',
       },
@@ -555,7 +571,7 @@ class PartyController extends GetxController {
 
   Future<void> getCityData({required String cityid}) async {
     final response = await http.post(
-        Uri.parse('https://app.partypeople.in/v1/home/cities'),
+        Uri.parse(API.getCities),
         headers: <String, String>{
           'x-access-token': '${GetStorage().read('token')}',
         },

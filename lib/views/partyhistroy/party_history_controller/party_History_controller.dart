@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../constants/const_strings.dart';
 import '../../../controller/organisation/dashboard/organization_dashboard.dart';
 import '../../../model/partyModel/partyDataModel.dart';
 
@@ -26,7 +27,7 @@ class PartyHistoryController extends GetxController{
     try {
       http.Response response = await http.post(
         Uri.parse(
-            'https://app.partypeople.in/v1/party/get_user_organization_party_by_id'),
+            API.getPartyById),
         headers: {
           'x-access-token': '${GetStorage().read('token')}',
         },
