@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/const_strings.dart';
@@ -60,13 +61,16 @@ class OrganizationDashboardController extends GetxController {
 
   @override
   void onInit() {
+
     super.onInit();
+
     getAPIOverview();
 
     /*Timer.periodic(Duration(seconds: 3), (timer) {
       getAPIOverview();
     });*/
   }
+
 
   Future<void> getAPIOverview() async {
     isLoading.value = true;
@@ -85,10 +89,22 @@ class OrganizationDashboardController extends GetxController {
           jsonDecode(response.body)['notification_count'].toString();
       timelinePic.value = data['timeline_pic'];
       circularDP.value = data['profile_pic'];
-      profileImgB.value = data['profile_pic_b'];
-      profileImgC.value = data['profile_pic_c'];
-      profileImgD.value = data['profile_pic_d'];
-      profileImgE.value = data['profile_pic_e'];
+      if(data['profile_pic_b'] != null){
+        profileImgB.value = data['profile_pic_b'];
+      }
+      if(data['profile_pic_c'] != null){
+        profileImgC.value = data['profile_pic_c'];
+      }
+      if(data['profile_pic_d'] != null){
+        profileImgD.value = data['profile_pic_d'];
+      }
+      if(data['profile_pic_e'] != null){
+        profileImgE.value = data['profile_pic_e'];
+      }
+
+
+
+
       likes.value = _formatNumber(data['like']);
       views.value = _formatNumber(data['view']);
       going.value = _formatNumber(data['ongoing']);
@@ -217,6 +233,7 @@ class OrganizationDashboardController extends GetxController {
     }
   }
 
+
   getOrganisationDetailsPopular() async {
     //status = 5 for popular parties
     http.Response response = await http.post(
@@ -250,4 +267,5 @@ class OrganizationDashboardController extends GetxController {
       }
     }
   }
+
 }

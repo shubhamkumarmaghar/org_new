@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'package:partypeoplebusiness/controller/organisation/dashboard/organization_dashboard.dart';
 import 'package:partypeoplebusiness/views/partyhistroy/party_history_controller/party_History_controller.dart';
 import 'package:sizer/sizer.dart';
@@ -276,6 +277,11 @@ class CustomListTile extends StatelessWidget {
                 child: Image(
                   image: CachedNetworkImageProvider(leadingImage),
                   fit: BoxFit.fill,
+                  errorBuilder: (context, url,
+                      error) => Icon(
+                        Icons.error_outline,color: Colors.white,
+                    size: 28,
+                      ),
                 ),
               ),
             ),

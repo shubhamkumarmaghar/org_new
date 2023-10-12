@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
@@ -26,7 +27,7 @@ class ProfilePreviewView extends StatefulWidget {
 class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   // DashbordController dashbordController = Get.find();
   List<MultiSelectCard> listOfAmenities = [];
-  List partyImages =[];
+  List profileImages =[];
   getAmenities() async {
     setState(() {
       var jsonAddAmenitiesData =
@@ -47,27 +48,27 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   }
 
 
-  void getpartyImages()
+  void getPartyImages()
   {
     if(widget.organizationData['timeline_pic']!=null){
-      partyImages.add(widget.organizationData['timeline_pic']);
+      profileImages.add(widget.organizationData['timeline_pic']);
     }
     if(widget.organizationData['profile_pic_b']!=null){
-      partyImages.add(widget.organizationData['profile_pic_b']);
+      profileImages.add(widget.organizationData['profile_pic_b']);
     }
     if(widget.organizationData['profile_pic_c']!=null){
-      partyImages.add(widget.organizationData['profile_pic_c']);
+      profileImages.add(widget.organizationData['profile_pic_c']);
     }
     if(widget.organizationData['profile_pic_d']!=null){
-      partyImages.add(widget.organizationData['profile_pic_d']);
+      profileImages.add(widget.organizationData['profile_pic_d']);
     }
     if(widget.organizationData['profile_pic_e']!=null){
-      partyImages.add(widget.organizationData['profile_pic_e']);
+      profileImages.add(widget.organizationData['profile_pic_e']);
     }
     if(widget.organizationData['profile_pic']!=null){
-      partyImages.add(widget.organizationData['profile_pic']);
+      profileImages.add(widget.organizationData['profile_pic']);
     }
-    partyImages.forEach((element) {
+    profileImages.forEach((element) {
       print(element.toString());
     });
   }
@@ -76,6 +77,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   @override
   void initState() {
     getAmenities();
+    getPartyImages();
     super.initState();
   }
 
@@ -88,10 +90,11 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
         body: SingleChildScrollView(
       child: SafeArea(
         child: Column(
+
           children: [
             Stack(
               children: [
-                Container(
+              /*  Container(
                   child: CachedNetworkImageWidget(
                     imageUrl: '${widget.organizationData['timeline_pic']}',
                     fit: BoxFit.fill,
@@ -103,10 +106,34 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                         child: CupertinoActivityIndicator(
                             color: Colors.white, radius: 15)),
                   ),
-                ),
+                ),*/
+                if (widget.organizationData['profile_pic_approval_status'] == '1')
+                  Card(elevation: 5,
+                    //color: Colors.orange,
+                    clipBehavior:Clip.hardEdge ,
+                    margin: EdgeInsets.only(bottom: 25),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),),
+                    child:
+                    CarouselSlider(items: profileImages.map((element) =>
+                        customImageSlider(partyPhotos: element, imageStatus: '${widget.organizationData['profile_pic_approval_status']}') ).toList(),
+                      options: CarouselOptions(
+                        height: Get.height*0.4,
+                        // enlargeCenterPage: true,
+                        autoPlay: true,
+                        //aspectRatio: 16 / 9,
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enableInfiniteScroll: true,
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        viewportFraction: 1
+                      ),
+                    ),
+
+                  ),
                 Positioned(
-                  bottom: 0,
-                  left: Get.width * 0.4,
+                  bottom: Get.width * 0.08,
+                  left: Get.width * 0.03,
+                  //left: Get.width * 0.4,
                   child: ClipOval(
                     child: Stack(
                       children: [
@@ -144,56 +171,45 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                   ),
               ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                //  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "${widget.organizationData['name']}",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'malgun',
-                          fontSize: 18.sp),
-                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                      customIconText(icon: CupertinoIcons.person_alt_circle, text: "${widget.organizationData['name']}"),
+                    OrganizationProfileButton(
+                    onPressed: () {
+                      addOrganizationsEventController.isProfileEditable.value =true;
+                      Get.to(const EditOrganisationProfile());
+                    },
+                  ),
+                  ],),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
-                    Text(
-                      "Username - ${GetStorage().read('username')}"
-                          .capitalizeFirst!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.black,
-                          letterSpacing: 1.01,
-                          fontSize: 14.sp,
-                          fontFamily: 'malgun'),
-                    ),
+                    customIconText(icon: CupertinoIcons.person, text: "Username: ${GetStorage().read('username')}"),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     Container(
                       width: Get.width * 0.8,
                       child: Text(
                         "${widget.organizationData['description']}"
                             .capitalizeFirst!,
-                        textAlign: TextAlign.center,
+                        //textAlign: TextAlign.center,
+                        maxLines: 4,
                         style: TextStyle(
                             color: Colors.black,
-                            letterSpacing: 1.01,
+                            letterSpacing: 0.2,
                             fontSize: 14.sp,
-                            fontFamily: 'malgun'),
+                            ),
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
                     SmoothStarRating(
                       allowHalfRating: false,
@@ -208,57 +224,31 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                       spacing: .5,
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 10,
                     ),
-                    Text(
-                      widget.phoneNumber,
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'malgun'),
-                    ),
+                    customIconText(icon: CupertinoIcons.phone_circle, text: widget.phoneNumber,),
                     const SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      widget.organizationData['branch']
-                          .toString()
-                          .capitalizeFirst!,
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'malgun'),
+                    customIconText(icon: CupertinoIcons.list_dash , text: widget.organizationData['branch'],),
+                    const SizedBox(
+                      height: 10,
                     ),
                     LikesAndViewsWidget(
                         likes: int.parse(widget.organizationData['like']),
                         views: int.parse(widget.organizationData['view'])),
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
-                    Text(
-                      widget.organizationData['city_id'] == '-'
-                          ? ''
-                          : "${widget.organizationData['city_id']}"
-                              .capitalizeFirst!,
-                      style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14.sp,
-                          fontFamily: 'malgun'),
+                    customIconText(icon: CupertinoIcons.location ,
+                      text:  widget.organizationData['city_id'] == '-'
+                        ? ''
+                        : "${widget.organizationData['city_id']}",
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
-                    OrganizationProfileButton(
-                      onPressed: () {
-                        addOrganizationsEventController.isProfileEditable.value =true;
-                        Get.to(const EditOrganisationProfile());
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
@@ -267,7 +257,6 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'malgun',
                             fontSize: 13.sp),
                       ),
                     ),
@@ -303,6 +292,63 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
       ),
     ));
   }
+  Widget customImageSlider({
+    required String partyPhotos, required String imageStatus
+  }
+      ){
+    return
+      Container(
+        height: Get.height*0.4,
+        decoration: BoxDecoration(
+          // borderRadius: BorderRadius.circular(15),
+          image:DecorationImage( image: NetworkImage(partyPhotos),fit: BoxFit.cover),
+        ),
+        width: Get.width,
+        /* child: Image.network(
+                        widget.party.coverPhoto,
+                        width: Get.width,
+                        height: 250,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                          );
+                        },
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                          );
+                        },
+                      ), */
+      );
+  }
+}
+
+Widget customIconText({required IconData icon , required String text}){
+  return Row(children: [
+    Icon(icon,color: Colors.grey,),
+    SizedBox(width: 5,),
+    Text(
+    text
+        .capitalizeFirst!,
+    textAlign: TextAlign.center,
+    style: TextStyle(
+      color: Colors.black,
+      // letterSpacing: 1.01,
+      fontSize: 13.sp,
+      fontWeight: FontWeight.normal,
+    ),
+  ),
+  ],);
 }
 
 class OrganizationProfileButton extends StatefulWidget {
@@ -348,6 +394,7 @@ class _OrganizationProfileButtonState extends State<OrganizationProfileButton>
       child: Transform.scale(
         scale: _animation.value,
         child: Container(
+          width: Get.width*0.3,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             boxShadow: [
@@ -368,24 +415,26 @@ class _OrganizationProfileButtonState extends State<OrganizationProfileButton>
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Edit Organization Profile',
-                  style: TextStyle(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: FittedBox(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.edit,
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    'Edit Profile',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -128,7 +128,6 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                   alignment: Alignment.center,
                   child: Text('Edit Profile',
                       style: TextStyle(
-                        fontFamily: 'malgun',
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.0,
@@ -149,7 +148,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                         () => Stack(
                           children: [
                             Container(
-                              height: Get.height*0.25,
+                              height: Get.height*0.4,
                               width: double.maxFinite,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10)),

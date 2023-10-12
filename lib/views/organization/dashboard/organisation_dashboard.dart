@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,8 +14,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:lottie/lottie.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:partypeoplebusiness/controller/party_controller.dart';
 import 'package:partypeoplebusiness/views/organization/party_preview/party_preview.dart';
 import 'package:partypeoplebusiness/views/organization/profile_preview/profile_preview.dart';
@@ -38,6 +44,9 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
   OrganizationDashboardController controller =
       Get.put(OrganizationDashboardController());
 
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+  late StreamSubscription subscription;
   int totalPartiesCount = 0;
   double currentDotIndex = 0.0;
   var partiesJsonData;
@@ -73,6 +82,16 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
     controller.getAPIOverview();
     controller.getOrganisationDetailsPopular();
   }
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+            (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (!isDeviceConnected && isAlertSet == false) {
+            showNoInternetDialogBox();
+            setState(() => isAlertSet = true);
+          }
+        },
+      );
 
   bool isDismissed = false;
   final GlobalKey<LiquidPullToRefreshState> _refreshIndicatorKey =
@@ -85,7 +104,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
         itShouldLoad = false;
       });
     });
-
+    getConnectivity();
     super.initState();
   }
 
@@ -1272,6 +1291,38 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
       ),
     );
   }
+
+  showNoInternetDialogBox() {
+    {
+      AwesomeDialog(
+          context: context,
+          dialogType: DialogType.noHeader,
+          animType: AnimType.BOTTOMSLIDE,
+          body: Column(crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment:MainAxisAlignment.center,
+            children: [Lottie.asset('assets/noInternet.json',),
+              Text('Please check your internet connectivity',textAlign: TextAlign.center,style:TextStyle(fontSize: 18, color: Colors.black) ,)],),
+          title: 'No Connection',
+          desc: 'Please check your internet connectivity',
+          titleTextStyle: TextStyle(fontSize: 22, color: Colors.black),
+          descTextStyle: TextStyle(fontSize: 18, color: Colors.black54),
+          btnOkText: "Ok",btnOkColor: Colors.red.shade900,
+          btnOkOnPress: () async {
+            // Navigator.pop(context, 'Cancel');
+            setState(() => isAlertSet = false);
+            isDeviceConnected =
+            await InternetConnectionChecker().hasConnection;
+            if (!isDeviceConnected && isAlertSet == false) {
+              showNoInternetDialogBox();
+              setState(() => isAlertSet = true);
+            }
+          },
+          dismissOnTouchOutside: false
+      ).show();
+    }
+  }
+
+
 }
 
 class PartiesContainerWidget extends StatefulWidget {

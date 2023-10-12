@@ -77,7 +77,9 @@ dependencies:
   flutter_faq: ^1.0.1+1
   webview_flutter: ^4.2.4
   awesome_dialog: ^3.1.0
-
+  internet_connection_checker: ^1.0.0+1
+  connectivity_plus: ^4.0.2
+  in_app_update: ^4.2.2
 
 
 dev_dependencies:
@@ -127,19 +129,19 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: PlusJakartaSans
-   - fonts:
-            - asset: asset/fonts/plusjakarta/PlusJakartaSans-Light.ttf
+    - family: PlusJakartaSans
+      fonts:
+            - asset: assets/fonts/plusjakarta/PlusJakartaSans-Light.ttf
               weight: 400
-            - asset: asset/fonts/plusjakarta/PlusJakartaSans-Regular.ttf
+            - asset: assets/fonts/plusjakarta/PlusJakartaSans-Regular.ttf
               weight: 500
-            - asset: asset/fonts/plusjakarta/PlusJakartaSans-Medium.ttf
+            - asset: assets/fonts/plusjakarta/PlusJakartaSans-Medium.ttf
               weight: 600
-            - asset: asset/fonts/plusjakarta/PlusJakartaSans-SemiBold.ttf
+            - asset: assets/fonts/plusjakarta/PlusJakartaSans-SemiBold.ttf
               weight: 700
-            - asset: asset/fonts/plusjakarta/PlusJakartaSans-Bold.ttf
+            - asset: assets/fonts/plusjakarta/PlusJakartaSans-Bold.ttf
               weight: 800
-            - asset: asset/fonts/plusjakarta/PlusJakartaSans-ExtraBold.ttf
+            - asset: assets/fonts/plusjakarta/PlusJakartaSans-ExtraBold.ttf
               weight: 900
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

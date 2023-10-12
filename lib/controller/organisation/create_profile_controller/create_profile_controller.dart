@@ -159,7 +159,7 @@ class CreteOrganisationProfileController extends GetxController {
           String url = await uploadImage(type: '1',
               imgFile: imageProfile_d,
               id: organisationID.value,
-              imageKey: 'profile_pic_c');
+              imageKey: 'profile_pic_d');
           if (url.isNotEmpty) {
             profileD.value = url;
           }
@@ -171,7 +171,7 @@ class CreteOrganisationProfileController extends GetxController {
           String url = await uploadImage(type: '1',
               imgFile: imageProfile_e,
               id: organisationID.value,
-              imageKey: 'profile_pic_c');
+              imageKey: 'profile_pic_e');
           if (url.isNotEmpty) {
             profileE.value = url;
           }
@@ -407,6 +407,11 @@ class CreteOrganisationProfileController extends GetxController {
       timeline.value =
           "${jsonDecode(response.body)['data'][0]['timeline_pic']}";
       profile.value = "${jsonDecode(response.body)['data'][0]['profile_pic']}";
+      profileB.value = "${jsonDecode(response.body)['data'][0]['profile_pic_b']}";
+      profileC.value = "${jsonDecode(response.body)['data'][0]['profile_pic_c']}";
+      profileD.value = "${jsonDecode(response.body)['data'][0]['profile_pic_d']}";
+      profileE.value = "${jsonDecode(response.body)['data'][0]['profile_pic_e']}";
+
       update();
       refresh();
     }
@@ -426,14 +431,14 @@ class CreteOrganisationProfileController extends GetxController {
           .toString()
           .replaceAll('[', '')
           .replaceAll(']', ''),
-      'city_id': '${fullAddress.text}',
+      'city_id': '${fullAddress.text}, $city, $state, $county}',
       'country' : county.value,
       'city' :  city.value,
       'state' : state.value,
       'description': description.text,
       'branch': branches.text,
       'name': name.text.toUpperCase(),
-      'latitude': '${fullAddress.text}, $city, $state, $county',
+      'latitude': '${fullAddress.text}',
       'longitude': '${fullAddress.text}, $city, $state, $county',
       'organization_id': organisationID.value,
       'type': '1',

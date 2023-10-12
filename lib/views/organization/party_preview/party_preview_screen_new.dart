@@ -106,6 +106,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
 
   @override
   void initState() {
+    controller.partyId.value = widget.party.id!;
     _fetchData();
     getpartyImages();
     print(" ${widget.party.toJson()}");
@@ -189,9 +190,10 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                         ? Colors.grey.shade300
                         : Colors.purple.shade900,
                     label: 'Boost Post',
-                    onPressed: () {
+                    onPressed: () async {
                       if (widget.party.approvalStatus != '1') {
                       } else {
+                        await controller.getSubscriptionPlan();
                         Get.to(SubscriptionView(
                             id: '${widget.party.id}', data: widget.party));
                       }

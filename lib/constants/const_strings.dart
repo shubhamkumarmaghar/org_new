@@ -25,6 +25,7 @@ class API {
 
 
  static const String getSubscriptionTransactionHistory = '$apiUrlString/Subscription/transaction_history';
+ static const String getSubscriptionPlan = '$apiUrlString/subscription/subscription_plan_organization';
  static const String orgUserSubscriptionPurchase = '$apiUrlString/subscription/organiztion_user_subscriptions_purchase';
  static const String userSubscriptionPlanStatusUpdate = '$apiUrlString/subscription/user_subscription_plan_status_update';
  static const String createOrder = '$apiUrlString/order/create_order';

@@ -15,6 +15,7 @@ import 'package:partypeoplebusiness/views/organization/dashboard/organisation_da
 import '../constants/const_strings.dart';
 import '../constants/statecity/model/state_model.dart';
 import '../model/partyModel/partyDataModel.dart';
+import '../model/subscription_plan_model/subscription_plan_model.dart';
 
 class PartyController extends GetxController {
   List<StateName> stateName = [] ;
@@ -71,6 +72,9 @@ class PartyController extends GetxController {
   late Party getPrefiledData;
   RxBool isEditable = false.obs;
   RxBool isRepostParty = false.obs;
+
+  SubscriptionPlanModel subscriptionModel = SubscriptionPlanModel(subsData: []);
+  List<SubscriptionData> subsList = [];
 
   @override
   void dispose() {
@@ -570,40 +574,81 @@ class PartyController extends GetxController {
 
 
   Future<void> getCityData({required String cityid}) async {
-    final response = await http.post(
-        Uri.parse(API.getCities),
-        headers: <String, String>{
-          'x-access-token': '${GetStorage().read('token')}',
-        },
-        body: {'state_id' : cityid,}
+    try {
+      final response = await http.post(
+          Uri.parse(API.getCities),
+          headers: <String, String>{
+            'x-access-token': '${GetStorage().read('token')}',
+          },
+          body: {'state_id': cityid,}
 
-    );
+      );
 
-    if (response.statusCode == 200) {
-      // If the server returns a 200 OK response,
-      // then parse the JSON.
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      print(jsonResponse);
-      if (jsonResponse['status'] == 1 && jsonResponse['message'].contains('Data Found')) {
-        //  cityName = jsonResponse['data'];
-        var data= StateCityModel.fromJson(jsonResponse) ;
-        var list = data.data ?? [] ;
-        cityName= list ;
-        update();
+      if (response.statusCode == 200) {
+        // If the server returns a 200 OK response,
+        // then parse the JSON.
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        print(jsonResponse);
+        if (jsonResponse['status'] == 1 &&
+            jsonResponse['message'].contains('Data Found')) {
+          //  cityName = jsonResponse['data'];
+          var data = StateCityModel.fromJson(jsonResponse);
+          var list = data.data ?? [];
+          cityName = list;
+          update();
+        }
+        else {
+          print('else  Data not found');
+
+          //isLiked= false;
+        }
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to fetch data ');
       }
-      else {
-        print('else  Data not found');
-
-        //isLiked= false;
-      }
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to fetch data ');
-
+    }
+    catch(e){
+      log('error: $e');
     }
   }
 
+  Future<void> getSubscriptionPlan() async {
+    try {
+      final response = await http.post(
+          Uri.parse(API.getSubscriptionPlan),
+          headers: <String, String>{
+            'x-access-token': '${GetStorage().read('token')}',
+          },
+      );
+
+      if (response.statusCode == 200) {
+        // If the server returns a 200 OK response,
+        // then parse the JSON.
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        print(jsonResponse);
+        if (jsonResponse['status'] == 1 &&
+            jsonResponse['message'].contains('Data Found')) {
+          //  cityName = jsonResponse['data'];
+          var data = SubscriptionPlanModel.fromJson(jsonResponse);
+          subscriptionModel = data;
+          update();
+        }
+        else {
+          print('else  Data not found');
+
+          //isLiked= false;
+        }
+      } else {
+        // If the server did not return a 200 OK response,
+        // then throw an exception.
+        throw Exception('Failed to fetch data ');
+      }
+    }
+    catch(e){
+      log('error: $e');
+    }
+  }
   @override
   void onClose() {
     stateName.clear();

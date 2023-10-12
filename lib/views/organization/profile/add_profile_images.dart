@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../constants/cached_image_placeholder.dart';
 import '../../../controller/organisation/create_profile_controller/create_profile_controller.dart';
@@ -23,10 +24,11 @@ class _AddImageProfileState extends State<AddImageProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(body: Container(margin: EdgeInsets.all(10),child:
+    return  Scaffold(body:
+    Container(margin: EdgeInsets.all(10),child:
     Column(
       children: [
-        GestureDetector(
+       /* GestureDetector(
       onTap: () {
         defaultController.defaultControllerType.value = 0;
         controller.showSelectPhotoOptionsTimeline(context);
@@ -107,7 +109,26 @@ class _AddImageProfileState extends State<AddImageProfile> {
           ],
         ),
       ),
-    ),
+    ),*/
+        SizedBox(
+          height: Get.height*0.05,
+        ),
+        Row(
+          children: [
+            GestureDetector(onTap: (){Navigator.pop(context);},
+              child: Container(alignment: Alignment.bottomLeft,
+                  child: CircleAvatar(child: Icon(Icons.arrow_back,color: Colors.red.shade900,),
+                    backgroundColor: Colors.grey.shade200,)),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Text('Add more Images',style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.w600),),
+          ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
        GestureDetector(
          onTap: () {
@@ -179,20 +200,25 @@ class _AddImageProfileState extends State<AddImageProfile> {
                   fit: BoxFit.fill,
                   errorWidget: (context, url,
                       error) =>
-                  const Center(
-                    child:
-                    CupertinoActivityIndicator(
+                   Center(
+                    child:  Card(
+                      child: Lottie.asset(
+                        'assets/127619-photo-click.json',
+                      ),
+                   /* CupertinoActivityIndicator(
                       radius: 15,
                       color: Colors.black,
-                    ),
-                  ),
+                    ),*/
+                  ),),
                   placeholder: (context, url) =>
                   const Center(
                       child:
                       CupertinoActivityIndicator(
                           color: Colors
                               .black,
-                          radius: 15))))
+                          radius: 15))
+              ),
+          )
               : imageFile.path.isEmpty ?
           Card(
             child: Lottie.asset(

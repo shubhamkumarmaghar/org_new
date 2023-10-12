@@ -709,9 +709,11 @@ class _CreatePartyState extends State<CreateParty> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14),
+
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14),
                       child: DropdownButtonFormField<String>(
-                         decoration: InputDecoration(
+                         decoration:
+                         InputDecoration(
                          enabledBorder: OutlineInputBorder(
                          borderSide:
                         BorderSide(color: Colors.white, width: 2),
@@ -752,7 +754,7 @@ class _CreatePartyState extends State<CreateParty> {
                   // for city
                   Container(
                     // width: 300,
-                      padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14),
                       child: DropdownButtonFormField<String>(
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -1040,12 +1042,15 @@ class _CreatePartyState extends State<CreateParty> {
                                   fit: BoxFit.fill,
                                   errorWidget: (context, url,
                                       error) =>
-                                  const Center(
+                                   Center(
                                     child:
-                                    CupertinoActivityIndicator(
+                                       Lottie.asset(
+                                        'assets/127619-photo-click.json',
+                                    ),
+                                   /* CupertinoActivityIndicator(
                                       radius: 15,
                                       color: Colors.black,
-                                    ),
+                                    ),*/
                                   ),
                                   placeholder: (context, url) =>
                                   const Center(
@@ -1076,7 +1081,7 @@ class _CreatePartyState extends State<CreateParty> {
                             ),
                           ),
                         ),
-                        Positioned(
+                       /* Positioned(
                           bottom: 0,
                           right: 0,
                           child: Container(
@@ -1092,7 +1097,7 @@ class _CreatePartyState extends State<CreateParty> {
                               ),
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     );
 
@@ -1127,12 +1132,14 @@ class _CreatePartyState extends State<CreateParty> {
                                   fit: BoxFit.fill,
                                   errorWidget: (context, url,
                                       error) =>
-                                  const Center(
-                                    child:
-                                    CupertinoActivityIndicator(
+                                  Center(
+                                    child: Lottie.asset(
+                                      'assets/127619-photo-click.json',
+                                    ),
+                                   /* CupertinoActivityIndicator(
                                       radius: 15,
                                       color: Colors.black,
-                                    ),
+                                    ),*/
                                   ),
                                   placeholder: (context, url) =>
                                   const Center(
@@ -1163,7 +1170,7 @@ class _CreatePartyState extends State<CreateParty> {
                             ),
                           ),
                         ),
-                        Positioned(
+                      /*  Positioned(
                           bottom: 0,
                           right: 0,
                           child: Container(
@@ -1179,7 +1186,7 @@ class _CreatePartyState extends State<CreateParty> {
                               ),
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     );
 
@@ -1213,9 +1220,16 @@ class _OptionSelectorState extends State<OptionSelector> {
             onSelected: (string, index, isSelected) {
               setState(() {
                 if (isSelected) {
+                  if(controller.genderList.contains(string.toLowerCase())){
+                    log('already contains--- $string');
+                  }else{
                   controller.genderList.add(string);
+                  log('contains $string');
+                  }
                 } else {
                   controller.genderList.remove(string);
+                  log('contains remove $string');
+
                 }
                 showLadiesFees = false;
                 showStagFees = false;

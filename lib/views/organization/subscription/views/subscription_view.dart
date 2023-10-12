@@ -77,7 +77,6 @@ class _SubscriptionViewState extends State<SubscriptionView> {
   @override
   Widget build(BuildContext context) {
     print(widget.data);
-
     return Scaffold(
         body: SafeArea(
             child: Container(
@@ -124,7 +123,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                           return AlertDialog(
                             title: Text('About Our Pricing'),
                             content: Text(
-                                'For 1 Day of Popular Post we charge Rs 499/-'),
+                                'For 1 Day of Popular Post we charge Rs ${partyController.subscriptionModel.subsData[0].amount}/-'),
                             actions: [
                               ElevatedButton(
                                 onPressed: () {
@@ -185,7 +184,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                                   height: 5,
                                 ),
                                 Text(
-                                  '₹${int.parse(partyController.numberOfDays.value.toString()) * 499}',
+                                  '₹${int.parse(partyController.numberOfDays.value.toString()) * int.parse(partyController.subscriptionModel.subsData[0].amount)}',
                                   style: TextStyle(
                                     fontFamily: 'malgun',
                                     fontSize: 18.sp,
@@ -391,7 +390,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                   }
                   else {
                     selectPlanBottom(
-                      context: context, amount: '499', startDate: '${partyController
+                      context: context, amount: '${partyController.subscriptionModel.subsData[0].amount}', startDate: '${partyController
                         .popular_start_date.text} ${widget.data.startTime}', endDate: '${partyController
                         .popular_end_date.text}');
                   }
@@ -423,8 +422,8 @@ class _SubscriptionViewState extends State<SubscriptionView> {
     required String amount ,
     required String startDate ,
     required String endDate}){
-    String totalamount = '${double.parse(amount)*partyController.numberOfDays.value}';
-   log('${partyController.numberOfDays.value}  $totalamount' );
+    String totalAmount = '${double.parse(amount)*partyController.numberOfDays.value}';
+   log('${partyController.numberOfDays.value}  $totalAmount' );
     showModalBottomSheet(context: context,backgroundColor: Colors.red.shade100, shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(20),
@@ -453,7 +452,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Total Amount:' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.grey),),
-                  Text('₹'+'${totalamount}' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
+                  Text('₹'+'${totalAmount}' , style: TextStyle(fontSize: 22 , fontWeight: FontWeight.w600, color: Colors.blue),),
                 ]),
             Spacer(),
              GestureDetector(
@@ -464,12 +463,12 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                     startDate: startDate,
                     endDate: endDate,
                     userType: 'Organization',
-                    amount: '${totalamount}');
+                    amount: '${totalAmount}');
                 Navigator.pop(context);
 
                  await Get.to(
                       WebViewContainer(url:'https://app.partypeople.in/easebuzz/easebuzz.php?api_name=initiate_payment'
-                      '&amount=${double.parse(totalamount)}'
+                      '&amount=${double.parse(totalAmount)}'
                   // '&amount=${double.parse('10')}'
                       '&phone=${widget.data.phoneNumber}'
                       '&email=${partyController.email.value.text}'

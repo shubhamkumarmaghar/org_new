@@ -18,7 +18,7 @@ class SubscriptionController extends GetxController {
   RxInt discountPercentage = 1.obs;
   RxInt subscriptionAmount = 499.obs;
   RxInt totalAmount = 499.obs;
-  int subsOrderId = 0;
+  RxInt subsOrderId = 0.obs;
 
   ///Call this function if payment was successfull
   oderIdPlaced(String partyID, String startDate, String endDate) async {
@@ -60,9 +60,9 @@ class SubscriptionController extends GetxController {
 
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
-        if (jsonResponse['status'] == 1 && jsonResponse['message'].contains(
-            'Subscription plan purchase successfully.')) {
-          subsOrderId = jsonResponse['subscription_purchase_id'];
+        if (jsonResponse['status'] == 1 ) {
+         var id  = jsonResponse['subscription_purchase_id'];
+         subsOrderId.value = int.parse(id.toString());
           log(' subs id : $subsOrderId');
           update();
           value = '1';
@@ -91,7 +91,8 @@ class SubscriptionController extends GetxController {
     return value ;
   }
 
-  Future<void> updateSubsPaymentStatus({required String subsId,required String paymentStatus,}) async{
+  Future<String> updateSubsPaymentStatus({required String subsId,required String paymentStatus,}) async{
+    String res='';
     try {
       log('$subsId  $paymentStatus ');
       final response = await http.post(Uri.parse(
@@ -99,8 +100,8 @@ class SubscriptionController extends GetxController {
           headers: <String, String>{
             'x-access-token': '${GetStorage().read('token')}',
           },
-          body: { 'subscription_purchase_id':subsId?.toString(),
-            'payment_status':paymentStatus?.toString(),
+          body: { 'subscription_purchase_id':subsId.toString(),
+            'payment_status':paymentStatus.toString(),
             //  'payment_response':paymentResponse?.toString(),
             // 'payment_id' :paymentId?.toString()
           }
@@ -116,20 +117,24 @@ class SubscriptionController extends GetxController {
           log('${jsonResponse['message']}');
           update();
           Get.snackbar("",'${jsonResponse['message']}' );
+          res = '1';
         }
         else {
           update();
           log('${jsonResponse['message']}');
+          res = '0';
         }
       }
       else{
         log('update subscription api response is not 200');
+        res = '0';
       }
     }
     catch(e)
     {
       log("dfgmhmgmgh $e");
     }
+    return res;
   }
 
 }

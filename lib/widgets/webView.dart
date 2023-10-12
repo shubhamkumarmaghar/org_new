@@ -82,8 +82,9 @@ class _WebViewContainerState extends State<WebViewContainer> {
 
              var splitOrder = param[2].split('&');
              orderId = splitOrder[0];
-              await subController.updateSubsPaymentStatus(subsId: orderId, paymentStatus: paymentStatus,);
-              await subController.oderIdPlaced(widget.partyId, widget.start_Date, widget.end_Date);
+            String result=  await subController.updateSubsPaymentStatus(subsId: orderId, paymentStatus: paymentStatus,);
+            if(paymentStatus =='1'){
+              await subController.oderIdPlaced(widget.partyId, widget.start_Date, widget.end_Date);}
                Get.to(  PaymentResponseView(isSuccess: paymentStatus,orderId: orderId,amount: param[3] ,));
            }
 
