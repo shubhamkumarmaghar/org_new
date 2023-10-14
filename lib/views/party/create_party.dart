@@ -1225,31 +1225,36 @@ class _OptionSelectorState extends State<OptionSelector> {
                   }else{
                   controller.genderList.add(string);
                   log('contains $string');
+                  controller.genderList.forEach((element) {log('$element');});
                   }
                 } else {
                   controller.genderList.remove(string);
+                  controller.genderList.remove(string.toLowerCase());
                   log('contains remove $string');
-
+                  controller.genderList.forEach((element) {log('$element');});
                 }
                 showLadiesFees = false;
                 showStagFees = false;
                 showCoupleFees = false;
                 showOthersFees = false;
-                if (controller.genderList.contains('Stag')) {
+                if (controller.genderList.contains('Stag') || controller.genderList.contains('stag')) {
                   showStagFees = true;
+
                 }
-                if (controller.genderList.contains('Ladies')) {
+                if (controller.genderList.contains('Ladies')  || controller.genderList.contains('ladies')) {
                   showLadiesFees = true;
+
                 }
-                if (controller.genderList.contains('Couple')) {
+                if (controller.genderList.contains('Couple') || controller.genderList.contains('couple')) {
                   showCoupleFees = true;
+
                 }
-                if (controller.genderList.contains('Others')) {
+                if (controller.genderList.contains('Others') || controller.genderList.contains('others')) {
                   showOthersFees = true;
                 }
               });
             },
-            options: GroupButtonOptions(borderRadius: BorderRadius.circular(10),selectedColor: Colors.red.shade900),
+            options: GroupButtonOptions(borderRadius: BorderRadius.circular(10),selectedColor: Colors.red.shade900,),
             buttons: [
               "Stag",
               "Ladies",

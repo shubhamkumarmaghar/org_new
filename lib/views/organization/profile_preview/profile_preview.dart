@@ -128,7 +128,6 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                         viewportFraction: 1
                       ),
                     ),
-
                   ),
                 Positioned(
                   bottom: Get.width * 0.08,
@@ -292,10 +291,8 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
       ),
     ));
   }
-  Widget customImageSlider({
-    required String partyPhotos, required String imageStatus
-  }
-      ){
+  Widget customImageSlider({required String partyPhotos, required String imageStatus})
+  {
     return
       Container(
         height: Get.height*0.4,

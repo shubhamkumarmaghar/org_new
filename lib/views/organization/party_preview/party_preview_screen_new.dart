@@ -275,6 +275,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                   subtitle: "${widget.party.longitude} , ${widget.party.pincode}",
                   sub: true,
                 ),
+
                 /*   CustomListTile(
                 icon: Icons.favorite,
                 title: "${widget.party.like} Likes",

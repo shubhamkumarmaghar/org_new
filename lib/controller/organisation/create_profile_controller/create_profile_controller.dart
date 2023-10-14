@@ -349,7 +349,6 @@ class CreteOrganisationProfileController extends GetxController {
       'x-access-token': '${GetStorage().read('token')}',
       // 'Cookie': 'ci_session=53748e98d26cf6811eb0a53be37158bf0cbe5b4b'
     };
-
     var request = http.MultipartRequest(
         'POST', Uri.parse(API.addOrganizationDetails));
     request.fields.addAll({
@@ -372,6 +371,15 @@ class CreteOrganisationProfileController extends GetxController {
       //'profile_pic': '$profile',
      // 'timeline_pic': '$timeline',
     });
+
+    if(coverProfile_img.path.isNotEmpty){
+      final imga = await http.MultipartFile.fromPath('cover_photo',coverProfile_img.path,);
+      request.files.add(imga);
+    }
+    if(imageProfile.path.isNotEmpty){
+      final imgb = await http.MultipartFile.fromPath('image_b',imageProfile.path,);
+      request.files.add(imgb);
+    }
 
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();

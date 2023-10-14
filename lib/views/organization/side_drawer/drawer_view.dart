@@ -14,6 +14,7 @@ import 'package:partypeoplebusiness/views/organization/side_drawer/verification_
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../controller/organisation/create_profile_controller/create_profile_controller.dart';
 import '../../../organization_transction_report/view/transction_screen.dart';
 import '../../../widgets/logout_dialouge.dart';
 import '../../faq_screen.dart';
@@ -41,6 +42,10 @@ class DrawerView extends StatefulWidget {
 }
 
 class _DrawerViewState extends State<DrawerView> {
+
+  CreteOrganisationProfileController addOrganizationsEventController =
+  Get.put(CreteOrganisationProfileController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,6 +96,7 @@ class _DrawerViewState extends State<DrawerView> {
                   title: 'Edit Organisation Profile',
                   icon: Icons.edit,
                   onTap: () {
+                    addOrganizationsEventController.isProfileEditable.value =true;
                     Get.to(EditOrganisationProfile());
                   },
                 ),
