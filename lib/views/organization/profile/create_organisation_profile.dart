@@ -102,12 +102,24 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                                                           CupertinoActivityIndicator(
                                                               color:
                                                                   Colors.black,
-                                                              radius: 15))))
-                                  : Card(
-                                      child: Lottie.asset(
-                                        'assets/127619-photo-click.json',
-                                      ),
+                                                              radius: 15))
+                                          )
+                              )
+                                  : controller.coverProfile_img.path.isEmpty ?
+                                        Card(
+                                child: Lottie.asset(
+                                  'assets/127619-photo-click.json',
+                                ),
+                              ): Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.0),
                                     ),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                  child: Image.file(controller.coverProfile_img)
+                              )
+
                             ),
                             Positioned(
                               bottom: 0,
@@ -171,7 +183,21 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                                         controller.profile.value,
                                       ),
                                     )
-                                  : Container(
+                                  :controller.imageProfile.path.isEmpty ?
+                              Card(
+                                child: Lottie.asset(
+                                  'assets/127619-photo-click.json',
+                                ),
+                              ): Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(15.0),
+                                    ),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                  child: Image.file(controller.imageProfile)
+                              )
+                            /*  Container(
                                       width: 50,
                                       height: 60,
                                       decoration: BoxDecoration(
@@ -181,7 +207,7 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                                       child: Lottie.asset(
                                           fit: BoxFit.cover,
                                           'assets/107137-add-profile-picture.json'),
-                                    ),
+                                    ),*/
                             )),
                       ),
                     ),
@@ -420,9 +446,9 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                                 .selectedAmenitiesListID.isEmpty) {
                               Get.snackbar(
                                   'Amenities', 'Select at least 1 Amenities');
-                            } else if (controller.timeline.isEmpty) {
+                            } else if (controller.coverProfile_img.path.isEmpty ) {
                               Get.snackbar('Cover Photo', 'Select Cover Photo');
-                            } else if (controller.profile.isEmpty) {
+                            } else if (controller.imageProfile.path.isEmpty) {
                               Get.snackbar('Amenities', 'Select Profile Photo');
                             } else if (controller.fullAddress.text.isEmpty) {
                               Get.snackbar(

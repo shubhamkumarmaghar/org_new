@@ -66,7 +66,7 @@ class OrganizationDashboardController extends GetxController {
 
     getAPIOverview();
 
-    /*Timer.periodic(Duration(seconds: 3), (timer) {
+  /*  Timer.periodic(Duration(seconds: 3), (timer) {
       getAPIOverview();
     });*/
   }
@@ -189,12 +189,10 @@ class OrganizationDashboardController extends GetxController {
           return startDateA.compareTo(startDateB);
         });
         for (var party in allParties) {
-          log('gkjhgh');
+
           DateTime startDate = DateTime.parse(party['start_date']);
-          log('gkjhgh  ${startDate.toString()}');
-          log(party.toString());
+
           Party parsedParty = Party.fromJson(party);
-          log('gkjhgh  ${parsedParty.startDate}');
           if (startDate.isAtSameMomentAs(today)) {
             todayParties.add(parsedParty);
           } else if (startDate.isAtSameMomentAs(tomorrow)) {

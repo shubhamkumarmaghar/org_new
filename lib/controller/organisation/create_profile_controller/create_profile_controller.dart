@@ -373,11 +373,11 @@ class CreteOrganisationProfileController extends GetxController {
     });
 
     if(coverProfile_img.path.isNotEmpty){
-      final imga = await http.MultipartFile.fromPath('cover_photo',coverProfile_img.path,);
+      final imga = await http.MultipartFile.fromPath('timeline_pic',coverProfile_img.path,);
       request.files.add(imga);
     }
     if(imageProfile.path.isNotEmpty){
-      final imgb = await http.MultipartFile.fromPath('image_b',imageProfile.path,);
+      final imgb = await http.MultipartFile.fromPath('profile_pic',imageProfile.path,);
       request.files.add(imgb);
     }
 
@@ -412,6 +412,9 @@ class CreteOrganisationProfileController extends GetxController {
       branches.text = jsonDecode(response.body)['data'][0]['branch'] ?? '';
       description.text = jsonDecode(response.body)['data'][0]['description'];
       fullAddress.text = jsonDecode(response.body)['data'][0]['latitude'];
+      county.value = jsonDecode(response.body)['data'][0]['country'];
+      state.value = jsonDecode(response.body)['data'][0]['state'];
+      city.value = jsonDecode(response.body)['data'][0]['city'];
       timeline.value =
           "${jsonDecode(response.body)['data'][0]['timeline_pic']}";
       profile.value = "${jsonDecode(response.body)['data'][0]['profile_pic']}";

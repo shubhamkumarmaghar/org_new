@@ -12,6 +12,7 @@ import 'package:sizer/sizer.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import '../../../constants/cached_image_placeholder.dart';
+import '../../../widgets/custom_image_slider.dart';
 
 class ProfilePreviewView extends StatefulWidget {
   var organizationData;
@@ -27,7 +28,7 @@ class ProfilePreviewView extends StatefulWidget {
 class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   // DashbordController dashbordController = Get.find();
   List<MultiSelectCard> listOfAmenities = [];
-  List profileImages =[];
+  List<ProfileImageWithStatus> profileImages =[];
   getAmenities() async {
     setState(() {
       var jsonAddAmenitiesData =
@@ -51,22 +52,26 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   void getPartyImages()
   {
     if(widget.organizationData['timeline_pic']!=null){
-      profileImages.add(widget.organizationData['timeline_pic']);
+      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['timeline_pic']}', status: '${widget.organizationData['profile_pic_approval_status']}'));
     }
     if(widget.organizationData['profile_pic_b']!=null){
-      profileImages.add(widget.organizationData['profile_pic_b']);
+      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_b']}', status: '${widget.organizationData['profile_pic_b_status']}'));
+
     }
     if(widget.organizationData['profile_pic_c']!=null){
-      profileImages.add(widget.organizationData['profile_pic_c']);
+      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_c']}', status: '${widget.organizationData['profile_pic_c_status']}'));
+
     }
     if(widget.organizationData['profile_pic_d']!=null){
-      profileImages.add(widget.organizationData['profile_pic_d']);
+      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_d']}', status: '${widget.organizationData['profile_pic_d_status']}'));
+
     }
     if(widget.organizationData['profile_pic_e']!=null){
-      profileImages.add(widget.organizationData['profile_pic_e']);
+      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_e']}', status: '${widget.organizationData['profile_pic_e_status']}'));
+
     }
     if(widget.organizationData['profile_pic']!=null){
-      profileImages.add(widget.organizationData['profile_pic']);
+      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic']}', status: '${widget.organizationData['profile_pic_approval_status']}'));
     }
     profileImages.forEach((element) {
       print(element.toString());
@@ -107,7 +112,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                             color: Colors.white, radius: 15)),
                   ),
                 ),*/
-                if (widget.organizationData['profile_pic_approval_status'] == '1')
+              //  if (widget.organizationData['profile_pic_approval_status'] == '1')
                   Card(elevation: 5,
                     //color: Colors.orange,
                     clipBehavior:Clip.hardEdge ,
@@ -116,7 +121,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                       borderRadius: BorderRadius.circular(15.0),),
                     child:
                     CarouselSlider(items: profileImages.map((element) =>
-                        customImageSlider(partyPhotos: element, imageStatus: '${widget.organizationData['profile_pic_approval_status']}') ).toList(),
+                        CustomImageSlider(partyPhotos: element.image, imageStatus: element.status) ).toList(),
                       options: CarouselOptions(
                         height: Get.height*0.4,
                         // enlargeCenterPage: true,

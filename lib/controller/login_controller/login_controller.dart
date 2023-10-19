@@ -50,7 +50,6 @@ class LoginController extends GetxController {
             backgroundColor: Colors.white);
         print('User Token Authentication => ${json['data']['token']}');
         print(GetStorage().read('token'));
-
         Get.to(OTPScreen());
       }
 

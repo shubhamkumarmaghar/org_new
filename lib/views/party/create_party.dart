@@ -284,6 +284,7 @@ class _CreatePartyState extends State<CreateParty> {
   Future<void > getData()async{
    await controller.getStateData();
     stateItems = controller.stateName;
+  //  if(controller.)
     statelist();
   }
 
@@ -539,12 +540,12 @@ class _CreatePartyState extends State<CreateParty> {
                                   width: 5,
                                   child: Center(
                                     child: Image.asset(
-                                      'assets/indian_flag.png',
+                                      'assets/indian_flag.png',height: 28,width: 28,
                                     ),
                                   )),
                               prefixText: ' +91 ',
                               prefixStyle: TextStyle(
-                                  color: Colors.grey[400], fontSize: 15.sp),
+                                  color: Colors.grey[400], fontSize: 13.sp),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16,
                                 vertical: 12,
@@ -723,7 +724,6 @@ class _CreatePartyState extends State<CreateParty> {
                           borderSide:BorderSide(color: Colors.white, width: 2),
                          borderRadius: BorderRadius.circular(8),
                          ),
-
                         filled: true,
                         fillColor: Colors.white,
                         ),
@@ -750,7 +750,6 @@ class _CreatePartyState extends State<CreateParty> {
                         }).toList(),
                       )
                   ),
-
                   // for city
                   Container(
                     // width: 300,

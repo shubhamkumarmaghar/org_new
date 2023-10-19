@@ -253,7 +253,9 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                                         controller.profile.value,
                                       ),
                                     )
-                                  : Container(
+                                  :
+
+                              Container(
                                       width: 50,
                                       height: 60,
                                       decoration: BoxDecoration(
@@ -378,6 +380,11 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                     countryDropdownLabel: "Country",
                     stateDropdownLabel: "State",
                     cityDropdownLabel: "City",
+
+
+                    currentCountry: controller.county.value,
+                    currentState: controller.state.value,
+                    currentCity: controller.city.value,
 
                     ///selected item style [OPTIONAL PARAMETER]
                     selectedItemStyle: TextStyle(
