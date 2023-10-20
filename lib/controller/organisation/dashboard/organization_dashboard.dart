@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/intl.dart';
 
 import '../../../constants/const_strings.dart';
@@ -66,9 +65,9 @@ class OrganizationDashboardController extends GetxController {
 
     getAPIOverview();
 
-  /*  Timer.periodic(Duration(seconds: 3), (timer) {
+    Timer.periodic(Duration(seconds: 3), (timer) {
       getAPIOverview();
-    });*/
+    });
   }
 
 

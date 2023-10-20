@@ -339,17 +339,21 @@ Widget customIconText({required IconData icon , required String text}){
   return Row(children: [
     Icon(icon,color: Colors.grey,),
     SizedBox(width: 5,),
-    Text(
-    text
-        .capitalizeFirst!,
-    textAlign: TextAlign.center,
-    style: TextStyle(
-      color: Colors.black,
-      // letterSpacing: 1.01,
-      fontSize: 13.sp,
-      fontWeight: FontWeight.normal,
-    ),
+    Container(width: Get.width*0.5,
+      alignment: Alignment.centerLeft,
+      child: Text(
+      text
+          .capitalizeFirst!,
+        maxLines: 2,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.black,
+        // letterSpacing: 1.01,
+        fontSize: 13.sp,
+        fontWeight: FontWeight.normal,
+      ),
   ),
+    ),
   ],);
 }
 

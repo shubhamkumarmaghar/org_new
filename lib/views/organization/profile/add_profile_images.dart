@@ -201,15 +201,9 @@ class _AddImageProfileState extends State<AddImageProfile> {
                   errorWidget: (context, url,
                       error) =>
                    Center(
-                    child:  Card(
-                      child: Lottie.asset(
-                        'assets/127619-photo-click.json',
-                      ),
-                   /* CupertinoActivityIndicator(
-                      radius: 15,
-                      color: Colors.black,
-                    ),*/
-                  ),),
+                    child:  Lottie.asset(
+                      'assets/127619-photo-click.json',
+                    ),),
                   placeholder: (context, url) =>
                   const Center(
                       child:
@@ -220,10 +214,8 @@ class _AddImageProfileState extends State<AddImageProfile> {
               ),
           )
               : imageFile.path.isEmpty ?
-          Card(
-            child: Lottie.asset(
-              'assets/127619-photo-click.json',
-            ),
+          Lottie.asset(
+            'assets/127619-photo-click.json',
           ):Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
