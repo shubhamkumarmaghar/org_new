@@ -25,6 +25,7 @@ class LoginView extends StatelessWidget {
               0.0, -1.0, 1.23, 0.0, -0.115, 1.0, Alignment(0.0, 0.0)),
         ),
       ),
+
       child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -172,6 +173,89 @@ class LoginView extends StatelessWidget {
                             ),
                           ),
                         ),
+/*
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Email Id',
+                            style: TextStyle(
+                              fontFamily: 'malgun',
+                              fontSize: 13.sp,
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              letterSpacing: -0.36,
+                              fontWeight: FontWeight.w700,
+                              height: 0.9444444444444444,
+                            ),
+                            textHeightBehavior: const TextHeightBehavior(
+                                applyHeightToFirstAscent: false),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          height: 55,
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(21.0),
+                            color: const Color(0xffffffff),
+                            border: Border.all(
+                              width: 0.2,
+                              color: const Color(0xff707070),
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x21329d9c),
+                                offset: Offset(0, 13),
+                                blurRadius: 34,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.only(left: 10.0, right: 20.0),
+                            child: Row(
+                              children: [
+                               // const SizedBox(width: 8),
+                               /* Text(
+                                  '+91',
+                                  style: TextStyle(
+                                    color: const Color(0xff707070),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),*/
+                              //  const SizedBox(width: 8),
+                                Expanded(
+                                  child: TextField(
+                                    maxLines: 1,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(10),
+                                    ],
+                                    controller: controller.mobileNumber,
+                                    keyboardType: TextInputType.number,
+
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      prefixIcon: const Icon(
+                                        Icons.mail_outline_outlined,
+                                        color: Color(0xff707070),
+                                      ),
+                                      hintText: 'Enter Email Address',
+                                      hintStyle: TextStyle(
+                                        fontFamily: 'malgun',
+                                        letterSpacing: -0.36.sp,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        */
+
                         const SizedBox(
                           height: 35,
                         ),

@@ -82,6 +82,7 @@ dependencies:
   in_app_update: ^4.2.2
   blur: ^3.1.0
   shimmer: ^3.0.0
+  mobile_scanner: ^3.5.1
 
 
 dev_dependencies:
