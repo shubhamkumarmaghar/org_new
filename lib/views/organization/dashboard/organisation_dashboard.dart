@@ -30,6 +30,7 @@ import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.da
 import '../../../constants/const_strings.dart';
 import '../../../controller/organisation/dashboard/organization_dashboard.dart';
 import '../../../model/partyModel/partyDataModel.dart';
+import '../../../qr_Scanner/view/qr_scanner_view.dart';
 import '../../notification/notification_screen.dart';
 import '../party_preview/party_preview_screen_new.dart';
 
@@ -138,6 +139,21 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                 ),
               ),
               actions: [
+                GestureDetector(
+                  onTap: () async {
+                  //  await readNotificationCount();
+                //    Get.to(QrScanner());
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    child: Icon(CupertinoIcons.qrcode_viewfinder,size: 30)
+                   /* Image.asset(
+                      'assets/notification.png',
+                      fit: BoxFit.fill,
+                    )*/,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Stack(

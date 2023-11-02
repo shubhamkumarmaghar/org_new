@@ -8,6 +8,7 @@ import 'package:in_app_update/in_app_update.dart';
 import 'package:partypeoplebusiness/views/login_user/login_screen.dart';
 import 'package:partypeoplebusiness/views/onboarding_screens/onboarding_screen.dart';
 
+import '../login_user/user_country_type.dart';
 import '../organization/dashboard/organisation_dashboard.dart';
 
 class SplashScreenMain extends StatefulWidget {
@@ -29,7 +30,8 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
           Get.offAll(OrganisationDashboard());
         }
         else{
-           Get.offAll(LoginView());
+         // Get.offAll(SelectUserCountry());
+          Get.offAll(LoginView());
       }
       }
       else {
