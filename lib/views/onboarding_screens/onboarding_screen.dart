@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:partypeoplebusiness/controller/onboarding_controller/onboarding_controller.dart';
 
 import '../login_user/login_screen.dart';
+import '../login_user/user_country_type.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   static var kHeadingStyle = GoogleFonts.oswald(
@@ -110,7 +111,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: GestureDetector(
                 onTap: () {
                   GetStorage().write('onboarding', '1');
-                  Get.to(LoginView());
+                  Get.to(SelectUserCountry());
+                 // Get.to(LoginView());
                 },
                 child: const Text(
                   'Skip\n ',

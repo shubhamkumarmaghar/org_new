@@ -41,14 +41,18 @@ class _SelectUserCountryState extends State<SelectUserCountry> {
                       Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                         GestureDetector(onTap: (){
-                          Get.offAll(LoginView());
+                          Get.to(LoginView(countryType: '1',));
                         },
                           child: CircleAvatar(backgroundImage: AssetImage('assets/indian_flag.png',) ,radius: 45,
                       ),
                         ),
                         SizedBox(height: Get.width*0.2,),
-                        CircleAvatar(backgroundColor: Colors.transparent,
-                          backgroundImage: AssetImage('assets/other_world.png',) ,radius: 55,
+                        GestureDetector(onTap: (){
+                          Get.to(LoginView(countryType: '2',));
+                        },
+                          child: CircleAvatar(backgroundColor: Colors.transparent,
+                            backgroundImage: AssetImage('assets/other_world.png',) ,radius: 55,
+                          ),
                         ),],),
 
                     ]),

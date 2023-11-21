@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,6 +14,7 @@ import 'package:sizer/sizer.dart';
 import '../../../constants/const_strings.dart';
 import '../../../controller/party_controller.dart';
 import '../../../model/partyModel/partyDataModel.dart';
+import '../../../org_book_party_report/view/book_party_list_screen.dart';
 import '../../party/party_amenities.dart';
 import '../subscription/views/subscription_view.dart';
 
@@ -126,10 +126,35 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                GestureDetector(onTap: (){Navigator.pop(context);},
-                  child: Container(alignment: Alignment.bottomLeft,
-                      child: CircleAvatar(child: Icon(Icons.arrow_back,color: Colors.red.shade900,),
-                        backgroundColor: Colors.grey.shade200,)),
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(onTap: (){Navigator.pop(context);},
+                      child: Container(alignment: Alignment.bottomLeft,
+                          child: CircleAvatar(child: Icon(Icons.arrow_back,color: Colors.red.shade900,),
+                            backgroundColor: Colors.grey.shade200,)),
+                    ),
+                    ElevatedButton(
+                      onPressed: (){
+                        Get.to(BookPartyListView(),arguments: widget.party.organizationId);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red.shade900,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      ),
+                      child: Text(
+                        'Booking List',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize:14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                  ],
                 ),
                 const SizedBox(
                   height: 20,
@@ -148,6 +173,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                         height: Get.height * 0.295,
                         // enlargeCenterPage: true,
                         autoPlay: true,
+                        viewportFraction: 1,
                         //aspectRatio: 16 / 9,
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enableInfiniteScroll: true,

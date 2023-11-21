@@ -18,6 +18,7 @@ import '../model/partyModel/partyDataModel.dart';
 import '../model/subscription_plan_model/subscription_plan_model.dart';
 
 class PartyController extends GetxController {
+
   List<StateName> stateName = [] ;
   List<StateName> cityName = [] ;
   var isComplet = false.obs;
@@ -56,6 +57,9 @@ class PartyController extends GetxController {
   final startPeopleAge = TextEditingController();
   final endPeopleAge = TextEditingController();
   final peopleLimit = TextEditingController();
+  final discountAmount = TextEditingController();
+  final maxMinAmount = TextEditingController();
+  final discountDescription = TextEditingController();
   final partyStatus = TextEditingController();
   final ladiesPrice = TextEditingController();
   final stagPrice = TextEditingController();
@@ -67,6 +71,7 @@ class PartyController extends GetxController {
   var city = 'Select City'.obs;
   RxString partyId= ''.obs;
   RxBool isPopular = false.obs;
+  RxBool discountPortion = false.obs;
   var partyStatusChange = "".obs;
 
   late Party getPrefiledData;
@@ -76,6 +81,13 @@ class PartyController extends GetxController {
   SubscriptionPlanModel subscriptionModel = SubscriptionPlanModel(subsData: []);
   List<SubscriptionData> subsList = [];
 
+  List<bool> listDiscount = [true, false];
+
+  void setChip({required int selectedIndex}) {
+    listDiscount = listDiscount.map((e) => false).toList();
+    listDiscount[selectedIndex] = true;
+    update();
+  }
   @override
   void dispose() {
     timeline.value = '';
@@ -335,7 +347,9 @@ class PartyController extends GetxController {
       'party_id': '${getPrefiledData.id}',
       'cover_photo': timeline.value,
       'image_b':imageB.value??'',
-      'image_c':imageC.value??''
+      'image_c':imageC.value??'',
+
+
       // 'organization_id': '1'
     });
     request.headers.addAll(headers);
@@ -428,6 +442,9 @@ class PartyController extends GetxController {
 */
 
   sendRequst() async {
+    /// discount_type == 1 {percent wise}
+    /// discount_type == 0 {No discount}
+    /// discount_type == 2 {Flat off}
     isLoading.value = true;
     var headers = {
       'x-access-token': '${GetStorage().read('token')}'
@@ -470,6 +487,10 @@ class PartyController extends GetxController {
       'stag': stagPrice.text,
       'couples': couplesPrice.text,
       'others': othersPrice.text,
+      'discount_type':discountPortion == true ? listDiscount[0] == true ? '1':'2':'0',
+      'discount_amount':discountAmount.text??'',
+      'bill_amount':maxMinAmount.text??'',
+      'discount_description':discountDescription.text??'',
       if(timeline.value.isNotEmpty && cover_img.path.isEmpty)'cover_photo': timeline.value??'',
       if(imageB.value.isNotEmpty && image_b.path.isEmpty)'image_b':imageB.value??'',
       if(imageC.value.isNotEmpty && image_c.path.isEmpty)'image_c':imageC.value??'',

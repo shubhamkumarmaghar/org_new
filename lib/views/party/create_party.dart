@@ -30,7 +30,6 @@ import '../../services/services.dart';
 //     extends GetView<AddOrganizationsEvent2Controller> {
 //
 
-
 class CreateParty extends StatefulWidget {
   bool isPopular;
 
@@ -44,10 +43,9 @@ class _CreatePartyState extends State<CreateParty> {
   String selectCity = 'Select City';
   String selectState = 'Select State';
   List<StateName> cityItems = [];
-  List<StateName> stateItems =[];
+  List<StateName> stateItems = [];
   List state = [];
   List city = [];
-
 
   DefaultController defaultController = Get.put(DefaultController());
   PartyController controller = Get.put(PartyController());
@@ -61,8 +59,7 @@ class _CreatePartyState extends State<CreateParty> {
   Future<String?> savePhotoToFirebase(
       String tokenId, File photo, String imageName) async {
     try {
-
-        controller.isLoading.value = true;
+      controller.isLoading.value = true;
 
       await FirebaseAuth.instance.signInAnonymously();
 
@@ -78,8 +75,8 @@ class _CreatePartyState extends State<CreateParty> {
       await photoRef.putFile(photo);
       // Get the download URL for the photo
       String downloadURL = await photoRef.getDownloadURL();
-        controller.timeline.value = downloadURL;
-        controller.isLoading.value = false;
+      controller.timeline.value = downloadURL;
+      controller.isLoading.value = false;
       return downloadURL;
     } catch (e) {
       return null;
@@ -88,44 +85,53 @@ class _CreatePartyState extends State<CreateParty> {
 
   _pickImageProfile(ImageSource source) async {
     try {
-      final image = await ImagePicker().pickImage(source: source,imageQuality:50  );
+      final image =
+          await ImagePicker().pickImage(source: source, imageQuality: 50);
       if (image == null) return;
       File? img = File(image.path);
       img = await _cropImage(imageFile: img);
-      if(controller.photoSelectNo.value == 0)
-        {
-          controller.cover_img=img!;
-          if(controller.isEditable.value == true){
-            String url = await uploadImage(type: '2',imgFile: controller.cover_img,id: controller.partyId.value,imageKey: 'cover_photo');
-            if(url.isNotEmpty){
-              controller.timeline.value = url;
-            }
+      if (controller.photoSelectNo.value == 0) {
+        controller.cover_img = img!;
+        if (controller.isEditable.value == true) {
+          String url = await uploadImage(
+              type: '2',
+              imgFile: controller.cover_img,
+              id: controller.partyId.value,
+              imageKey: 'cover_photo');
+          if (url.isNotEmpty) {
+            controller.timeline.value = url;
           }
         }
-      if(controller.photoSelectNo.value == 1)
-      {
-        controller.image_b=img!;
-        if(controller.isEditable.value == true){
-          String url = await uploadImage(type: '2',imgFile: controller.image_b,id: controller.partyId.value,imageKey: 'image_b');
-          if(url.isNotEmpty){
+      }
+      if (controller.photoSelectNo.value == 1) {
+        controller.image_b = img!;
+        if (controller.isEditable.value == true) {
+          String url = await uploadImage(
+              type: '2',
+              imgFile: controller.image_b,
+              id: controller.partyId.value,
+              imageKey: 'image_b');
+          if (url.isNotEmpty) {
             controller.imageB.value = url;
           }
         }
       }
-      if(controller.photoSelectNo.value == 2)
-      {
-        controller.image_c=img!;
-        if(controller.isEditable.value == true){
-          String url = await uploadImage(type: '2',imgFile: controller.image_c,id: controller.partyId.value,imageKey: 'image_c');
-          if(url.isNotEmpty){
+      if (controller.photoSelectNo.value == 2) {
+        controller.image_c = img!;
+        if (controller.isEditable.value == true) {
+          String url = await uploadImage(
+              type: '2',
+              imgFile: controller.image_c,
+              id: controller.partyId.value,
+              imageKey: 'image_c');
+          if (url.isNotEmpty) {
             controller.imageC.value = url;
           }
         }
       }
-    //  uploadImage(type: '2',imgFile: img,partyId: controller.partyId.value);
+      //  uploadImage(type: '2',imgFile: img,partyId: controller.partyId.value);
       setState(() {
-
-      /*  savePhotoToFirebase(
+        /*  savePhotoToFirebase(
                 '${GetStorage().read('token')}', img!, 'Party New Event')
             .then((value) {
           controller.timeline.value = value!;
@@ -171,28 +177,30 @@ class _CreatePartyState extends State<CreateParty> {
     );
   }
 
-
   fillFieldPreFilled() async {
     controller.timeline.value = '${controller.getPrefiledData.coverPhoto}';
     controller.imageB.value = '${controller.getPrefiledData.imageB}';
     controller.imageC.value = '${controller.getPrefiledData.imageC}';
-    log('abcde ${controller.timeline.value} ,${controller.imageB.value}  ,${controller.imageC.value} ');
     controller.title.text = controller.getPrefiledData.title!;
     controller.description.text = controller.getPrefiledData.description!;
     controller.mobileNumber.text = controller.getPrefiledData.phoneNumber!;
-    controller.genderList = controller.getPrefiledData.gender.toString().split(',');
-    controller.genderList.forEach((element) {log('qqqqq $element');});
-    if(controller.isRepostParty.value == true){
+    controller.genderList =
+        controller.getPrefiledData.gender.toString().split(',');
+    controller.genderList.forEach((element) {
+      log('qqqqq $element');
+    });
+    if (controller.isRepostParty.value == true) {
       var todayDate = DateTime.now().toString().split(" ");
-      var tomarrowDate = DateTime.now().add(Duration(days: 1)).toString().split(" ");
+      var tomarrowDate =
+          DateTime.now().add(Duration(days: 1)).toString().split(" ");
       var todayDate1 = todayDate[0].split("-");
       var todayDate2 = "${todayDate1[2]}-${todayDate1[1]}-${todayDate1[0]}";
       controller.startDate.text = todayDate2;
       var tomarrowDate1 = tomarrowDate[0].split("-");
-      var tomarrowDate2 = "${tomarrowDate1[2]}-${tomarrowDate1[1]}-${tomarrowDate1[0]}";
+      var tomarrowDate2 =
+          "${tomarrowDate1[2]}-${tomarrowDate1[1]}-${tomarrowDate1[0]}";
       controller.endDate.text = tomarrowDate2;
-    }
-    else{
+    } else {
       controller.startDate.text = controller.getPrefiledData.startDate!;
       controller.endDate.text = controller.getPrefiledData.endDate!;
     }
@@ -218,7 +226,7 @@ class _CreatePartyState extends State<CreateParty> {
     setState(() {
       controller.timeline.value = '';
       controller.imageB.value = '';
-      controller.imageC.value ='';
+      controller.imageC.value = '';
       controller.image_b = File('');
       controller.image_c = File('');
       controller.cover_img = File('');
@@ -237,26 +245,23 @@ class _CreatePartyState extends State<CreateParty> {
       controller.stagPrice.text = '';
       controller.othersPrice.text = '';
       controller.couplesPrice.text = '';
-      controller.pincode.text='';
-      controller.location.text='';
-      controller.city.value='';
-      controller.state.value='';
+      controller.pincode.text = '';
+      controller.location.text = '';
+      controller.city.value = '';
+      controller.state.value = '';
     });
   }
 
-
-  void statelist (){
+  void statelist() {
     state.add('Select State');
     stateItems.forEach((element) {
       state.add(element.name);
     });
-    setState(() {
-
-    });
+    setState(() {});
     //log('${stateItemss.first}');
   }
 
-  void cityList (String cityId) async {
+  void cityList(String cityId) async {
     await controller.getCityData(cityid: cityId);
     cityItems = controller.cityName;
     city.add('Select City');
@@ -264,15 +269,11 @@ class _CreatePartyState extends State<CreateParty> {
       // stateItemss  = [{element.id:element.name},];
       city.add(element.name);
     });
-    setState(() {
-
-    });
+    setState(() {});
   }
-
 
   @override
   void initState() {
-
     if (controller.isEditable.value == true) {
       fillFieldPreFilled();
     } else {
@@ -281,18 +282,19 @@ class _CreatePartyState extends State<CreateParty> {
     getData();
     super.initState();
   }
-  Future<void > getData()async{
-   await controller.getStateData();
+
+  Future<void> getData() async {
+    await controller.getStateData();
     stateItems = controller.stateName;
-  //  if(controller.)
+    //  if(controller.)
     statelist();
   }
 
   @override
   void dispose() {
     controller.timeline.value = '';
-    controller.imageC.value='';
-    controller.imageB.value='';
+    controller.imageC.value = '';
+    controller.imageB.value = '';
     controller.image_b = File('');
     controller.image_c = File('');
     controller.cover_img = File('');
@@ -322,7 +324,8 @@ class _CreatePartyState extends State<CreateParty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar( backgroundColor: Colors.red.shade900,
+        appBar: AppBar(
+          backgroundColor: Colors.red.shade900,
           title: Text(
             "Host New Event",
             style: TextStyle(fontSize: 13.sp),
@@ -343,7 +346,9 @@ class _CreatePartyState extends State<CreateParty> {
                     children: [
                       Row(
                         children: [
-                          Image.asset('assets/mice.png',),
+                          Image.asset(
+                            'assets/mice.png',
+                          ),
                           Text(
                             'Host New Event',
                             style: TextStyle(
@@ -366,104 +371,106 @@ class _CreatePartyState extends State<CreateParty> {
                           controller.photoSelectNo.value = 0;
                           _showSelectPhotoOptionsProfile(context);
                         },
-                        child: Obx(
-                          () {
-                            return Stack(
-                              children: [
-                                controller.isLoading.value == false
-                                    ? Container(
-                                  height: Get.height*0.25,
-                                  width: double.maxFinite,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: (controller.timeline.value.isNotEmpty ) && controller.cover_img.path.isEmpty
-                                      ? Card(shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(15.0),
-                                    ),
-                                  ),
-                                      clipBehavior: Clip.hardEdge,
-                                      child: CachedNetworkImageWidget(
-                                          imageUrl: controller.timeline.value,
-                                          width: Get.width,
-                                          height: Get.height*0.25,
-                                          fit: BoxFit.fill,
-                                          errorWidget: (context, url,
-                                              error) =>
-                                          const Center(
-                                            child:
-                                            CupertinoActivityIndicator(
-                                              radius: 15,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          placeholder: (context, url) =>
-                                          const Center(
-                                              child:
-                                              CupertinoActivityIndicator(
-                                                  color: Colors
-                                                      .black,
-                                                  radius: 15)
-                                          )
-                                      )
-                                  )
-                                      : controller.cover_img.path.isEmpty ?
-                                  Card(
-                                    child: Lottie.asset(
-                                      'assets/127619-photo-click.json',
-                                    ),
-                                  ):Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(15.0),
+                        child: Obx(() {
+                          return Stack(
+                            children: [
+                              controller.isLoading.value == false
+                                  ? Container(
+                                      height: Get.height * 0.25,
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: (controller
+                                                  .timeline.value.isNotEmpty) &&
+                                              controller.cover_img.path.isEmpty
+                                          ? Card(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(15.0),
+                                                ),
+                                              ),
+                                              clipBehavior: Clip.hardEdge,
+                                              child: CachedNetworkImageWidget(
+                                                  imageUrl:
+                                                      controller.timeline.value,
+                                                  width: Get.width,
+                                                  height: Get.height * 0.25,
+                                                  fit: BoxFit.fill,
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      const Center(
+                                                        child:
+                                                            CupertinoActivityIndicator(
+                                                          radius: 15,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                  placeholder: (context, url) =>
+                                                      const Center(
+                                                          child:
+                                                              CupertinoActivityIndicator(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  radius: 15))))
+                                          : controller.cover_img.path.isEmpty
+                                              ? Card(
+                                                  child: Lottie.asset(
+                                                    'assets/127619-photo-click.json',
+                                                  ),
+                                                )
+                                              : Card(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(15.0),
+                                                    ),
+                                                  ),
+                                                  clipBehavior: Clip.hardEdge,
+                                                  child: Image.file(
+                                                      controller.cover_img)),
+                                    )
+                                  : Container(
+                                      child: const Center(
+                                        child: CupertinoActivityIndicator(
+                                          radius: 15,
+                                          color: Colors.black,
                                         ),
                                       ),
-                                      clipBehavior: Clip.hardEdge,
-                                    child: Image.file(controller.cover_img)
-                                  ),
-                                )
-                                    : Container(
-                                  child: const Center(
-                                    child: CupertinoActivityIndicator(
-                                      radius: 15,
-                                      color: Colors.black,
+                                    ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  child: IconButton(
+                                    onPressed: () {
+                                      defaultController
+                                          .defaultControllerType.value = 2;
+                                      controller.photoSelectNo.value = 0;
+                                      _showSelectPhotoOptionsProfile(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    child: IconButton(
-                                      onPressed: () {
-                                        defaultController
-                                            .defaultControllerType.value = 2;
-                                        controller.photoSelectNo.value = 0;
-                                        _showSelectPhotoOptionsProfile(context);
-                                      },
-                                      icon: const Icon(
-                                        Icons.camera_alt,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 10,
-                                  right: 10,
-                                  child: Container(
-                                      height: 30,
-                                      width: 30,
-                                      child: Icon(
-                                        size: 30,
-                                        Icons.camera_alt,
-                                        color: Colors.red.shade900,
-                                      )),
-                                ),
-                              ],
-                            );
-
-                          }),
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: Container(
+                                    height: 30,
+                                    width: 30,
+                                    child: Icon(
+                                      size: 30,
+                                      Icons.camera_alt,
+                                      color: Colors.red.shade900,
+                                    )),
+                              ),
+                            ],
+                          );
+                        }),
                       ),
                     ],
                   ),
@@ -540,7 +547,9 @@ class _CreatePartyState extends State<CreateParty> {
                                   width: 5,
                                   child: Center(
                                     child: Image.asset(
-                                      'assets/indian_flag.png',height: 28,width: 28,
+                                      'assets/indian_flag.png',
+                                      height: 28,
+                                      width: 28,
                                     ),
                                   )),
                               prefixText: ' +91 ',
@@ -705,85 +714,82 @@ class _CreatePartyState extends State<CreateParty> {
                           color: Colors.black,
                         ),
                       ),
-                      onChanged: (value) {
-                      },
+                      onChanged: (value) {},
                     ),
                   ),
                   Container(
-
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14),
-                      child: DropdownButtonFormField<String>(
-                         decoration:
-                         InputDecoration(
-                         enabledBorder: OutlineInputBorder(
-                         borderSide:
-                        BorderSide(color: Colors.white, width: 2),
-                         borderRadius: BorderRadius.circular(8),
-                         ),
-                        border: OutlineInputBorder(
-                          borderSide:BorderSide(color: Colors.white, width: 2),
-                         borderRadius: BorderRadius.circular(8),
-                         ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        ),
-                         dropdownColor: Colors.white,
-                        value:selectState,
-                        onChanged: (newValue)  {
-                          selectState = newValue.toString();
-                          controller.state.value=selectState;
-                          selectCity ='Select City';
-                            log('$selectState');
-                          city.clear();
-                           cityList(selectState);
-                          controller.cityName.clear();
-                          cityItems.clear();
-                          setState(() {
-
-                          });
-                        },
-                        items: state.map((items) {
-                          return DropdownMenuItem<String>(
-                            value: items.toString(),
-                            child: Text(items.toString() ),
-                          );
-                        }).toList(),
-                      )
-                  ),
-                  // for city
-                  Container(
-                    // width: 300,
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 14),
                       child: DropdownButtonFormField<String>(
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide:
-                            BorderSide(color: Colors.white, width: 2),
+                                BorderSide(color: Colors.white, width: 2),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           border: OutlineInputBorder(
-                            borderSide:BorderSide(color: Colors.white, width: 2),
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           filled: true,
                           fillColor: Colors.white,
                         ),
                         dropdownColor: Colors.white,
-                        value:selectCity,
+                        value: selectState,
+                        onChanged: (newValue) {
+                          selectState = newValue.toString();
+                          controller.state.value = selectState;
+                          selectCity = 'Select City';
+                          log('$selectState');
+                          city.clear();
+                          cityList(selectState);
+                          controller.cityName.clear();
+                          cityItems.clear();
+                          setState(() {});
+                        },
+                        items: state.map((items) {
+                          return DropdownMenuItem<String>(
+                            value: items.toString(),
+                            child: Text(items.toString()),
+                          );
+                        }).toList(),
+                      )),
+                  // for city
+                  Container(
+                      // width: 300,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 14),
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        dropdownColor: Colors.white,
+                        value: selectCity,
                         onChanged: (newValue) {
                           setState(() {
                             selectCity = newValue.toString();
-                            controller.city.value=selectCity;
+                            controller.city.value = selectCity;
                           });
                         },
                         items: city.map((items) {
                           return DropdownMenuItem<String>(
                             value: items.toString(),
-                            child: Text(items.toString() ),
+                            child: Text(items.toString()),
                           );
                         }).toList(),
-                      )
-                  ),
+                      )),
                   /* Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: Get.width * 0.07,
@@ -978,7 +984,8 @@ class _CreatePartyState extends State<CreateParty> {
                       }
                     },
                   ),
-                  TextFieldWithTitle(
+                  controller.discountPortion.value == false
+                      ? TextFieldWithTitle(
                     title: 'Offers',
                     controller: controller.offersText,
                     validator: (value) {
@@ -988,11 +995,41 @@ class _CreatePartyState extends State<CreateParty> {
                         return null;
                       }
                     },
-                  ),
+                  ):Container(),
 
                   const SizedBox(
                     height: 10,
                   ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 28.0, vertical: 14),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Discount',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontFamily: 'malgun',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Switch(
+                            value: controller.discountPortion.value,
+                            onChanged: (value) {
+
+                              controller.discountPortion.value =
+                                  controller.discountPortion.value == false
+                                      ? true
+                                      : false;
+                            })
+                      ],
+                    ),
+                  ),
+                  controller.discountPortion.value == true
+                      ? discountSection()
+                      : Container(),
                   Center(child: AmenitiesButton()),
                   const SizedBox(
                     height: 25,
@@ -1002,85 +1039,180 @@ class _CreatePartyState extends State<CreateParty> {
             ),
           ),
         ));
-
-
   }
-  Widget textAddMedia(){
-    return Container(height: Get.height*0.15,
-      width: Get.width,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+  Widget discountSection() {
+    return Container(
+      child: Column(children: [
+        Row(
           children: [
-            GestureDetector(
-              onTap: () {
-                defaultController.defaultControllerType.value = 2;
-                controller.photoSelectNo.value = 1;
-                _showSelectPhotoOptionsProfile(context);
-              },
-              child: Obx(
-                      () {
-                    return Stack(
-                      children: [
-                        controller.isLoading.value == false
-                            ? Container(
-                          height: Get.height*0.15,
-                          width: Get.height*0.2,
-                          child: controller.imageB.value.isNotEmpty && controller.image_b.path.isEmpty
-                              ? Card(shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0),
-                              bottomLeft: Radius.circular(15.0),
-                            ),
-                          ),
-                              clipBehavior: Clip.hardEdge,
-                              child: CachedNetworkImageWidget(
-                                  imageUrl:
-                                  controller.imageB.value,
-                                  width: Get.height*0.12,
-                                  height: Get.height*0.12,
-                                  fit: BoxFit.fill,
-                                  errorWidget: (context, url,
-                                      error) =>
-                                   Center(
-                                    child:
-                                       Lottie.asset(
-                                        'assets/127619-photo-click.json',
-                                    ),
-                                   /* CupertinoActivityIndicator(
+            iconText(
+              'Percent Wise',
+              FilterChip(
+                  label: Text('Percent Wise'),
+                  selected: controller.listDiscount[0],
+                  selectedColor: Colors.red.shade900,
+                  backgroundColor: Colors.grey,
+                  labelStyle: TextStyle(color: Colors.white),
+                  onSelected: (value) {
+                    controller.setChip(selectedIndex: 0);
+                    //_peopleListController.getPaginatedNearbyPeoples(isRefresh: true ,type: 0);
+                    // _peopleListController.showList = _peopleListController.paginatedUsersList;
+                    // navigator?.pop();
+                    setState(() {});
+                  }),
+            ),
+            iconText(
+              'Direct Off',
+              FilterChip(
+                  label: Text('Direct Off'),
+                  selected: controller.listDiscount[1],
+                  selectedColor: Colors.red.shade900,
+                  backgroundColor: Colors.grey,
+                  labelStyle: TextStyle(color: Colors.white),
+                  onSelected: (value) {
+                    controller.setChip(selectedIndex: 1);
+                    //_peopleListController.getPaginatedNearbyPeoples(isRefresh: true ,type: 0);
+                    // _peopleListController.showList = _peopleListController.paginatedUsersList;
+                    // navigator?.pop();
+                    setState(() {});
+                  }),
+            ),
+          ],
+        ),
+        TextFieldWithTitle(
+          title: controller.listDiscount[0] == true
+              ? 'Please Enter percent(%) '
+              : 'Flat Discount Amount ()',
+          controller: controller.discountAmount,
+          inputType: TextInputType.number,
+          hinttext: controller.listDiscount[0] == true
+              ? 'Ex: 10 or 20'
+              : 'Ex: 500 or 1000',
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter value in number';
+            } else {
+              return null;
+            }
+          },
+        ),
+        TextFieldWithTitle(
+          title: controller.listDiscount[0] == true
+              ? 'Maximum discount amount'
+              : 'Flat discount on minimum Spends',
+          controller: controller.maxMinAmount,
+          inputType: TextInputType.number,
+          hinttext: 'Ex: 500 or 1000',
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return controller.listDiscount[0] == true
+                  ? 'Please enter max discount amount'
+                  : 'Please enter flat min discount amount';
+            } else {
+              return null;
+            }
+          },
+        ),
+        TextFieldWithTitle(
+          title: 'Terms & Conditions',
+          controller: controller.discountDescription,
+          inputType: TextInputType.text,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter Description about discount';
+            } else {
+              return null;
+            }
+          },
+        ),
+      ]),
+    );
+  }
+
+  Widget iconText(String text, Widget widget) {
+    return Container(
+      margin: EdgeInsets.all(20),
+      child: Row(children: [
+        SizedBox(
+          width: Get.width * 0.05,
+        ),
+        widget
+      ]),
+    );
+  }
+
+  Widget textAddMedia() {
+    return Container(
+      height: Get.height * 0.15,
+      width: Get.width,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        GestureDetector(
+          onTap: () {
+            defaultController.defaultControllerType.value = 2;
+            controller.photoSelectNo.value = 1;
+            _showSelectPhotoOptionsProfile(context);
+          },
+          child: Obx(() {
+            return Stack(
+              children: [
+                controller.isLoading.value == false
+                    ? Container(
+                        height: Get.height * 0.15,
+                        width: Get.height * 0.2,
+                        child: controller.imageB.value.isNotEmpty &&
+                                controller.image_b.path.isEmpty
+                            ? Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0),
+                                  ),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                                child: CachedNetworkImageWidget(
+                                    imageUrl: controller.imageB.value,
+                                    width: Get.height * 0.12,
+                                    height: Get.height * 0.12,
+                                    fit: BoxFit.fill,
+                                    errorWidget: (context, url, error) =>
+                                        Center(
+                                          child: Lottie.asset(
+                                            'assets/127619-photo-click.json',
+                                          ),
+                                          /* CupertinoActivityIndicator(
                                       radius: 15,
                                       color: Colors.black,
                                     ),*/
-                                  ),
-                                  placeholder: (context, url) =>
-                                  const Center(
-                                      child:
-                                      CupertinoActivityIndicator(
-                                          color: Colors
-                                              .black,
-                                          radius: 15))))
-                              : controller.image_b.path.isEmpty ?
-                          Card(
-                            child: Lottie.asset(
-                              'assets/127619-photo-click.json',
-                            ),
-                          ):Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(15.0),
-                                ),
-                              ),clipBehavior: Clip.hardEdge,
-                              child: Image.file(controller.image_b)
-                          ),
-                        )
-                            : Container(
-                          child: const Center(
-                            child: CupertinoActivityIndicator(
-                              radius: 15,
-                              color: Colors.black,
-                            ),
+                                        ),
+                                    placeholder: (context, url) => const Center(
+                                        child: CupertinoActivityIndicator(
+                                            color: Colors.black, radius: 15))))
+                            : controller.image_b.path.isEmpty
+                                ? Card(
+                                    child: Lottie.asset(
+                                      'assets/127619-photo-click.json',
+                                    ),
+                                  )
+                                : Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: Image.file(controller.image_b)),
+                      )
+                    : Container(
+                        child: const Center(
+                          child: CupertinoActivityIndicator(
+                            radius: 15,
+                            color: Colors.black,
                           ),
                         ),
-                       /* Positioned(
+                      ),
+                /* Positioned(
                           bottom: 0,
                           right: 0,
                           child: Container(
@@ -1097,79 +1229,77 @@ class _CreatePartyState extends State<CreateParty> {
                             ),
                           ),
                         ),*/
-                      ],
-                    );
-
-                  }),
-            ),
-            GestureDetector(
-              onTap: () {
-                defaultController.defaultControllerType.value = 2;
-                controller.photoSelectNo.value = 2;
-                _showSelectPhotoOptionsProfile(context);
-              },
-              child: Obx(
-                      () {
-                    return Stack(
-                      children: [
-                        controller.isLoading.value == false
-                            ? Container(
-                          height: Get.height*0.15,
-                          width: Get.height*0.2,
-                          child: (controller.imageC.value.isNotEmpty || controller.imageC.value=='null') && controller.image_c.path.isEmpty
-                              ? Card(shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0),
-                              bottomLeft: Radius.circular(15.0),
-                            ),
-                          ),clipBehavior: Clip.hardEdge,
-                              child: CachedNetworkImageWidget(
-                                  imageUrl: controller.imageC.value,
-                                  width: Get.height*0.12,
-                                  height: Get.height*0.12,
-                                  fit: BoxFit.fill,
-                                  errorWidget: (context, url,
-                                      error) =>
-                                  Center(
-                                    child: Lottie.asset(
-                                      'assets/127619-photo-click.json',
-                                    ),
-                                   /* CupertinoActivityIndicator(
+              ],
+            );
+          }),
+        ),
+        GestureDetector(
+          onTap: () {
+            defaultController.defaultControllerType.value = 2;
+            controller.photoSelectNo.value = 2;
+            _showSelectPhotoOptionsProfile(context);
+          },
+          child: Obx(() {
+            return Stack(
+              children: [
+                controller.isLoading.value == false
+                    ? Container(
+                        height: Get.height * 0.15,
+                        width: Get.height * 0.2,
+                        child: (controller.imageC.value.isNotEmpty ||
+                                    controller.imageC.value == 'null') &&
+                                controller.image_c.path.isEmpty
+                            ? Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0),
+                                  ),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                                child: CachedNetworkImageWidget(
+                                    imageUrl: controller.imageC.value,
+                                    width: Get.height * 0.12,
+                                    height: Get.height * 0.12,
+                                    fit: BoxFit.fill,
+                                    errorWidget: (context, url, error) =>
+                                        Center(
+                                          child: Lottie.asset(
+                                            'assets/127619-photo-click.json',
+                                          ),
+                                          /* CupertinoActivityIndicator(
                                       radius: 15,
                                       color: Colors.black,
                                     ),*/
-                                  ),
-                                  placeholder: (context, url) =>
-                                  const Center(
-                                      child:
-                                      CupertinoActivityIndicator(
-                                          color: Colors
-                                              .black,
-                                          radius: 15))))
-                              : controller.image_c.path.isEmpty ?
-                          Card(
-                            child: Lottie.asset(
-                              'assets/127619-photo-click.json',
-                            ),
-                          ):Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(15.0),
-                                ),
-                              ),clipBehavior: Clip.hardEdge,
-                              child: Image.file(controller.image_c)
-                          ),
-                        )
-                            : Container(
-                          child: const Center(
-                            child: CupertinoActivityIndicator(
-                              radius: 15,
-                              color: Colors.black,
-                            ),
+                                        ),
+                                    placeholder: (context, url) => const Center(
+                                        child: CupertinoActivityIndicator(
+                                            color: Colors.black, radius: 15))))
+                            : controller.image_c.path.isEmpty
+                                ? Card(
+                                    child: Lottie.asset(
+                                      'assets/127619-photo-click.json',
+                                    ),
+                                  )
+                                : Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: Image.file(controller.image_c)),
+                      )
+                    : Container(
+                        child: const Center(
+                          child: CupertinoActivityIndicator(
+                            radius: 15,
+                            color: Colors.black,
                           ),
                         ),
-                      /*  Positioned(
+                      ),
+                /*  Positioned(
                           bottom: 0,
                           right: 0,
                           child: Container(
@@ -1186,13 +1316,12 @@ class _CreatePartyState extends State<CreateParty> {
                             ),
                           ),
                         ),*/
-                      ],
-                    );
-
-                  }),
-            ),
-          ]
-      ),);
+              ],
+            );
+          }),
+        ),
+      ]),
+    );
   }
 }
 
@@ -1215,45 +1344,52 @@ class _OptionSelectorState extends State<OptionSelector> {
         children: [
           GroupButton(
             isRadio: false,
-
             onSelected: (string, index, isSelected) {
               setState(() {
                 if (isSelected) {
-                  if(controller.genderList.contains(string.toLowerCase())){
+                  if (controller.genderList.contains(string.toLowerCase())) {
                     log('already contains--- $string');
-                  }else{
-                  controller.genderList.add(string);
-                  log('contains $string');
-                  controller.genderList.forEach((element) {log('$element');});
+                  } else {
+                    controller.genderList.add(string);
+                    log('contains $string');
+                    controller.genderList.forEach((element) {
+                      log('$element');
+                    });
                   }
                 } else {
                   controller.genderList.remove(string);
                   controller.genderList.remove(string.toLowerCase());
                   log('contains remove $string');
-                  controller.genderList.forEach((element) {log('$element');});
+                  controller.genderList.forEach((element) {
+                    log('$element');
+                  });
                 }
                 showLadiesFees = false;
                 showStagFees = false;
                 showCoupleFees = false;
                 showOthersFees = false;
-                if (controller.genderList.contains('Stag') || controller.genderList.contains('stag')) {
+                if (controller.genderList.contains('Stag') ||
+                    controller.genderList.contains('stag')) {
                   showStagFees = true;
-
                 }
-                if (controller.genderList.contains('Ladies')  || controller.genderList.contains('ladies')) {
+                if (controller.genderList.contains('Ladies') ||
+                    controller.genderList.contains('ladies')) {
                   showLadiesFees = true;
-
                 }
-                if (controller.genderList.contains('Couple') || controller.genderList.contains('couple')) {
+                if (controller.genderList.contains('Couple') ||
+                    controller.genderList.contains('couple')) {
                   showCoupleFees = true;
-
                 }
-                if (controller.genderList.contains('Others') || controller.genderList.contains('others')) {
+                if (controller.genderList.contains('Others') ||
+                    controller.genderList.contains('others')) {
                   showOthersFees = true;
                 }
               });
             },
-            options: GroupButtonOptions(borderRadius: BorderRadius.circular(10),selectedColor: Colors.red.shade900,),
+            options: GroupButtonOptions(
+              borderRadius: BorderRadius.circular(10),
+              selectedColor: Colors.red.shade900,
+            ),
             buttons: [
               "Stag",
               "Ladies",
@@ -1306,13 +1442,14 @@ class AmenitiesButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: () {
-
         bool hasEmptyField = false;
         String emptyFieldTitle = '';
         String emptyFieldMessage = '';
         List<Map<String, String>> fieldsToValidate = [
           {
-            'Party Image': controller.cover_img.path.isEmpty?controller.timeline.value:controller.cover_img.path
+            'Party Image': controller.cover_img.path.isEmpty
+                ? controller.timeline.value
+                : controller.cover_img.path
           },
           {'Party Title': controller.title.text},
           {'Party Description': controller.description.text},
@@ -1339,14 +1476,12 @@ class AmenitiesButton extends StatelessWidget {
           Get.snackbar(emptyFieldTitle, emptyFieldMessage);
           return;
         }
-        if(controller.cover_img.path.isEmpty && controller.timeline.value.isEmpty) {
+        if (controller.cover_img.path.isEmpty &&
+            controller.timeline.value.isEmpty) {
           Get.snackbar("Error ", "Cover Image should not be empty");
           return;
         }
         Get.to(const AmenitiesPartyScreen());
-
-
-
       },
       icon: const Icon(
         Icons.grid_view,
@@ -1361,7 +1496,7 @@ class AmenitiesButton extends StatelessWidget {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        primary: Colors.red,
+        backgroundColor: Colors.red.shade900,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
@@ -1379,16 +1514,17 @@ class TextFieldWithTitle extends StatefulWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   var passGesture;
+  final String hinttext;
 
-  TextFieldWithTitle({
-    required this.validator,
-    this.passGesture,
-    this.maxlength,
-    required this.title,
-    required this.controller,
-    this.inputType = TextInputType.text,
-    this.obscureText = false,
-  });
+  TextFieldWithTitle(
+      {required this.validator,
+      this.passGesture,
+      this.maxlength,
+      required this.title,
+      required this.controller,
+      this.inputType = TextInputType.text,
+      this.obscureText = false,
+      this.hinttext = ''});
 
   @override
   State<TextFieldWithTitle> createState() => _TextFieldWithTitleState();
@@ -1442,7 +1578,9 @@ class _TextFieldWithTitleState extends State<TextFieldWithTitle> {
                   vertical: 12,
                 ),
                 border: InputBorder.none,
-                hintText: "Enter ${widget.title}",
+                hintText: widget.hinttext == ''
+                    ? "Enter ${widget.title}"
+                    : widget.hinttext,
                 hintStyle: TextStyle(
                   color: Colors.grey[400],
                 ),
@@ -1476,5 +1614,3 @@ class _TextFieldWithTitleState extends State<TextFieldWithTitle> {
     );
   }
 }
-
-

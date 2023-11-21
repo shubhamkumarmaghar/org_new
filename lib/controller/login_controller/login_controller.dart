@@ -16,14 +16,15 @@ import '../../views/login_user/otp_screen.dart';
 class LoginController extends GetxController {
   TextEditingController username = TextEditingController();
   TextEditingController mobileNumber = TextEditingController();
+  TextEditingController emailAddress = TextEditingController();
   RxBool isLoading = false.obs;
   RxString OTPCodeValue = ''.obs;
   RxString deviceToken = ''.obs;
 
   ///Use this function to verify phone number and send otp
-  Future verifyPhone() async {
+  Future verifyPhone({required type}) async {
     print('API started');
-    if (mobileNumber.text.isPhoneNumber) {
+    if (mobileNumber.text.isPhoneNumber || emailAddress.text.isEmail) {
       isLoading.value = true;
       await FirebaseMessaging.instance.getToken().then((token) {
         print("token is $token");
@@ -32,14 +33,18 @@ class LoginController extends GetxController {
 
       http.Response response = await http
           .post(Uri.parse(API.login), body: {
-        'phone': mobileNumber.text,
+            if(type =='1') 'phone': mobileNumber.text,
+            if(type =='2') 'email': emailAddress.text,
         'username': username.text,
         'device_token': deviceToken.value,
-        'user_type':'Organization'
+        'user_type':'Organization',
+        'type':type
       });
+      print('$response');
       print('API started');
 
       dynamic json = jsonDecode(response.body);
+      log('${json}  ${response.body}');
       if (json['status'] == 0) {
         Get.snackbar('Error', 'Username or Mobile Number is not matching',
             backgroundColor: Colors.white);
@@ -50,7 +55,7 @@ class LoginController extends GetxController {
             backgroundColor: Colors.white);
         print('User Token Authentication => ${json['data']['token']}');
         print(GetStorage().read('token'));
-        Get.to(OTPScreen());
+        Get.to(OTPScreen(countryType: type,));
       }
 
       isLoading.value = false;

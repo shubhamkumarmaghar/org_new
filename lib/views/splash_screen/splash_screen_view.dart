@@ -30,8 +30,8 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
           Get.offAll(OrganisationDashboard());
         }
         else{
-         // Get.offAll(SelectUserCountry());
-          Get.offAll(LoginView());
+          Get.offAll(SelectUserCountry());
+          //Get.offAll(LoginView());
       }
       }
       else {

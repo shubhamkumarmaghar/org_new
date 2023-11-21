@@ -65,9 +65,9 @@ class OrganizationDashboardController extends GetxController {
 
     getAPIOverview();
 
-    Timer.periodic(Duration(seconds: 3), (timer) {
+    /* Timer.periodic(Duration(seconds: 3), (timer) {
       getAPIOverview();
-    });
+    });*/
   }
 
 

@@ -2,7 +2,7 @@ class API {
 
  static const String developmentUrl = 'https://65.2.59.129/app/v1';
  static const String productionUrlString = 'https://app.partypeople.in/v1';
- static const String apiUrlString = productionUrlString;
+ static const String apiUrlString = developmentUrl;
 
  static const String login = '$apiUrlString/account/login';
  static const String otp = '$apiUrlString/account/otp_verify';
@@ -22,6 +22,8 @@ class API {
  static const String partyAmenities = '$apiUrlString/party/party_amenities';
  static const String getPartyById = '$apiUrlString/party/get_user_organization_party_by_id';
  static const String updateRegularPartiesStatus = '$apiUrlString/order/update_ragular_papular_status';
+ static const String getPartyBookingHistory = '$apiUrlString/party/get_org_user_join_party';
+ static const String partyApprovalRejectStatus = '$apiUrlString/party/qr_approval_status_update';
 
 
  static const String getSubscriptionTransactionHistory = '$apiUrlString/Subscription/transaction_history';
