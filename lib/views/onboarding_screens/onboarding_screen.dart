@@ -111,8 +111,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: GestureDetector(
                 onTap: () {
                   GetStorage().write('onboarding', '1');
-                  Get.to(SelectUserCountry());
-                 // Get.to(LoginView());
+                 // Get.to(SelectUserCountry());
+                  Get.to(LoginView());
                 },
                 child: const Text(
                   'Skip\n ',

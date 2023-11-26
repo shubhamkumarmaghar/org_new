@@ -115,6 +115,12 @@ class PartyController extends GetxController {
     partyId.value = '';
     state.value = '';
     city.value = '';
+    discountPortion.value=false;
+    discountAmount.text = '';
+    discountDescription.text ='';
+    maxMinAmount.text ='';
+
+
     super.dispose();
   }
 
@@ -348,8 +354,10 @@ class PartyController extends GetxController {
       'cover_photo': timeline.value,
       'image_b':imageB.value??'',
       'image_c':imageC.value??'',
-
-
+      'discount_type':discountPortion == true ? listDiscount[0] == true ? '1':'2':'0',
+      'discount_amount':discountPortion == true ? discountAmount.text??'':"",
+      'bill_amount':discountPortion == true ? maxMinAmount.text??'':"",
+      'discount_description':discountPortion == true ? discountDescription.text??'':"",
       // 'organization_id': '1'
     });
     request.headers.addAll(headers);
@@ -488,9 +496,9 @@ class PartyController extends GetxController {
       'couples': couplesPrice.text,
       'others': othersPrice.text,
       'discount_type':discountPortion == true ? listDiscount[0] == true ? '1':'2':'0',
-      'discount_amount':discountAmount.text??'',
-      'bill_amount':maxMinAmount.text??'',
-      'discount_description':discountDescription.text??'',
+      'discount_amount':discountPortion == true ? discountAmount.text??'':"",
+      'bill_amount':discountPortion == true ? maxMinAmount.text??'':"",
+      'discount_description':discountPortion == true ? discountDescription.text??'':"",
       if(timeline.value.isNotEmpty && cover_img.path.isEmpty)'cover_photo': timeline.value??'',
       if(imageB.value.isNotEmpty && image_b.path.isEmpty)'image_b':imageB.value??'',
       if(imageC.value.isNotEmpty && image_c.path.isEmpty)'image_c':imageC.value??'',

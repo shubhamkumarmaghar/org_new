@@ -101,170 +101,199 @@ class BookingPartyReport extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-       Row(
-         children: [Container(margin: EdgeInsets.only(left: 20,top: 10),
-         child: Text('Total Tickets : ${dataList.length}',style: TextStyle(fontSize: 16,
-             color: Colors.black,
-             fontWeight: FontWeight.w600),
-         ),
-       ),],),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [Container(margin: EdgeInsets.only(left: 20,top: 10),
+            child: Text('Total Tickets : ${dataList.length}',style: TextStyle(fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w600),
+            ),
+          ),
+          /*  Container(margin: EdgeInsets.only(left: 20,top: 10),
+              child: Text('Unapproved Tickets : ${data.unapprovedCount}',style: TextStyle(fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
+              ),),*/
+          ],
+        ),
         ListView.builder(shrinkWrap: true,
           itemCount: dataList.length,
           itemBuilder: (context, index) {
             SingleTicketData data = dataList[index];
-            return  GestureDetector(
-              onTap: (){
-                 Get.to(JoinPartyDetails(),arguments: data.pjId);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                margin: EdgeInsets.symmetric(
-                  vertical: 10,horizontal: 10
-                ),
-                decoration: BoxDecoration(
-                // color: data.paymentStatus =='1' ?Colors.red.shade900:Colors.grey.shade500,
-              //    border: Border.all(color: data.paymentStatus =='1' ?Colors.red.shade900:Colors.grey.shade500),
-                  borderRadius: BorderRadius.circular(2.w),
-                /*    gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      /*    Color(0xfff2d5f7),
-                          Color(0xffe6acef),
-                          Color(0xffd982e6),
-                          Color(0xffcd59de),
-                          Color(0xffc02fd6),*/
-
-                      /*  Color(0xffd1dce6),
-                          Color(0xffa2bace),
-                          Color(0xff7497b5),
-                          Color(0xff45759d),
-                          Color(0xff175284),
-*/
-                      Color(0xffee216c),
-                      Color(0xffee216c),
-                      Color(0xffee216c),
-                      Color(0xfff14d89),
-                      Color(0xfff57aa7),
-                      Color(0xfff8a6c4),
-                      Color(0xfffcd3e2),
-                      // Colors.red.shade800,
-                      //Colors.red.shade700,
-                      //Colors.red.shade500,
-                      // Colors.red.shade400,
-                      // Colors.red.shade300,
-                      // Colors.black45,
-                      //Colors.black54,
-                      //   Colors.black87,
-                      // Colors.black,
-                    ]
-
-                ),
-*/
-                ),
-                child: FittedBox(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      // color: Colors.white,
-                      boxShadow: [
-                        const BoxShadow(
-                          color: Color.fromARGB(255, 110, 19, 9),
-                          blurRadius: 10,
-                          spreadRadius: 3,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(10.0),
+            return  Column(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                     Get.to(JoinPartyDetails(),arguments: data.pjId);
+                  },
+                  child: Stack(children: [
+                    Container(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    margin: EdgeInsets.symmetric(
+                        vertical: 10,horizontal: 10
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(margin: EdgeInsets.only(left: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: Get.width*0.5,
-                                child: Text(
-                                  '${data.title.toString().capitalizeFirst}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: const Color(0xFF3c0103),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.0.sp,
-                                  ),
-                                ),
-                              ),
-                              Row(
+                    decoration: BoxDecoration(
+                      // color: data.paymentStatus =='1' ?Colors.red.shade900:Colors.grey.shade500,
+                      //    border: Border.all(color: data.paymentStatus =='1' ?Colors.red.shade900:Colors.grey.shade500),
+                      borderRadius: BorderRadius.circular(2.w),
+                      /*    gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            /*    Color(0xfff2d5f7),
+                                Color(0xffe6acef),
+                                Color(0xffd982e6),
+                                Color(0xffcd59de),
+                                Color(0xffc02fd6),*/
+
+                            /*  Color(0xffd1dce6),
+                                Color(0xffa2bace),
+                                Color(0xff7497b5),
+                                Color(0xff45759d),
+                                Color(0xff175284),
+*/
+                            Color(0xffee216c),
+                            Color(0xffee216c),
+                            Color(0xffee216c),
+                            Color(0xfff14d89),
+                            Color(0xfff57aa7),
+                            Color(0xfff8a6c4),
+                            Color(0xfffcd3e2),
+                            // Colors.red.shade800,
+                            //Colors.red.shade700,
+                            //Colors.red.shade500,
+                            // Colors.red.shade400,
+                            // Colors.red.shade300,
+                            // Colors.black45,
+                            //Colors.black54,
+                            //   Colors.black87,
+                            // Colors.black,
+                          ]
+
+                      ),
+*/
+                    ),
+                    child: FittedBox(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          // color: Colors.white,
+                          boxShadow: [
+                            const BoxShadow(
+                              color: Color.fromARGB(255, 110, 19, 9),
+                              blurRadius: 10,
+                              spreadRadius: 3,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(margin: EdgeInsets.only(left: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  Container(
+                                    width: Get.width*0.5,
+                                    child: Text(
+                                      '${data.title.toString().capitalizeFirst}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: const Color(0xFF3c0103),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0.sp,
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Name : ${data.individualName}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: const Color(0xFF3c0103),
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 10.0.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   Text(
-                                    'Username : ${data.fullName}',
+                                    'Created On :  ${dateConvert('${data.createdAt}')}',
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: const Color(0xFF3c0103),
                                       fontWeight: FontWeight.normal,
-                                      fontSize: 10.0.sp,
+                                      fontSize: 9.0.sp,
                                     ),
                                   ),
+                                  const SizedBox(height: 10.0),
+
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month,
+                                        color: const Color(0xFF3c0103),
+                                        size: 13.sp,
+                                      ),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.015,
+                                      ),
+                                      Text(
+                                        "${dateConvert('${data.startDate}').split(',')[0]} ${data.startTime}\n${dateConvert('${data.endDate}').split(',')[0]} ${data.endTime}",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 9.sp,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5.0),
                                 ],
                               ),
-                              Text(
-                                'Created On :  ${dateConvert('${data.createdAt}')}',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: const Color(0xFF3c0103),
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 9.0.sp,
+                            ),
+                            const SizedBox(width: 10.0),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: MediaQuery.of(context).size.height * 0.12,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                                child: Image.network(
+                                  '${data.coverPhoto}',
+                                  fit: BoxFit.fill,
                                 ),
                               ),
-                              const SizedBox(height: 10.0),
-
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.calendar_month,
-                                    color: const Color(0xFF3c0103),
-                                    size: 13.sp,
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.015,
-                                  ),
-                                  Text(
-                                    "${dateConvert('${data.startDate}').split(',')[0]} ${data.startTime}\n${dateConvert('${data.endDate}').split(',')[0]} ${data.endTime}",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 9.sp,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 5.0),
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                        const SizedBox(width: 10.0),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          height: MediaQuery.of(context).size.height * 0.12,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10),
-                            ),
-                            child: Image.network(
-                              '${data.coverPhoto}',
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        )
-                      ],
+                      ),
                     ),
                   ),
+                  data.pjApprovalStatus =='1' ? Positioned(
+                    top: 15.0,
+                    right: 15.0,
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        'Approved',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ):Container()
+                  ],
+                  ),
                 ),
-              ),
+              ],
             );
            /*   Column(
               crossAxisAlignment: CrossAxisAlignment.end,

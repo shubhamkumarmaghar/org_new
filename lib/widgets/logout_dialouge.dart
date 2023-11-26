@@ -23,8 +23,8 @@ void showLogoutAlertDialog(BuildContext context) {
       GetStorage().remove('token');
       GetStorage().remove('loggedIn');
       //Get.find<OrganizationDashboardController>().timer.cancel();
-      Get.offAll(SelectUserCountry());
-      //Get.offAll(LoginView());
+      //Get.offAll(SelectUserCountry());
+      Get.offAll(LoginView());
     },
     btnCancelText: "Cancel",
     btnCancelOnPress: () {

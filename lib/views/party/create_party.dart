@@ -1,15 +1,13 @@
 // ignore_for_file: must_be_immutable
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:csc_picker/csc_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+
 import 'package:group_button/group_button.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,7 +19,6 @@ import 'package:sizer/sizer.dart';
 
 import '../../constants/cached_image_placeholder.dart';
 import '../../constants/statecity/model/state_model.dart';
-import '../../controller/api_heler_class.dart';
 import '../../controller/organisation/create_profile_controller/select_photo_options_screen.dart';
 import '../../services/services.dart';
 
@@ -211,6 +208,7 @@ class _CreatePartyState extends State<CreateParty> {
     controller.startPeopleAge.text = controller.getPrefiledData.startAge!;
     controller.endPeopleAge.text = controller.getPrefiledData.endAge!;
     controller.offersText.text = controller.getPrefiledData.offers!;
+    controller.offersText.text ==''?  controller.discountPortion.value = true:controller.discountPortion.value = false;
     controller.ladiesPrice.text = controller.getPrefiledData.ladies!;
     controller.stagPrice.text = controller.getPrefiledData.stag!;
     controller.othersPrice.text = controller.getPrefiledData.others!;
@@ -220,6 +218,24 @@ class _CreatePartyState extends State<CreateParty> {
     controller.state.value = controller.getPrefiledData.state!;
     controller.city.value = controller.getPrefiledData.city!;
     controller.partyId.value = controller.getPrefiledData.id!;
+    controller.maxMinAmount.text = controller.getPrefiledData.billMaxAmount??'';
+    controller.discountDescription.text = controller.getPrefiledData.discountDescription??"";
+    controller.discountAmount.text = controller.getPrefiledData.discountAmount??"";
+    if(controller.getPrefiledData.discountType =='1')
+      {
+        controller.listDiscount[0] = true;
+        controller.listDiscount[1] = false;
+      }
+    else if (controller.getPrefiledData.discountType =='2')
+    {
+      controller.listDiscount[1] = true;
+      controller.listDiscount[0] = false;
+    }
+    else{
+      controller.listDiscount[0] = true;
+      controller.listDiscount[1] = false;
+    }
+
   }
 
   nonField() {
@@ -249,6 +265,10 @@ class _CreatePartyState extends State<CreateParty> {
       controller.location.text = '';
       controller.city.value = '';
       controller.state.value = '';
+      controller.discountPortion.value=false;
+      controller.discountAmount.text = '';
+      controller.discountDescription.text ='';
+      controller.maxMinAmount.text ='';
     });
   }
 
@@ -1018,7 +1038,6 @@ class _CreatePartyState extends State<CreateParty> {
                         Switch(
                             value: controller.discountPortion.value,
                             onChanged: (value) {
-
                               controller.discountPortion.value =
                                   controller.discountPortion.value == false
                                       ? true
@@ -1099,8 +1118,8 @@ class _CreatePartyState extends State<CreateParty> {
         ),
         TextFieldWithTitle(
           title: controller.listDiscount[0] == true
-              ? 'Maximum discount amount'
-              : 'Flat discount on minimum Spends',
+              ? 'Maximum discount amount (Optional)'
+              : 'Flat discount on minimum Spends (Optional)',
           controller: controller.maxMinAmount,
           inputType: TextInputType.number,
           hinttext: 'Ex: 500 or 1000',
@@ -1115,7 +1134,7 @@ class _CreatePartyState extends State<CreateParty> {
           },
         ),
         TextFieldWithTitle(
-          title: 'Terms & Conditions',
+          title: 'Terms & Conditions (Optional)',
           controller: controller.discountDescription,
           inputType: TextInputType.text,
           validator: (value) {

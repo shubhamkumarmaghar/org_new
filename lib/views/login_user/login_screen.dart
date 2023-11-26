@@ -8,7 +8,7 @@ import 'package:sizer/sizer.dart';
 
 class LoginView extends StatelessWidget {
   String countryType = '';
-  LoginView({Key? key, required this.countryType}) : super(key: key);
+  LoginView({Key? key,  this.countryType ='1'}) : super(key: key);
   LoginController controller = Get.put(LoginController());
 
   @override

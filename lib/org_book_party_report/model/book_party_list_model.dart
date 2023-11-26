@@ -87,6 +87,9 @@ class SingleTicketData {
   String? approvalStatus;
   String? qr;
   String? pjApprovalStatus;
+  String? individualName;
+  dynamic unapprovedCount;
+
   SingleTicketData(
       {this.pjId,
         this.noOfPeople,
@@ -146,7 +149,9 @@ class SingleTicketData {
         this.imageStatus,
         this.approvalStatus,
         this.qr,
-        this.pjApprovalStatus
+        this.pjApprovalStatus,
+        this.individualName,
+        this.unapprovedCount,
       });
 
   SingleTicketData.fromJson(Map<String, dynamic> json) {
@@ -209,6 +214,8 @@ class SingleTicketData {
     approvalStatus = json['approval_status'];
     qr = json['qr_image'];
     pjApprovalStatus = json['pj_approval_status'];
+    individualName=json['user_profile_name'];
+    unapprovedCount=json['not_approval_qr_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -272,6 +279,8 @@ class SingleTicketData {
     data['approval_status'] = this.approvalStatus;
     data['qr_image']=this.qr;
     data['pjApprovalStatus'] = this.pjApprovalStatus;
+    data['user_profile_name']= this.individualName;
+    data['not_approval_qr_count']=this.unapprovedCount;
     return data;
   }
 }

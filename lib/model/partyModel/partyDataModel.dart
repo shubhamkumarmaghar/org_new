@@ -77,6 +77,10 @@ class Party {
   String? organization;
   dynamic fullName;
   dynamic profilePicture;
+  String?  discountType;
+  String?  discountAmount;
+  String?  billMaxAmount;
+  String?  discountDescription;
   List<PartyAmenitie>? partyAmenitie;
 
   Party(
@@ -129,6 +133,10 @@ class Party {
         this.organization,
         this.fullName,
         this.profilePicture,
+        this.discountDescription,
+        this.discountAmount,
+        this.billMaxAmount,
+        this.discountType,
         this.partyAmenitie});
 
   Party.fromJson(Map<String, dynamic> json) {
@@ -181,6 +189,11 @@ class Party {
     organization = json['organization'];
     fullName = json['full_name'];
     profilePicture = json['profile_picture'];
+    discountAmount =json['discount_amount'];
+    discountDescription= json['discount_description'];
+    discountType= json['discount_type'];
+    billMaxAmount= json['bill_amount'];
+
     if (json['party_amenitie'] != null) {
       partyAmenitie = <PartyAmenitie>[];
       json['party_amenitie'].forEach((v) {
@@ -239,6 +252,11 @@ class Party {
     data['approval_status'] = this.approvalStatus;
     data['organization'] = this.organization;
     data['full_name'] = this.fullName;
+    data['discount_type'] = this.discountType;
+    data['discount_amount'] = this.discountAmount;
+    data['bill_amount'] = this.billMaxAmount;
+    data['discount_description'] = this.discountDescription;
+
     data['profile_picture'] = this.profilePicture;
     if (this.partyAmenitie != null) {
       data['party_amenitie'] =

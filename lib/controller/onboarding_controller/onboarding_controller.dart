@@ -15,8 +15,8 @@ class OnBoardingController extends GetxController {
       pageCount.value++;
     } else {
       GetStorage().write('onboarding', '1');
-      Get.to(SelectUserCountry());
-      //Get.to(LoginView());
+      //Get.to(SelectUserCountry());
+      Get.to(LoginView());
     }
   }
 

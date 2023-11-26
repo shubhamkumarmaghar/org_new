@@ -188,7 +188,9 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                               '${data?.startDate}')}  ${data?.startTime.toString()}',fontSize: 14 ),
                           customText(text1:'Party goes count :   ',text2: '${data?.noOfPeople} ',fontSize: 14 ),
                           customText(text1:'Party Address :     ',text2: '${data?.latitude} ,${data?.longitude} ',fontSize: 14 ,maxLines: 3,),
-                          customText(text1:'Coupon code :     ',text2: '${data?.discountDescription}',fontSize: 14 ),
+                          data?.offers.toString().toLowerCase() =="" ? customText(text1:'Offer :     ',        text2: '${data?.offers}',fontSize: 14 ):
+                          data?.discountType=='1'?customText(text1:'Offer :     ',        text2: 'get ${data?.discountAmount}% Discount  ${data?.billAmount !='' ? 'upto ${data?.billAmount}':""} .',fontSize: 14 ):
+                          customText(text1:'Offer :     ',        text2: 'get flat ${data?.discountAmount} Discount ${data?.billAmount !='' ? 'on minimum ${data?.billAmount}':""} .',fontSize: 14 ),
                           customText(text1:'Booked On :       ',text2: '${dateConvert('${data?.createdAt}')} ',fontSize: 14 ),
                           SizedBox(height: 20,),
 
@@ -215,9 +217,10 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)
                   ))),
-                    onPressed: (){
+                    onPressed: ()async {
                       if(partyDateChecker(data?.endDate?? '${DateTime.now()}')==true) {
-                        controller.approveRejectTicket();
+                        await controller.approveRejectTicket();
+                        Get.back();
                       }
                       else{
                          Fluttertoast.showToast(msg: 'This QR is Expired Now,');

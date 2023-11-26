@@ -42,8 +42,9 @@ class _SettingsViewState extends State<SettingsView> {
             'You\'r request for account deactivation has successfully saved',
             '',
             colorText: Colors.white);
-         Get.offAll(SelectUserCountry());
-        //Get.offAll(LoginView());
+
+        // Get.offAll(SelectUserCountry());
+        Get.offAll(LoginView());
         GetStorage().remove('token');
         GetStorage().remove('loggedIn');
       }

@@ -357,12 +357,21 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                   subtitle: '${widget.party.personLimit}',
                   sub: true,
                 ),
-                CustomListTile(
+               CustomListTile(
                   icon: Icons.local_offer,
                   title: "Offers",
                   subtitle: '${widget.party.offers}',
                   sub: true,
                 ),
+                CustomListTile(
+                  icon: Icons.local_offer,
+                  title: widget.party.discountType == '1' ?"PercentWise Discount ":widget.party.discountType == '2' ?"Flat Discount":"No Discount ",
+                  subtitle: 'Discount Amount :${widget.party.discountAmount??"NA"} \n'
+                      'Max discount: ${widget.party.billMaxAmount??"NA"} \n'
+                  'Discount Description :${widget.party.discountDescription??"NA"}',
+                  sub: true,
+                ),
+
 
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 16),
