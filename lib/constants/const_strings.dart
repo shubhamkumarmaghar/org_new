@@ -22,6 +22,8 @@ class API {
  static const String partyAmenities = '$apiUrlString/party/party_amenities';
  static const String getPartyById = '$apiUrlString/party/get_user_organization_party_by_id';
  static const String updateRegularPartiesStatus = '$apiUrlString/order/update_ragular_papular_status';
+ static const String getPartyBookingHistory = '$apiUrlString/party/get_org_user_join_party';
+ static const String partyApprovalRejectStatus = '$apiUrlString/party/qr_approval_status_update';
 
 
  static const String getSubscriptionTransactionHistory = '$apiUrlString/Subscription/transaction_history';

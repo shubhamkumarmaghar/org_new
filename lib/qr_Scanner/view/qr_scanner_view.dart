@@ -4,10 +4,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:partypeoplebusiness/qr_Scanner/view/result_screen.dart';
+
+import '../../constants/const_strings.dart';
+import '../../controller/organisation/dashboard/organization_dashboard.dart';
+import '../../org_join_party_details/view/join_party_details.dart';
 
 class QrScanner extends StatefulWidget {
   const QrScanner({super.key});
@@ -17,7 +22,7 @@ class QrScanner extends StatefulWidget {
 }
 
 class _QrScannerState extends State<QrScanner> {
-
+  OrganizationDashboardController dashboardController = Get.find();
   bool isScanCompleted = false;
   List qrList = [];
 
@@ -67,12 +72,29 @@ class _QrScannerState extends State<QrScanner> {
                         final List<Barcode> barcodes = capture.barcodes;
                         final Uint8List? image = capture.image;
                         for (final barcode in barcodes) {
-                          log('scanner detais ${barcode.rawValue}');
+                          log('scanner details ${barcode.rawValue}');
                           debugPrint('Barcode found! ${barcode.rawValue}');
                           qrList.add(barcode.rawValue);
                         }
                         isScanCompleted=true;
-                        Get.off(QrResultScreen(resultQr: qrList,));
+                        var list = qrList[0].toString().split('=');
+                        log('${list[1].toString()}  ${list[2].toString()}  '  );
+                        if(qrList[0].toString().contains(API.getPartyBookingHistory)){
+                          if(list[2].toString() == dashboardController.organisationID.value)
+                            {
+                              var pj = list[1].toString().split('&');
+                              Get.off( JoinPartyDetails(),arguments: pj[0]);
+                            }
+                          else{
+                            Fluttertoast.showToast(msg: ' This qr is not valid for this pub ',);
+                            Get.back();
+                          }
+                        }
+                        else{
+                          Fluttertoast.showToast(msg: ' Invalid QR, please scan qr for party people ',);
+                          Get.back();
+                        }
+                      //  Get.off(QrResultScreen(resultQr: qrList,));
                       }
 
                   },)

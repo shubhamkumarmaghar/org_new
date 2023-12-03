@@ -11,6 +11,7 @@ import 'package:partypeoplebusiness/views/login_user/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/const_strings.dart';
+import '../../login_user/user_country_type.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({Key? key}) : super(key: key);
@@ -41,6 +42,8 @@ class _SettingsViewState extends State<SettingsView> {
             'You\'r request for account deactivation has successfully saved',
             '',
             colorText: Colors.white);
+
+        // Get.offAll(SelectUserCountry());
         Get.offAll(LoginView());
         GetStorage().remove('token');
         GetStorage().remove('loggedIn');

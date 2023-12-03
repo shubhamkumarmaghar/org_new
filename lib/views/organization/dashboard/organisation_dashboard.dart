@@ -141,8 +141,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
               actions: [
                 GestureDetector(
                   onTap: () async {
-                  //  await readNotificationCount();
-                //    Get.to(QrScanner());
+                   Get.to(QrScanner());
                   },
                   child: Container(
                     height: 40,

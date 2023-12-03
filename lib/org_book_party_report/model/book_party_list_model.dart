@@ -1,17 +1,17 @@
-class partyDataModel {
+class PartyBookingList {
   int? status;
   String? message;
-  List<Party>? data;
+  List<SingleTicketData>? data;
 
-  partyDataModel({this.status, this.message, this.data});
+  PartyBookingList({this.status, this.message, this.data});
 
-  partyDataModel.fromJson(Map<String, dynamic> json) {
+  PartyBookingList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <Party>[];
+      data = <SingleTicketData>[];
       json['data'].forEach((v) {
-        data!.add(new Party.fromJson(v));
+        data!.add(new SingleTicketData.fromJson(v));
       });
     }
   }
@@ -27,16 +27,23 @@ class partyDataModel {
   }
 }
 
-class Party {
+class SingleTicketData {
+  String? pjId;
+  String? noOfPeople;
+  String? organizationName;
+  String? organizationPic;
+  String? fullName;
   String? id;
   String? userId;
-  dynamic userType;
+  String? userType;
   String? phoneNumber;
   String? organizationId;
   String? title;
   String? description;
   String? coverPhoto;
   String? imageB;
+  String? imageBStatus;
+  String? imageCStatus;
   String? imageC;
   String? startDate;
   String? endDate;
@@ -55,7 +62,7 @@ class Party {
   String? startAge;
   String? endAge;
   String? personLimit;
-  String? status;
+  dynamic status;
   String? active;
   String? createdAt;
   String? updatedAt;
@@ -65,6 +72,10 @@ class Party {
   String? view;
   String? ongoing;
   String? offers;
+  String? discountType;
+  String? discountAmount;
+  String? billAmount;
+  String? discountDescription;
   String? ladies;
   String? stag;
   String? couples;
@@ -74,17 +85,18 @@ class Party {
   String? partyAmenitieId;
   String? imageStatus;
   String? approvalStatus;
-  String? organization;
-  dynamic fullName;
-  dynamic profilePicture;
-  String?  discountType;
-  String?  discountAmount;
-  String?  billMaxAmount;
-  String?  discountDescription;
-  List<PartyAmenitie>? partyAmenitie;
+  String? qr;
+  String? pjApprovalStatus;
+  String? individualName;
+  dynamic unapprovedCount;
 
-  Party(
-      {this.id,
+  SingleTicketData(
+      {this.pjId,
+        this.noOfPeople,
+        this.organizationName,
+        this.organizationPic,
+        this.fullName,
+        this.id,
         this.userId,
         this.userType,
         this.phoneNumber,
@@ -93,6 +105,8 @@ class Party {
         this.description,
         this.coverPhoto,
         this.imageB,
+        this.imageBStatus,
+        this.imageCStatus,
         this.imageC,
         this.startDate,
         this.endDate,
@@ -121,6 +135,10 @@ class Party {
         this.view,
         this.ongoing,
         this.offers,
+        this.discountType,
+        this.discountAmount,
+        this.billAmount,
+        this.discountDescription,
         this.ladies,
         this.stag,
         this.couples,
@@ -130,16 +148,18 @@ class Party {
         this.partyAmenitieId,
         this.imageStatus,
         this.approvalStatus,
-        this.organization,
-        this.fullName,
-        this.profilePicture,
-        this.discountDescription,
-        this.discountAmount,
-        this.billMaxAmount,
-        this.discountType,
-        this.partyAmenitie});
+        this.qr,
+        this.pjApprovalStatus,
+        this.individualName,
+        this.unapprovedCount,
+      });
 
-  Party.fromJson(Map<String, dynamic> json) {
+  SingleTicketData.fromJson(Map<String, dynamic> json) {
+    pjId = json['pj_id'];
+    noOfPeople = json['no_of_people'];
+    organizationName = json['organization_name'];
+    organizationPic = json['organization_pic'];
+    fullName = json['full_name'];
     id = json['id'];
     userId = json['user_id'];
     userType = json['user_type'];
@@ -149,6 +169,8 @@ class Party {
     description = json['description'];
     coverPhoto = json['cover_photo'];
     imageB = json['image_b'];
+    imageBStatus = json['image_b_status'];
+    imageCStatus = json['image_c_status'];
     imageC = json['image_c'];
     startDate = json['start_date'];
     endDate = json['end_date'];
@@ -177,6 +199,10 @@ class Party {
     view = json['view'];
     ongoing = json['ongoing'];
     offers = json['offers'];
+    discountType = json['discount_type'];
+    discountAmount = json['discount_amount'];
+    billAmount = json['bill_amount'];
+    discountDescription = json['discount_description'];
     ladies = json['ladies'];
     stag = json['stag'];
     couples = json['couples'];
@@ -186,24 +212,19 @@ class Party {
     partyAmenitieId = json['party_amenitie_id'];
     imageStatus = json['image_status'];
     approvalStatus = json['approval_status'];
-    organization = json['organization'];
-    fullName = json['full_name'];
-    profilePicture = json['profile_picture'];
-    discountAmount =json['discount_amount'];
-    discountDescription= json['discount_description'];
-    discountType= json['discount_type'];
-    billMaxAmount= json['bill_amount'];
-
-    if (json['party_amenitie'] != null) {
-      partyAmenitie = <PartyAmenitie>[];
-      json['party_amenitie'].forEach((v) {
-        partyAmenitie!.add(new PartyAmenitie.fromJson(v));
-      });
-    }
+    qr = json['qr_image'];
+    pjApprovalStatus = json['pj_approval_status'];
+    individualName=json['user_profile_name'];
+    unapprovedCount=json['not_approval_qr_count'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['pj_id'] = this.pjId;
+    data['no_of_people'] = this.noOfPeople;
+    data['organization_name'] = this.organizationName;
+    data['organization_pic'] = this.organizationPic;
+    data['full_name'] = this.fullName;
     data['id'] = this.id;
     data['user_id'] = this.userId;
     data['user_type'] = this.userType;
@@ -213,6 +234,8 @@ class Party {
     data['description'] = this.description;
     data['cover_photo'] = this.coverPhoto;
     data['image_b'] = this.imageB;
+    data['image_b_status'] = this.imageBStatus;
+    data['image_c_status'] = this.imageCStatus;
     data['image_c'] = this.imageC;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
@@ -241,6 +264,10 @@ class Party {
     data['view'] = this.view;
     data['ongoing'] = this.ongoing;
     data['offers'] = this.offers;
+    data['discount_type'] = this.discountType;
+    data['discount_amount'] = this.discountAmount;
+    data['bill_amount'] = this.billAmount;
+    data['discount_description'] = this.discountDescription;
     data['ladies'] = this.ladies;
     data['stag'] = this.stag;
     data['couples'] = this.couples;
@@ -250,37 +277,10 @@ class Party {
     data['party_amenitie_id'] = this.partyAmenitieId;
     data['image_status'] = this.imageStatus;
     data['approval_status'] = this.approvalStatus;
-    data['organization'] = this.organization;
-    data['full_name'] = this.fullName;
-    data['discount_type'] = this.discountType;
-    data['discount_amount'] = this.discountAmount;
-    data['bill_amount'] = this.billMaxAmount;
-    data['discount_description'] = this.discountDescription;
-
-    data['profile_picture'] = this.profilePicture;
-    if (this.partyAmenitie != null) {
-      data['party_amenitie'] =
-          this.partyAmenitie!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class PartyAmenitie {
-  String? id;
-  String? name;
-
-  PartyAmenitie({this.id, this.name});
-
-  PartyAmenitie.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
+    data['qr_image']=this.qr;
+    data['pjApprovalStatus'] = this.pjApprovalStatus;
+    data['user_profile_name']= this.individualName;
+    data['not_approval_qr_count']=this.unapprovedCount;
     return data;
   }
 }

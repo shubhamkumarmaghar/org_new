@@ -11,10 +11,11 @@ import 'package:partypeoplebusiness/controller/login_controller/login_controller
 import 'package:sizer/sizer.dart';
 
 class OTPScreen extends StatelessWidget {
+  String countryType ='';
   LoginController controller = Get.find();
   String OTPCodeValue = '';
 
-  OTPScreen({super.key});
+  OTPScreen({super.key,required this.countryType});
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +155,7 @@ class OTPScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                controller.verifyPhone();
+                controller.verifyPhone(type: countryType);
               },
               child: Text.rich(
                 TextSpan(

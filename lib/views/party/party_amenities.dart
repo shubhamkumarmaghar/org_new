@@ -160,7 +160,8 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
         title: Text(
           'Select Parties Amenities',
           style: TextStyle(fontSize: 13.sp),
-        ),leading: GestureDetector(onTap:(){
+        ),backgroundColor: Colors.red.shade900,
+        leading: GestureDetector(onTap:(){
           Navigator.pop(context);},
           child: Icon(Icons.arrow_back,)),
       ),
@@ -245,7 +246,7 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
                             }),
                           ),
                           SizedBox(
-                            height: 25,
+                            height: Get.height*0.05,
                           ),
                         ],
                       ),
@@ -310,7 +311,7 @@ class _AmenitiesButtonState extends State<AmenitiesButton> {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        primary: Colors.red,
+        primary: Colors.red.shade900,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
