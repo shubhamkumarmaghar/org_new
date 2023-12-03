@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,16 +26,13 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
     updaterApp();
     Timer(const Duration(seconds: 2), () {
       if ('${GetStorage().read('onboarding')}' == '1') {
-
-        if(GetStorage().read('loggedIn') == '1') {
+        if (GetStorage().read('loggedIn') == '1') {
           Get.offAll(OrganisationDashboard());
-        }
-        else{
+        } else {
           //Get.offAll(SelectUserCountry());
           Get.offAll(LoginView());
-      }
-      }
-      else {
+        }
+      } else {
         Get.offAll(OnBoardingScreen());
       }
     });
@@ -56,17 +54,19 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
     );
   }
 
-  void updaterApp() async
-  {
-    await appUpdater();
+  void updaterApp() async {
+    if(Platform.isAndroid){
+      await appUpdater();
+    }
+
   }
-  Future<void> appUpdater()async {
+
+  Future<void> appUpdater() async {
     InAppUpdate.checkForUpdate().then((updateInfo) {
       if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
         log('updateInfo.updateAvailability ${updateInfo.updateAvailability}');
         if (updateInfo.immediateUpdateAllowed) {
-          log('updateInfo.immediateUpdateAllowed ${updateInfo
-              .immediateUpdateAllowed}');
+          log('updateInfo.immediateUpdateAllowed ${updateInfo.immediateUpdateAllowed}');
           // Perform immediate update
           InAppUpdate.performImmediateUpdate().then((appUpdateResult) {
             if (appUpdateResult == AppUpdateResult.success) {
@@ -75,8 +75,7 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
             }
           });
         } else if (updateInfo.flexibleUpdateAllowed) {
-          log('updateInfo.flexibleUpdateAllowed ${updateInfo
-              .flexibleUpdateAllowed}');
+          log('updateInfo.flexibleUpdateAllowed ${updateInfo.flexibleUpdateAllowed}');
           //Perform flexible update
           InAppUpdate.startFlexibleUpdate().then((appUpdateResult) {
             if (appUpdateResult == AppUpdateResult.success) {
@@ -89,5 +88,4 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
       }
     });
   }
-
 }
