@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../controller/organisation/create_profile_controller/create_profile_controller.dart';
 import '../../../organization_transction_report/view/transction_screen.dart';
+import '../../../util/views/pop_up_widgets.dart';
 import '../../../widgets/logout_dialouge.dart';
 import '../../faq_screen.dart';
 
@@ -52,7 +53,8 @@ class _DrawerViewState extends State<DrawerView> {
         appBar: AppBar(
           backgroundColor: Colors.red.shade900,
           elevation: 0,
-          leading: const BackButton(color: Colors.white),
+
+          leading:getBackBarButton(context: context),
           title: Text(
             "My Profile",
             style: TextStyle(

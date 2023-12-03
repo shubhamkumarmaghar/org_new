@@ -12,6 +12,7 @@ import 'package:sizer/sizer.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import '../../../constants/cached_image_placeholder.dart';
+import '../../../util/views/pop_up_widgets.dart';
 import '../../../widgets/custom_image_slider.dart';
 
 class ProfilePreviewView extends StatefulWidget {
@@ -92,6 +93,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         body: SingleChildScrollView(
       child: SafeArea(
         child: Column(
@@ -173,6 +175,9 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
+                Positioned(
+                    top: 10,
+                    child: getBackBarButton(context:context)),
               ],
             ),
             SingleChildScrollView(

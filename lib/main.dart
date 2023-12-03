@@ -110,6 +110,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
             title: 'Party People Business',
+            debugShowCheckedModeBanner: false,
 
             theme: ThemeData(
               primarySwatch: Colors.red,

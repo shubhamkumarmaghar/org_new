@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:partypeoplebusiness/util/views/pop_up_widgets.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../constants/const_strings.dart';
@@ -58,6 +59,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           "Notifications",
           style: TextStyle(fontSize: 13.sp, color: Colors.white),
         ),
+        leading: getBackBarButton(context: context),
         backgroundColor: Colors.red,
       ),
       body: data == null
