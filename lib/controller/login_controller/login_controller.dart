@@ -15,6 +15,7 @@ import 'package:partypeoplebusiness/views/organization/profile/create_organisati
 import '../../views/login_user/otp_screen.dart';
 
 class LoginController extends GetxController {
+  RxBool isChecked = false.obs;
   TextEditingController username = TextEditingController();
   TextEditingController mobileNumber = TextEditingController();
   TextEditingController emailAddress = TextEditingController();

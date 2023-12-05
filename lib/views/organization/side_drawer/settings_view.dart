@@ -11,6 +11,7 @@ import 'package:partypeoplebusiness/views/login_user/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/const_strings.dart';
+import '../../../util/views/pop_up_widgets.dart';
 import '../../login_user/user_country_type.dart';
 
 class SettingsView extends StatefulWidget {
@@ -44,6 +45,7 @@ class _SettingsViewState extends State<SettingsView> {
             colorText: Colors.white);
 
         // Get.offAll(SelectUserCountry());
+        GetStorage().erase();
         Get.offAll(LoginView());
         GetStorage().remove('token');
         GetStorage().remove('loggedIn');
@@ -60,7 +62,7 @@ class _SettingsViewState extends State<SettingsView> {
       },
     );
     Widget continueButton = TextButton(
-      child: const Text("Request"),
+      child: const Text("Delete"),
       onPressed: () {
         deleteAccountAPICall();
         Navigator.pop(context);
@@ -113,8 +115,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    return (Platform.isAndroid)
-        ? MaterialApp(
+    return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               colorScheme: ColorScheme.fromSwatch().copyWith(
@@ -125,6 +126,7 @@ class _SettingsViewState extends State<SettingsView> {
             home: Scaffold(
               appBar: AppBar(
                 title: const Text("Settings"),
+                leading: getBackBarButton(context: context),
               ),
               body: SingleChildScrollView(
                 child: Container(
@@ -216,13 +218,13 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
             ),
-          )
-        : CupertinoApp(
+          );
+      /*  : CupertinoApp(
             debugShowCheckedModeBanner: false,
             home: CupertinoPageScaffold(
               navigationBar: const CupertinoNavigationBar(
                 backgroundColor: CupertinoColors.destructiveRed,
-                middle: Text("Settings UI"),
+                middle: Text("Settings"),
               ),
               child: Container(
                 height: double.infinity,
@@ -585,6 +587,6 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
             ),
-          );
+          );*/
   }
 }
