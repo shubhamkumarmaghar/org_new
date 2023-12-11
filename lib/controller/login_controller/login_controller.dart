@@ -38,7 +38,7 @@ class LoginController extends GetxController {
         'username': username.text,
         'device_token': deviceToken.value,
         'user_type':'Organization',
-        //'type':type
+        'type':type
       });
       print('$response');
       print('API started');

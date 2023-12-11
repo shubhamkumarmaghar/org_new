@@ -365,10 +365,10 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                 ),
                 CustomListTile(
                   icon: Icons.local_offer,
-                  title: widget.party.discountType == '1' ?"PercentWise Discount ":widget.party.discountType == '2' ?"Flat Discount":"No Discount ",
-                  subtitle: 'Discount Amount :${widget.party.discountAmount??"NA"} \n'
-                      'Max discount: ${widget.party.billMaxAmount??"NA"} \n'
-                  'Discount Description :${widget.party.discountDescription??"NA"}',
+                  title: widget.party.discountType == '1' ?"Percent Wise Discount ":widget.party.discountType == '2' ?"Flat Discount":"No Discount ",
+                  subtitle: '${widget.party.discountType == '2' ?"Discount Amount : ₹":"Discount Percent : "}${widget.party.discountAmount??"NA"} ${widget.party.discountType == '1' ?"%":""} \n'
+                      'Max Discount: ₹${widget.party.billMaxAmount??"NA"} \n'
+                  'Discount Description : ${widget.party.discountDescription??"NA"}',
                   sub: true,
                 ),
 

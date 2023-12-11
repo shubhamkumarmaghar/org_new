@@ -345,7 +345,7 @@ class PartyController extends GetxController {
       'party_amenitie_id':
           selectedAmenities.toString().replaceAll('[', ' ').replaceAll(']', ''),
       "phone_number": mobileNumber.text,
-      'offers': offersText.text,
+      'offers': discountPortion == false ? offersText.text :"",
       'ladies': ladiesPrice.text,
       'stag': stagPrice.text,
       'couples': couplesPrice.text,
@@ -357,7 +357,7 @@ class PartyController extends GetxController {
       'discount_type':discountPortion == true ? listDiscount[0] == true ? '1':'2':'0',
       'discount_amount':discountPortion == true ? discountAmount.text??'':"",
       'bill_amount':discountPortion == true ? maxMinAmount.text??'':"",
-      'discount_description':discountPortion == true ? discountDescription.text??'':"",
+      'discount_description':discountPortion == true ? discountDescription.text.isEmpty ?"":discountDescription.text:"",
       // 'organization_id': '1'
     });
     request.headers.addAll(headers);
@@ -490,7 +490,7 @@ class PartyController extends GetxController {
       'organization_id': organisationProfileController.organisationID.value,
       'party_amenitie_id':
           selectedAmenities.toString().replaceAll('[', ' ').replaceAll(']', ''),
-      'offers': offersText.text,
+      'offers': discountPortion == false ? offersText.text :"",
       'ladies': ladiesPrice.text,
       'stag': stagPrice.text,
       'couples': couplesPrice.text,
@@ -498,7 +498,7 @@ class PartyController extends GetxController {
       'discount_type':discountPortion == true ? listDiscount[0] == true ? '1':'2':'0',
       'discount_amount':discountPortion == true ? discountAmount.text??'':"",
       'bill_amount':discountPortion == true ? maxMinAmount.text??'':"",
-      'discount_description':discountPortion == true ? discountDescription.text??'':"",
+      'discount_description':discountPortion == true ? discountDescription.text.isEmpty ?"":discountDescription.text:"",
       if(timeline.value.isNotEmpty && cover_img.path.isEmpty)'cover_photo': timeline.value??'',
       if(imageB.value.isNotEmpty && image_b.path.isEmpty)'image_b':imageB.value??'',
       if(imageC.value.isNotEmpty && image_c.path.isEmpty)'image_c':imageC.value??'',

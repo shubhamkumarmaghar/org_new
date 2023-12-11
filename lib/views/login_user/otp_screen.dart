@@ -46,7 +46,7 @@ class OTPScreen extends StatelessWidget {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Phone Verification',
+                      countryType == '1'? 'Phone Verification' :'Email Verification' ,
                       style: TextStyle(
                         fontFamily: 'malgun',
                         fontSize: 13.sp,
@@ -93,13 +93,13 @@ class OTPScreen extends StatelessWidget {
                               text: 'Enter the 4-digit code sent to you \nat ',
                             ),
                             TextSpan(
-                              text: controller.mobileNumber.text,
+                              text: countryType == '1'? controller.mobileNumber.text:controller.emailAddress.text,
                               style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
-                            const TextSpan(
-                              text: ' did you enter the \ncorrect number?',
+                             TextSpan(
+                              text: ' did you enter the \ncorrect ${countryType == '1'? 'number':'Email' } ?',
                             ),
                           ],
                         ),

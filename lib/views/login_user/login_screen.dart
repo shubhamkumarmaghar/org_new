@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +7,17 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:partypeoplebusiness/controller/login_controller/login_controller.dart';
 import 'package:sizer/sizer.dart';
+class LoginView extends StatefulWidget {
+  LoginView({Key? key,}) : super(key: key);
 
-class LoginView extends StatelessWidget {
-  String countryType = '';
-  LoginView({Key? key,  this.countryType ='1'}) : super(key: key);
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+
+  String countryType = '1';
+
   LoginController controller = Get.put(LoginController());
 
   @override
@@ -36,6 +45,78 @@ class LoginView extends StatelessWidget {
                   child: Stack(children: [
                     Column(
                       children: [
+                        SizedBox(height: Get.height*0.025,),
+                        Text('Please Choose Country ',style: TextStyle(fontSize: 25,color: Colors.white),),
+                        SizedBox(height: Get.height*0.025,),
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            GestureDetector(
+                            onTap: (){
+                              countryType ='1';
+                              log('country type $countryType');
+                              setState(() {
+
+                              });
+                              //Get.to(LoginView(countryType: '1',));
+                            },
+                              child:
+                              Container(
+                                width: Get.width*0.4,
+                                  height: Get.width*0.2,
+                                //  margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(10),
+                                  child:Card(
+                                    shape:RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                      ),
+                                  color:  countryType =='1'? Colors.green.shade600:Colors.white,
+                                    child: Row( children: [
+                                      SizedBox(width: 10),
+                                CircleAvatar(backgroundImage: AssetImage('assets/indian_flag.png',) ,radius: 20,
+                              ),
+                                      SizedBox(width: 10),
+                                      Container(width:Get.width*0.15,
+                                          child: Text('India',style: TextStyle(fontSize: 20,color: countryType =='1'? Colors.white:Colors.grey.shade900),)),
+                              ]
+                                    ),
+                                  )
+                                  ),
+                            ),
+                            SizedBox(height: Get.width*0.2,),
+                            GestureDetector(
+                              onTap: (){
+                                countryType = '2';
+
+                                setState(() {
+
+                                });
+                                log('country type $countryType');
+                               // Get.to(LoginView(countryType: '1',));
+                              },
+                              child:
+                              Container(
+                                  width: Get.width*0.4,
+                                  height: Get.width*0.2,
+                                 // margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(10),
+                                  child:Card(color: countryType =='2'? Colors.green.shade600:Colors.white,
+                                    shape:RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                    ),
+                                    child: Row( children: [
+                                      SizedBox(width: 10),
+                                   //   CircleAvatar(backgroundImage: AssetImage('assets/other_world.png',) ,radius: 20,),
+                                      Icon(CupertinoIcons.globe,size: 38,color: countryType =='2'? Colors.white:Colors.grey.shade700,),
+                                      SizedBox(width: 10),
+                                      Container(width:Get.width*0.15,
+                                          child:  Text('World ',style: TextStyle(fontSize: 20,color: countryType =='2'? Colors.white:Colors.grey.shade900),)),
+                                    ]
+                                    ),
+                                  )
+                              ),
+                            ),
+                           ],),
+                        SizedBox(height: Get.height*0.05,),
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(

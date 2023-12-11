@@ -136,7 +136,7 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                   ),*/
                 TicketWidget(pic: '${data?.coverPhoto}',
                   width: Get.width * 0.9,
-                  height: Get.height * 0.7,
+                  height: Get.height * 0.72,
                   child:
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 10),
@@ -148,7 +148,7 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                           SizedBox(height: Get.width * 0.14,),
                           Container(alignment: Alignment.center,
                             child: Text(
-                              '${data?.fullName}', textAlign: TextAlign.center,
+                              '${data?.individualName}', textAlign: TextAlign.center,
                               maxLines: 2,
                               style: TextStyle(fontSize: 18,
                                   color: Colors.red.shade300,
@@ -174,7 +174,7 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                             height: 20,
                           ),
                           Container(alignment: Alignment.center,
-                            child: Text('${data?.title}', maxLines: 2,
+                            child: Text('${data?.title.toString().capitalizeFirst}', maxLines: 2,
                               style: TextStyle(fontSize: 25,
                                   color: Colors.red.shade300,
                                   fontWeight: FontWeight.w600),
@@ -183,17 +183,16 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                           SizedBox(
                             height: 20,
                           ),
-                          customText(text1:'Venue Name :    ',text2:  '${data?.organizationName}',fontSize: 14 ),
+                          customText(text1:'Venue Name :    ',text2:  '${data?.organizationName.toString().capitalizeFirst}',fontSize: 14 ),
                           customText(text1:'Party Time :     ',text2: '${dateConvert(
                               '${data?.startDate}')}  ${data?.startTime.toString()}',fontSize: 14 ),
                           customText(text1:'Party goes count :   ',text2: '${data?.noOfPeople} ',fontSize: 14 ),
-                          customText(text1:'Party Address :     ',text2: '${data?.latitude} ,${data?.longitude} ',fontSize: 14 ,maxLines: 3,),
-                          data?.offers.toString().toLowerCase() =="" ? customText(text1:'Offer :     ',        text2: '${data?.offers}',fontSize: 14 ):
-                          data?.discountType=='1'?customText(text1:'Offer :     ',        text2: 'get ${data?.discountAmount}% Discount  ${data?.billAmount !='' ? 'upto ${data?.billAmount}':""} .',fontSize: 14 ):
-                          customText(text1:'Offer :     ',        text2: 'get flat ${data?.discountAmount} Discount ${data?.billAmount !='' ? 'on minimum ${data?.billAmount}':""} .',fontSize: 14 ),
+                          customText(text1:'Party Address :     ',text2: '${data?.latitude.toString().capitalizeFirst} ,${data?.longitude} ',fontSize: 14 ,maxLines: 3,),
+                          data?.offers.toString().toLowerCase() != "" || data?.discountType=='0' ? customText(text1:'Offer :     ',        text2: '${data?.offers}',fontSize: 14 ):
+                          data?.discountType=='1'? customText(text1:'Offer :     ',        text2: 'Get ${data?.discountAmount}% off  ${data?.billAmount !='0' ? 'upto ₹${data?.billAmount}':""} .',fontSize: 14 ):
+                          customText(text1:'Offer :     ',        text2: 'Get flat ₹${data?.discountAmount} Discount ${data?.billAmount !='0' ? 'on minimum ₹${data?.billAmount}':""} .',fontSize: 14 ),
+                          data?.discountType != '0' || data?.discountDescription !=null || data?.discountDescription !="" ? customText(text1:'               ',text2: '${data?.discountDescription.toString().capitalizeFirst }',fontSize: 14 ,maxLines: 2,):Container(),
                           customText(text1:'Booked On :       ',text2: '${dateConvert('${data?.createdAt}')} ',fontSize: 14 ),
-                          SizedBox(height: 20,),
-
                         ]),
                   ),
                   isCornerRounded: true,),
