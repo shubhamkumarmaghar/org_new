@@ -40,9 +40,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   HttpOverrides.global =  MyHttpOverrides();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
-  await Firebase.initializeApp();
+
   GetStorage.init();
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -59,9 +60,17 @@ Future<void> main() async {
   } else {
     print('User declined permission');
   }
-  messaging.getToken().then((value) {
-    print('Firebase Messaging Token : ${value}');
-  });
+  if(Platform.isIOS) {
+    messaging.getAPNSToken().then((value) {
+      print('Firebase Messaging Token : ${value}');
+    });
+  }
+  else{
+    messaging.getToken().then((value) {
+      print('Firebase Messaging Token : ${value}');
+    });
+  }
+
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     print(message.messageType);
     print(message.data);
@@ -97,14 +106,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    print(GetStorage().read('loggedIn'));
-    print('user Token');
-    print(GetStorage().read('token'));
-    print(GetStorage().read('onboarding'));
     return Sizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
             title: 'Party People Business',
+            debugShowCheckedModeBanner: false,
 
             theme: ThemeData(
               primarySwatch: Colors.red,

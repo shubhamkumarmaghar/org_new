@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:partypeoplebusiness/default_controller.dart';
+import 'package:partypeoplebusiness/util/views/pop_up_widgets.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../constants/cached_image_placeholder.dart';
@@ -21,13 +22,11 @@ class EditOrganisationProfile extends StatefulWidget {
   const EditOrganisationProfile({Key? key}) : super(key: key);
 
   @override
-  State<EditOrganisationProfile> createState() =>
-      _EditOrganisationProfileState();
+  State<EditOrganisationProfile> createState() => _EditOrganisationProfileState();
 }
 
 class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
-  CreteOrganisationProfileController controller =
-      Get.put(CreteOrganisationProfileController());
+  CreteOrganisationProfileController controller = Get.put(CreteOrganisationProfileController());
   DefaultController defaultController = Get.put(DefaultController());
   List<MultiSelectCard> ameList = [];
 
@@ -41,8 +40,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
       Uri.parse(API.organizationDetails),
       headers: {'x-access-token': '${GetStorage().read('token')}'},
     );
-    final organizationData = await jsonDecode(organizationResponse.body)['data']
-        [0]['organization_amenities'];
+    final organizationData = await jsonDecode(organizationResponse.body)['data'][0]['organization_amenities'];
 
     // Add amenities from organizationData to selectedAmenitiesListID and ameList
     for (final amenityData in organizationData) {
@@ -107,15 +105,14 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         body: SingleChildScrollView(
             child: Obx(
       () => Container(
         height: Get.height,
         width: Get.width,
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/red_background.png"),
-                fit: BoxFit.fill)),
+            image: DecorationImage(image: AssetImage("assets/red_background.png"), fit: BoxFit.fill)),
         child: SingleChildScrollView(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -124,15 +121,21 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                 const SizedBox(
                   height: 40,
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: Text('Edit Profile',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.0,
-                        color: Colors.white,
-                      )),
+                Row(
+                  children: [
+                    getBackBarButton(context: context),
+                    SizedBox(width: 25,),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text('Edit Profile',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.0,
+                            color: Colors.white,
+                          )),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
@@ -148,10 +151,9 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                         () => Stack(
                           children: [
                             Container(
-                              height: Get.height*0.4,
+                              height: Get.height * 0.4,
                               width: double.maxFinite,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10)),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                               child: controller.timeline.value != ''
                                   ? controller.isLoading.value == true
                                       ? const Center(
@@ -160,31 +162,25 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                                           color: Colors.black,
                                         ))
                                       : Card(
-                                            shape: RoundedRectangleBorder(
+                                          shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15.0),
-                          bottomRight: Radius.circular(15.0),
-                          topLeft: Radius.circular(15.0),
-                          topRight: Radius.circular(15.0),
-                        ),),
-                                            child: ClipRRect(borderRadius: BorderRadius.circular(15),
+                                              bottomLeft: Radius.circular(15.0),
+                                              bottomRight: Radius.circular(15.0),
+                                              topLeft: Radius.circular(15.0),
+                                              topRight: Radius.circular(15.0),
+                                            ),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(15),
                                             child: CachedNetworkImageWidget(
-                                                imageUrl:
-                                                    controller.timeline.value,
+                                                imageUrl: controller.timeline.value,
                                                 width: Get.width,
-                                                height: Get.height*0.25,
+                                                height: Get.height * 0.25,
                                                 fit: BoxFit.fill,
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        const Icon(
-                                                            Icons.error_outline),
-                                                placeholder: (context, url) =>
-                                                    const Center(
-                                                        child:
-                                                            CupertinoActivityIndicator(
-                                                                color:
-                                                                    Colors.black,
-                                                                radius: 15))),
+                                                errorWidget: (context, url, error) => const Icon(Icons.error_outline),
+                                                placeholder: (context, url) => const Center(
+                                                    child:
+                                                        CupertinoActivityIndicator(color: Colors.black, radius: 15))),
                                           ))
                                   : Card(
                                       child: Lottie.asset(
@@ -197,10 +193,8 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                               right: 0,
                               child: IconButton(
                                 onPressed: () {
-                                  defaultController
-                                      .defaultControllerType.value = 0;
-                                  controller
-                                      .showSelectPhotoOptionsTimeline(context);
+                                  defaultController.defaultControllerType.value = 0;
+                                  controller.showSelectPhotoOptionsTimeline(context);
                                 },
                                 icon: const Icon(
                                   Icons.camera_alt,
@@ -235,8 +229,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                           controller.showSelectPhotoOptionsProfile(context);
                         },
                         child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(99)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(99)),
                             elevation: 5,
                             child: Container(
                               height: 100,
@@ -248,23 +241,17 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                                   ? CircleAvatar(
                                       backgroundColor: Colors.red.shade900,
                                       maxRadius: 40,
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(
+                                      backgroundImage: CachedNetworkImageProvider(
                                         controller.profile.value,
                                       ),
                                     )
-                                  :
-
-                              Container(
+                                  : Container(
                                       width: 50,
                                       height: 60,
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(99999),
+                                        borderRadius: BorderRadius.circular(99999),
                                       ),
-                                      child: Lottie.asset(
-                                          fit: BoxFit.cover,
-                                          'assets/107137-add-profile-picture.json'),
+                                      child: Lottie.asset(fit: BoxFit.cover, 'assets/107137-add-profile-picture.json'),
                                     ),
                             )),
                       ),
@@ -275,27 +262,24 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                   height: 10,
                 ),
                 GestureDetector(
-                  onTap: (){
-                    Get.to( AddImageProfile());
+                  onTap: () {
+                    Get.to(AddImageProfile());
                   },
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Container(
-                      width: Get.width*0.25,
+                      width: Get.width * 0.25,
                       margin: EdgeInsets.only(right: 28),
                       alignment: Alignment.center,
-                      height: Get.width*0.08,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
-                      color: Colors.orange),
-                      child: Text('Add Images',
-                        style: TextStyle(fontSize: 13.sp,
-                          color: Colors.white,
-                            fontWeight: FontWeight.w600
-                        ),),
+                      height: Get.width * 0.08,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.orange),
+                      child: Text(
+                        'Add Images',
+                        style: TextStyle(fontSize: 13.sp, color: Colors.white, fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ),
-
                 TextFieldWithTitle(
                   title: 'Organization Name *',
                   controller: controller.name,
@@ -357,19 +341,15 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                     flagState: CountryFlag.SHOW_IN_DROP_DOWN_ONLY,
 
                     dropdownDecoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         color: Colors.white,
-                        border:
-                            Border.all(color: Colors.grey.shade300, width: 1)),
+                        border: Border.all(color: Colors.grey.shade300, width: 1)),
 
                     //Disabled Dropdown box decoration to style your dropdown selector [OPTIONAL PARAMETER]  (USE with disabled dropdownDecoration)
                     disabledDropdownDecoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
                         color: Colors.white,
-                        border:
-                            Border.all(color: Colors.grey.shade300, width: 1)),
+                        border: Border.all(color: Colors.grey.shade300, width: 1)),
 
                     ///placeholders for dropdown search field
                     countrySearchPlaceholder: "Country",
@@ -381,23 +361,17 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                     stateDropdownLabel: "State",
                     cityDropdownLabel: "City",
 
-                   // defaultCountry:CscCountry.India,
+                    // defaultCountry:CscCountry.India,
 
                     currentCountry: controller.county.value,
                     currentState: controller.state.value,
                     currentCity: controller.city.value,
 
                     ///selected item style [OPTIONAL PARAMETER]
-                    selectedItemStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400),
+                    selectedItemStyle: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeight.w400),
 
                     ///DropdownDialog Heading style [OPTIONAL PARAMETER]
-                    dropdownHeadingStyle: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.bold),
+                    dropdownHeadingStyle: TextStyle(color: Colors.black, fontSize: 14.sp, fontWeight: FontWeight.bold),
 
                     ///DropdownDialog Item style [OPTIONAL PARAMETER]
                     dropdownItemStyle: TextStyle(
@@ -468,27 +442,19 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                                   setState(() {
                                     item.selected = !item.selected;
 
-                                    if (!controller.selectedAmenitiesListID
-                                        .contains(item.value.toString())) {
-                                      controller.selectedAmenitiesListID
-                                          .add(item.value.toString());
+                                    if (!controller.selectedAmenitiesListID.contains(item.value.toString())) {
+                                      controller.selectedAmenitiesListID.add(item.value.toString());
                                     } else {
-                                      controller.selectedAmenitiesListID
-                                          .remove(item.value.toString());
+                                      controller.selectedAmenitiesListID.remove(item.value.toString());
                                     }
                                   });
                                 },
                                 child: Chip(
                                   label: Text(
                                     item.label.toString(),
-                                    style: TextStyle(
-                                        color: item.selected
-                                            ? Colors.white
-                                            : Colors.black),
+                                    style: TextStyle(color: item.selected ? Colors.white : Colors.black),
                                   ),
-                                  backgroundColor: item.selected
-                                      ? Colors.red
-                                      : Colors.grey.shade200,
+                                  backgroundColor: item.selected ? Colors.red : Colors.grey.shade200,
                                 ),
                               ))
                           .toList(),
@@ -500,12 +466,10 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                 ),
                 Center(
                     child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 28.0, vertical: 14),
+                  padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 14),
                   child: controller.isLoading.value == true
                       ? const Center(
-                          child: CupertinoActivityIndicator(
-                              color: Colors.white, radius: 15),
+                          child: CupertinoActivityIndicator(color: Colors.white, radius: 15),
                         )
                       : ElevatedButton(
                           onPressed: () {
@@ -519,17 +483,14 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                               Get.snackbar('Country', 'Field is empty');
                             } else if (controller.state.isEmpty) {
                               Get.snackbar('State', 'Field is empty');
-                            } else if (controller
-                                .selectedAmenitiesListID.isEmpty) {
-                              Get.snackbar(
-                                  'Amenities', 'Select at least 1 Amenities');
+                            } else if (controller.selectedAmenitiesListID.isEmpty) {
+                              Get.snackbar('Amenities', 'Select at least 1 Amenities');
                             } else if (controller.timeline.isEmpty) {
                               Get.snackbar('Cover Photo', 'Select Cover Photo');
                             } else if (controller.profile.isEmpty) {
                               Get.snackbar('Amenities', 'Select Profile Photo');
                             } else if (controller.fullAddress.text.isEmpty) {
-                              Get.snackbar(
-                                  'Full Address', 'Enter your full address ');
+                              Get.snackbar('Full Address', 'Enter your full address ');
                             } else {
                               controller.updateOrganisation();
                             }
@@ -540,8 +501,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 16.0, horizontal: 24.0),
+                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

@@ -12,14 +12,14 @@ import 'package:sizer/sizer.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import '../../../constants/cached_image_placeholder.dart';
+import '../../../util/views/pop_up_widgets.dart';
 import '../../../widgets/custom_image_slider.dart';
 
 class ProfilePreviewView extends StatefulWidget {
   var organizationData;
   String phoneNumber;
 
-  ProfilePreviewView(
-      {required this.organizationData, required this.phoneNumber});
+  ProfilePreviewView({required this.organizationData, required this.phoneNumber});
 
   @override
   State<ProfilePreviewView> createState() => _ProfilePreviewViewState();
@@ -28,11 +28,11 @@ class ProfilePreviewView extends StatefulWidget {
 class _ProfilePreviewViewState extends State<ProfilePreviewView> {
   // DashbordController dashbordController = Get.find();
   List<MultiSelectCard> listOfAmenities = [];
-  List<ProfileImageWithStatus> profileImages =[];
+  List<ProfileImageWithStatus> profileImages = [];
+
   getAmenities() async {
     setState(() {
-      var jsonAddAmenitiesData =
-          widget.organizationData['organization_amenities'];
+      var jsonAddAmenitiesData = widget.organizationData['organization_amenities'];
       listOfAmenities.clear();
       for (var i = 0; i < jsonAddAmenitiesData.length; i++) {
         setState(() {
@@ -48,36 +48,41 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
     });
   }
 
-
-  void getPartyImages()
-  {
-    if(widget.organizationData['timeline_pic']!=null){
-      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['timeline_pic']}', status: '${widget.organizationData['profile_pic_approval_status']}'));
+  void getPartyImages() {
+    if (widget.organizationData['timeline_pic'] != null) {
+      profileImages.add(ProfileImageWithStatus(
+          image: '${widget.organizationData['timeline_pic']}',
+          status: '${widget.organizationData['profile_pic_approval_status']}'));
     }
-    if(widget.organizationData['profile_pic_b']!=null){
-      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_b']}', status: '${widget.organizationData['profile_pic_b_status']}'));
-
+    if (widget.organizationData['profile_pic_b'] != null) {
+      profileImages.add(ProfileImageWithStatus(
+          image: '${widget.organizationData['profile_pic_b']}',
+          status: '${widget.organizationData['profile_pic_b_status']}'));
     }
-    if(widget.organizationData['profile_pic_c']!=null){
-      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_c']}', status: '${widget.organizationData['profile_pic_c_status']}'));
-
+    if (widget.organizationData['profile_pic_c'] != null) {
+      profileImages.add(ProfileImageWithStatus(
+          image: '${widget.organizationData['profile_pic_c']}',
+          status: '${widget.organizationData['profile_pic_c_status']}'));
     }
-    if(widget.organizationData['profile_pic_d']!=null){
-      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_d']}', status: '${widget.organizationData['profile_pic_d_status']}'));
-
+    if (widget.organizationData['profile_pic_d'] != null) {
+      profileImages.add(ProfileImageWithStatus(
+          image: '${widget.organizationData['profile_pic_d']}',
+          status: '${widget.organizationData['profile_pic_d_status']}'));
     }
-    if(widget.organizationData['profile_pic_e']!=null){
-      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic_e']}', status: '${widget.organizationData['profile_pic_e_status']}'));
-
+    if (widget.organizationData['profile_pic_e'] != null) {
+      profileImages.add(ProfileImageWithStatus(
+          image: '${widget.organizationData['profile_pic_e']}',
+          status: '${widget.organizationData['profile_pic_e_status']}'));
     }
-    if(widget.organizationData['profile_pic']!=null){
-      profileImages.add(ProfileImageWithStatus(image: '${widget.organizationData['profile_pic']}', status: '${widget.organizationData['profile_pic_approval_status']}'));
+    if (widget.organizationData['profile_pic'] != null) {
+      profileImages.add(ProfileImageWithStatus(
+          image: '${widget.organizationData['profile_pic']}',
+          status: '${widget.organizationData['profile_pic_approval_status']}'));
     }
     profileImages.forEach((element) {
       print(element.toString());
     });
   }
-
 
   @override
   void initState() {
@@ -86,8 +91,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
     super.initState();
   }
 
-  CreteOrganisationProfileController addOrganizationsEventController =
-      Get.put(CreteOrganisationProfileController());
+  CreteOrganisationProfileController addOrganizationsEventController = Get.put(CreteOrganisationProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +99,10 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
         body: SingleChildScrollView(
       child: SafeArea(
         child: Column(
-
           children: [
             Stack(
               children: [
-              /*  Container(
+                /*  Container(
                   child: CachedNetworkImageWidget(
                     imageUrl: '${widget.organizationData['timeline_pic']}',
                     fit: BoxFit.fill,
@@ -112,28 +115,30 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                             color: Colors.white, radius: 15)),
                   ),
                 ),*/
-              //  if (widget.organizationData['profile_pic_approval_status'] == '1')
-                  Card(elevation: 5,
-                    //color: Colors.orange,
-                    clipBehavior:Clip.hardEdge ,
-                    margin: EdgeInsets.only(bottom: 25),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),),
-                    child:
-                    CarouselSlider(items: profileImages.map((element) =>
-                        CustomImageSlider(partyPhotos: element.image, imageStatus: element.status) ).toList(),
-                      options: CarouselOptions(
-                        height: Get.height*0.4,
+                //  if (widget.organizationData['profile_pic_approval_status'] == '1')
+                Card(
+                  elevation: 5,
+                  //color: Colors.orange,
+                  clipBehavior: Clip.hardEdge,
+                  margin: EdgeInsets.only(bottom: 25),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: CarouselSlider(
+                    items: profileImages
+                        .map((element) => CustomImageSlider(partyPhotos: element.image, imageStatus: element.status))
+                        .toList(),
+                    options: CarouselOptions(
+                        height: Get.height * 0.4,
                         // enlargeCenterPage: true,
                         autoPlay: true,
                         //aspectRatio: 16 / 9,
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enableInfiniteScroll: true,
                         autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        viewportFraction: 1
-                      ),
-                    ),
+                        viewportFraction: 1),
                   ),
+                ),
                 Positioned(
                   bottom: Get.width * 0.08,
                   left: Get.width * 0.03,
@@ -146,15 +151,11 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                           fit: BoxFit.fill,
                           height: 100,
                           width: 100,
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error_outline),
-                          placeholder: (context, url) => const Center(
-                              child: CupertinoActivityIndicator(
-                                  color: Colors.black, radius: 15)),
+                          errorWidget: (context, url, error) => const Icon(Icons.error_outline),
+                          placeholder: (context, url) =>
+                              const Center(child: CupertinoActivityIndicator(color: Colors.black, radius: 15)),
                         ),
-                        if (widget.organizationData[
-                                'profile_pic_approval_status'] ==
-                            '0')
+                        if (widget.organizationData['profile_pic_approval_status'] == '0')
                           BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                             child: Container(
@@ -165,32 +166,36 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                     ),
                   ),
                 ),
-                if (widget.organizationData['profile_pic_approval_status'] !=
-                    '1')
+                if (widget.organizationData['profile_pic_approval_status'] != '1')
                   BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                     child: Container(
                       color: Colors.grey.withOpacity(0.1),
                     ),
                   ),
+                Positioned(top: 10, child: getBackBarButton(context: context)),
               ],
             ),
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: EdgeInsets.symmetric(horizontal: getScreenWidth*0.025),
                 child: Column(
-                //  mainAxisAlignment: MainAxisAlignment.start,
+                  //  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-                      customIconText(icon: CupertinoIcons.person_alt_circle, text: "${widget.organizationData['name']}"),
-                    OrganizationProfileButton(
-                    onPressed: () {
-                      addOrganizationsEventController.isProfileEditable.value =true;
-                      Get.to(const EditOrganisationProfile());
-                    },
-                  ),
-                  ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        customIconText(
+                            icon: CupertinoIcons.person_alt_circle, text: "${widget.organizationData['name']}"),
+                        OrganizationProfileButton(
+                          onPressed: () {
+                            addOrganizationsEventController.isProfileEditable.value = true;
+                            Get.to(const EditOrganisationProfile());
+                          },
+                        ),
+                      ],
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -201,15 +206,14 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                     Container(
                       width: Get.width * 0.8,
                       child: Text(
-                        "${widget.organizationData['description']}"
-                            .capitalizeFirst!,
+                        "${widget.organizationData['description']}".capitalizeFirst!,
                         //textAlign: TextAlign.center,
                         maxLines: 4,
                         style: TextStyle(
-                            color: Colors.black,
-                            letterSpacing: 0.2,
-                            fontSize: 14.sp,
-                            ),
+                          color: Colors.black,
+                          letterSpacing: 0.2,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -230,11 +234,17 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                     const SizedBox(
                       height: 10,
                     ),
-                    customIconText(icon: CupertinoIcons.phone_circle, text: widget.phoneNumber,),
+                    customIconText(
+                      icon: CupertinoIcons.phone_circle,
+                      text: widget.phoneNumber,
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
-                    customIconText(icon: CupertinoIcons.list_dash , text: widget.organizationData['branch'],),
+                    customIconText(
+                      icon: CupertinoIcons.list_dash,
+                      text: widget.organizationData['branch'],
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -244,24 +254,19 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                     const SizedBox(
                       height: 10,
                     ),
-                    customIconText(icon: CupertinoIcons.location ,
-                      text:  widget.organizationData['city_id'] == '-'
-                        ? ''
-                        : "${widget.organizationData['city_id']}",
+                    customIconText(
+                      icon: CupertinoIcons.location,
+                      text: widget.organizationData['city_id'] == '-' ? '' : "${widget.organizationData['city_id']}",
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-
                     Container(
                       alignment: Alignment.topLeft,
                       child: Text(
                         "Selected Amenities",
                         textAlign: TextAlign.left,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13.sp),
+                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13.sp),
                       ),
                     ),
                     const SizedBox(
@@ -269,8 +274,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                     ),
                     MultiSelectContainer(
                       isMaxSelectableWithPerpetualSelects: true,
-                      controller: MultiSelectController(
-                          deSelectPerpetualSelectedItems: true),
+                      controller: MultiSelectController(deSelectPerpetualSelectedItems: true),
                       itemsDecoration: const MultiSelectDecorations(),
                       itemsPadding: const EdgeInsets.all(10),
                       highlightColor: Colors.red,
@@ -296,17 +300,16 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
       ),
     ));
   }
-  Widget customImageSlider({required String partyPhotos, required String imageStatus})
-  {
-    return
-      Container(
-        height: Get.height*0.4,
-        decoration: BoxDecoration(
-          // borderRadius: BorderRadius.circular(15),
-          image:DecorationImage( image: NetworkImage(partyPhotos),fit: BoxFit.cover),
-        ),
-        width: Get.width,
-        /* child: Image.network(
+
+  Widget customImageSlider({required String partyPhotos, required String imageStatus}) {
+    return Container(
+      height: Get.height * 0.4,
+      decoration: BoxDecoration(
+        // borderRadius: BorderRadius.circular(15),
+        image: DecorationImage(image: NetworkImage(partyPhotos), fit: BoxFit.cover),
+      ),
+      width: Get.width,
+      /* child: Image.network(
                         widget.party.coverPhoto,
                         width: Get.width,
                         height: 250,
@@ -331,30 +334,37 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                           );
                         },
                       ), */
-      );
+    );
   }
 }
 
-Widget customIconText({required IconData icon , required String text}){
-  return Row(children: [
-    Icon(icon,color: Colors.grey,),
-    SizedBox(width: 5,),
-    Container(width: Get.width*0.5,
-      alignment: Alignment.centerLeft,
-      child: Text(
-      text
-          .capitalizeFirst!,
-        maxLines: 2,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Colors.black,
-        // letterSpacing: 1.01,
-        fontSize: 13.sp,
-        fontWeight: FontWeight.normal,
+Widget customIconText({required IconData icon, required String text}) {
+  return Row(
+    children: [
+      Icon(
+        icon,
+        color: Colors.grey,
       ),
-  ),
-    ),
-  ],);
+      SizedBox(
+        width: 5,
+      ),
+      Container(
+        width: Get.width * 0.5,
+        alignment: Alignment.centerLeft,
+        child: Text(
+          text.capitalizeFirst!,
+          maxLines: 2,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            // letterSpacing: 1.01,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 class OrganizationProfileButton extends StatefulWidget {
@@ -363,25 +373,21 @@ class OrganizationProfileButton extends StatefulWidget {
   OrganizationProfileButton({required this.onPressed});
 
   @override
-  _OrganizationProfileButtonState createState() =>
-      _OrganizationProfileButtonState();
+  _OrganizationProfileButtonState createState() => _OrganizationProfileButtonState();
 }
 
-class _OrganizationProfileButtonState extends State<OrganizationProfileButton>
-    with SingleTickerProviderStateMixin {
+class _OrganizationProfileButtonState extends State<OrganizationProfileButton> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    _animation =
-        Tween<double>(begin: 1.0, end: 0.95).animate(_animationController)
-          ..addListener(() {
-            setState(() {});
-          });
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    _animation = Tween<double>(begin: 1.0, end: 0.95).animate(_animationController)
+      ..addListener(() {
+        setState(() {});
+      });
   }
 
   @override
@@ -400,7 +406,7 @@ class _OrganizationProfileButtonState extends State<OrganizationProfileButton>
       child: Transform.scale(
         scale: _animation.value,
         child: Container(
-          width: Get.width*0.3,
+          width: Get.width * 0.3,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             boxShadow: [

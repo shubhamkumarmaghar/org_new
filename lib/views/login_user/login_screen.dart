@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -414,6 +412,57 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                         ),*/
+SizedBox(height: 10,),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Checkbox(
+                                side: const BorderSide(color: Colors.white),
+                                checkColor: Colors.grey.shade900,
+                                activeColor: Colors.white,
+                                value: controller.isChecked.value,
+                                onChanged: (value) {
+                                  setState(() {
+                                    controller.isChecked.value =
+                                        value ?? false;
+                                  });
+                                },
+                              ),
+                              InkWell(
+                                  onTap: () async {
+                                    const url =
+                                        'https://partypeople.in'; // URL to redirect to
+                                    // ignore: deprecated_member_use
+                                    if (await canLaunch(url)) {
+                                      await launch(url);
+                                    } else {
+                                      throw 'Could not launch $url';
+                                    }
+                                  },
+                                  child: RichText(
+                                    text: const TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'I agree to the ',
+                                          style: TextStyle(
+                                            color: Colors.white,
+
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: 'Terms and Conditions',
+                                          style: TextStyle(
+                                            color: Colors.blue,
+                                            decoration: TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                            ],
+                          ),
 
                         const SizedBox(
                           height: 35,
@@ -429,12 +478,18 @@ class _LoginViewState extends State<LoginView> {
                               )
                             : OrganizationProfileButton(
                                 onPressed: () {
-                                  if ((controller.mobileNumber.text.isNotEmpty || controller.emailAddress.text.isNotEmpty) &&
-                                      controller.username.text.isNotEmpty) {
-                                    controller.verifyPhone(type: countryType);
-                                  } else {
-                                    Get.snackbar('Field is Empty',
-                                        'Fill all the fields');
+                                  if (!controller.isChecked.value) {
+                                    Get.snackbar('Terms & Condition', 'Please accept the terms and conditions.');
+                                  }
+                                  else {
+                                    if ((controller.mobileNumber.text.isNotEmpty ||
+                                        controller.emailAddress.text.isNotEmpty) &&
+                                        controller.username.text.isNotEmpty) {
+                                      controller.verifyPhone(type: widget.countryType);
+                                    } else {
+                                      Get.snackbar('Field is Empty',
+                                          'Fill all the fields');
+                                    }
                                   }
                                 },
                               ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,7 @@ import 'package:partypeoplebusiness/views/organization/profile/create_organisati
 import '../../views/login_user/otp_screen.dart';
 
 class LoginController extends GetxController {
+  RxBool isChecked = false.obs;
   TextEditingController username = TextEditingController();
   TextEditingController mobileNumber = TextEditingController();
   TextEditingController emailAddress = TextEditingController();
@@ -26,10 +28,19 @@ class LoginController extends GetxController {
     print('API started');
     if (mobileNumber.text.isPhoneNumber || emailAddress.text.isEmail) {
       isLoading.value = true;
-      await FirebaseMessaging.instance.getToken().then((token) {
-        print("token is $token");
-        deviceToken.value = token!;
-      });
+
+      if(Platform.isIOS) {
+        await FirebaseMessaging.instance.getAPNSToken().then((token) {
+          print("token is $token");
+          deviceToken.value = token!;
+        });
+      }
+      else{
+        await FirebaseMessaging.instance.getToken().then((token) {
+          print("token is $token");
+          deviceToken.value = token!;
+        });
+      }
 
       http.Response response = await http
           .post(Uri.parse(API.login), body: {
