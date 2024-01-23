@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/const_strings.dart';
 import '../../../model/partyModel/partyDataModel.dart';
+import '../../party_controller.dart';
 
 class OrganizationDashboardController extends GetxController {
   //TODO: Implement OrganizationProfileNewController
@@ -161,13 +162,13 @@ class OrganizationDashboardController extends GetxController {
             API.getPartyById),
         body: {
           'organization_id': organisationID.value.toString(),
-          'status': '0'
+          'status': '1'
         },
         headers: {'x-access-token': '${GetStorage().read('token')}'},
       );
 
       dynamic decodedData = jsonDecode(response.body);
-      print(decodedData);
+      print('shubhamm $decodedData');
 
       // Initialize lists to store parties
       List<Party> todayParties = [];

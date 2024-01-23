@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -18,8 +19,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   FlutterLocalNotificationsPlugin pluginInstance =
   FlutterLocalNotificationsPlugin();
   var init = const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/launcher_icon')
-  );
+      android: AndroidInitializationSettings('@mipmap/launcher_icon'));
   pluginInstance.initialize(init);
   AndroidNotificationDetails androidSpec = const AndroidNotificationDetails(
     'ch_id',
@@ -28,72 +28,67 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     priority: Priority.high,
     playSound: true,
   );
-  NotificationDetails platformSpec =
-
-  NotificationDetails(android: androidSpec);
+  NotificationDetails platformSpec = NotificationDetails(android: androidSpec);
 
   await pluginInstance.show(
       0, message.data['title'], message.data['body'], platformSpec);
-
+  log('A background msg just showed ${message.data}');
   //return;
 }
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
-  HttpOverrides.global =  MyHttpOverrides();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+ // final PendingDynamicLinkData? initialLink =
+  //await FirebaseDynamicLinks.instance.getInitialLink();
 
-  GetStorage.init();
+  //log('deeplink from initialLink :: ${initialLink?.link}');
+ // Get.put(SplashController());
+
+//  analytics = await FirebaseAnalytics.instance;
+ // FirebaseAnalyticsObserver observer =
+ // FirebaseAnalyticsObserver(analytics: analytics);
+  await GetStorage.init();
+//  logCustomEvent(eventName: splash, parameters: {'name': 'splash'});
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FlutterLocalNotificationsPlugin pluginInstance =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
   var init = const InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/launcher_icon'));
   pluginInstance.initialize(init);
-
   NotificationSettings settings = await messaging.requestPermission();
-
+  AndroidNotificationDetails androidSpec = const AndroidNotificationDetails(
+    'ch_id',
+    'ch_name',
+    importance: Importance.high,
+    priority: Priority.high,
+    playSound: true,
+  );
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     print('User granted permission');
   } else {
     print('User declined permission');
   }
-  if(Platform.isIOS) {
-    messaging.getAPNSToken().then((value) {
-      print('Firebase Messaging Token : ${value}');
-    });
-  }
-  else{
-    messaging.getToken().then((value) {
-      print('Firebase Messaging Token : ${value}');
-    });
-  }
+  messaging.getToken().then((value) {
+    print('Firebase Messaging Token : ${value}');
+  });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     print(message.messageType);
     print(message.data);
-    AndroidNotificationDetails androidSpec = const AndroidNotificationDetails(
-      'ch_id',
-      'ch_name',
-      importance: Importance.high,
-      priority: Priority.high,
-      playSound: true,
-    );
-
     NotificationDetails platformSpec =
-        NotificationDetails(android: androidSpec);
-
+    NotificationDetails(android: androidSpec);
     await pluginInstance.show(
         0, message.data['title'], message.data['body'], platformSpec);
   });
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  runApp(
-    const MyApp(),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -111,7 +106,9 @@ class _MyAppState extends State<MyApp> {
         return GetMaterialApp(
             title: 'Party People Business',
             debugShowCheckedModeBanner: false,
-
+            builder: (context,child){
+              return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9), child: child ?? Text(''));
+            },
             theme: ThemeData(
               primarySwatch: Colors.red,
               fontFamily:'PlusJakartaSans'

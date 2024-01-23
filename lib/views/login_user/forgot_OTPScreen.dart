@@ -4,18 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:partypeoplebusiness/controller/login_controller/login_controller.dart';
 import 'package:sizer/sizer.dart';
 
-class OTPScreen extends StatelessWidget {
-  String countryType ='';
-  LoginController controller = Get.find();
-  String OTPCodeValue = '';
+import '../../controller/login_controller/login_controller.dart';
 
-  OTPScreen({super.key,required this.countryType});
+class ForgotOTPScreen extends StatelessWidget {
+  LoginController controller = Get.find();
+  String forgotOTPCodeValue = '';
+
+  ForgotOTPScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class OTPScreen extends StatelessWidget {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      countryType == '1'? 'Phone Verification' :'Email Verification' ,
+                      'Otp' ,
                       style: TextStyle(
                         fontFamily: 'malgun',
                         fontSize: 13.sp,
@@ -93,13 +95,13 @@ class OTPScreen extends StatelessWidget {
                               text: 'Enter the 4-digit code sent to you \nat ',
                             ),
                             TextSpan(
-                              text: countryType == '1'? controller.mobileNumber.text:controller.emailAddress.text,
+                              text: controller.forgotMobileNumber.text,
                               style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white),
                             ),
                              TextSpan(
-                              text: ' did you enter the \ncorrect ${countryType == '1'? 'number':'Email' } ?',
+                              text: ' did you enter the \ncorrect number/Email ?',
                             ),
                           ],
                         ),
@@ -107,6 +109,61 @@ class OTPScreen extends StatelessWidget {
                             applyHeightToFirstAscent: false),
                         textAlign: TextAlign.left,
                       )),
+                  SizedBox(height: Get.height*0.05,),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'User Name',
+                      style: TextStyle(
+                        fontFamily: 'malgun',
+                        fontSize: 13.sp,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        letterSpacing: -0.36.sp,
+                        fontWeight: FontWeight.w700,
+                        height: 0.9444444444444444,
+                      ),
+                      textHeightBehavior: const TextHeightBehavior(
+                          applyHeightToFirstAscent: false),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    height: 55,
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width,
+                    margin: const EdgeInsets.only(top: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(21.0),
+                      color: const Color(0xffffffff),
+                      border: Border.all(
+                          width: 0.2, color: const Color(0xff707070)),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x21329d9c),
+                          offset: Offset(0, 13),
+                          blurRadius: 34,
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.only(left: 10.0, right: 20.0),
+                      child: TextField(
+                        maxLines: 1,
+                        controller: controller.forgotUsername,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.person,
+                            color: Color(0xff707070),
+                          ),
+                          border: InputBorder.none,
+                          hintText: 'Enter Username',
+                          hintStyle: TextStyle(
+                              fontFamily: 'malgun', fontSize: 12.sp),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -137,17 +194,16 @@ class OTPScreen extends StatelessWidget {
                       enabledBorderColor: Colors.white),
                   style: const TextStyle(fontSize: 17, color: Colors.black),
                   onChanged: (pin) {
-                    OTPCodeValue = pin;
+                    forgotOTPCodeValue = pin;
                     if (kDebugMode) {
-                      print(OTPCodeValue);
+                      print(forgotOTPCodeValue);
                     }
                   },
                   onCompleted: (pin) {
                     if (kDebugMode) {
-                      print(OTPCodeValue);
+                      print(forgotOTPCodeValue);
                     }
-
-                    OTPCodeValue = pin;
+                    forgotOTPCodeValue = pin;
                   }),
             ),
             const SizedBox(
@@ -155,7 +211,7 @@ class OTPScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                controller.verifyPhone(type: countryType);
+                controller.forgotPassword();
               },
               child: Text.rich(
                 TextSpan(
@@ -197,107 +253,56 @@ class OTPScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                   )
-                : OrganizationProfileButton(onPressed: () {
-                    if (OTPCodeValue.length != 4) {
-                      Get.snackbar(
-                        "Enter 4 Digit OTP",
-                        '',
-                        snackPosition: SnackPosition.BOTTOM,
-                        colorText: Colors.white,
-                      );
-                    } else {
-                      controller.verifyOTP(OTPCodeValue, context);
-                    }
-                  }),
+                :GestureDetector(onTap: (){
+
+                if (forgotOTPCodeValue.length != 4) {
+                  Get.snackbar(
+                    "Enter 4 Digit OTP",
+                    '',
+                    snackPosition: SnackPosition.BOTTOM,
+                    colorText: Colors.white,
+                  );
+                } else {
+                  controller.forgotOtpVerify(otpValue: forgotOTPCodeValue);
+                }
+
+            },
+                  child: Container(
+                    width: Get.width * 0.6,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(11.0),
+                      color: const Color(0xffFFA914),
+                      border: Border.all(width: 1.0, color: const Color(0xffffffff)),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x66FFA914),
+                          offset: Offset(0, 13),
+                          blurRadius: 34,
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Text(
+                          'Verify OTP'.toUpperCase(),
+                          style: TextStyle(
+                            fontFamily: 'malgun',
+                            fontSize: 13.sp,
+                            color: const Color(0xffffffff),
+                            letterSpacing: -0.36,
+                            fontWeight: FontWeight.bold,
+                            height: 0.9444444444444444,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
           ],
         ),
       ),
     ));
-  }
-}
-
-class OrganizationProfileButton extends StatefulWidget {
-  final Function onPressed;
-
-  const OrganizationProfileButton({super.key, required this.onPressed});
-
-  @override
-  _OrganizationProfileButtonState createState() =>
-      _OrganizationProfileButtonState();
-}
-
-class _OrganizationProfileButtonState extends State<OrganizationProfileButton>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-    _animation =
-        Tween<double>(begin: 1.0, end: 0.95).animate(_animationController)
-          ..addListener(() {
-            setState(() {});
-          });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) {
-        _animationController.forward();
-      },
-      onTapUp: (_) {
-        _animationController.reverse();
-        widget.onPressed();
-      },
-      onTapCancel: () {
-        _animationController.reverse();
-      },
-      child:
-      Transform.scale(
-        scale: _animation.value,
-        child: Container(
-          width: Get.width * 0.6,
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(11.0),
-            color: const Color(0xffFFA914),
-            border: Border.all(width: 1.0, color: const Color(0xffffffff)),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x66FFA914),
-                offset: Offset(0, 13),
-                blurRadius: 34,
-              ),
-            ],
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                'Verify OTP'.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: 'malgun',
-                  fontSize: 13.sp,
-                  color: const Color(0xffffffff),
-                  letterSpacing: -0.36,
-                  fontWeight: FontWeight.bold,
-                  height: 0.9444444444444444,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 }

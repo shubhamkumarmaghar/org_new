@@ -392,7 +392,8 @@ class _OrganizationProfileButtonState extends State<OrganizationProfileButton> w
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return
+      GestureDetector(
       onTapDown: (_) {
         _animationController.forward();
       },

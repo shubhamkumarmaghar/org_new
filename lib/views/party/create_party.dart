@@ -1354,7 +1354,7 @@ class _OptionSelectorState extends State<OptionSelector> {
   bool showStagFees = false;
   bool showCoupleFees = false;
   bool showOthersFees = false;
-  PartyController controller = Get.put(PartyController());
+  PartyController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {

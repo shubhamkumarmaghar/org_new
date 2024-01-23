@@ -45,7 +45,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
   final List partyImages =[];
   final List<CategoryList> _categoryLists = [];
   List selectedAmenities = [];
-  PartyController controller = Get.put(PartyController());
+  PartyController controller = Get.find();
   
   void getpartyImages()
   {
@@ -62,6 +62,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
       print(element.toString());
     });
   }
+
   Future<void> _fetchData() async {
     http.Response response = await http.get(
       Uri.parse(API.partyAmenities),

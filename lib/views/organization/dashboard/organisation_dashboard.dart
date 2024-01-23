@@ -14,12 +14,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:in_app_update/in_app_update.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:lottie/lottie.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:partypeoplebusiness/controller/party_controller.dart';
-import 'package:partypeoplebusiness/views/organization/party_preview/party_preview.dart';
 import 'package:partypeoplebusiness/views/organization/profile_preview/profile_preview.dart';
 import 'package:partypeoplebusiness/views/organization/side_drawer/drawer_view.dart';
 import 'package:partypeoplebusiness/views/party/create_party.dart';
@@ -44,6 +42,8 @@ class OrganisationDashboard extends StatefulWidget {
 class _OrganisationDashboardState extends State<OrganisationDashboard> {
   OrganizationDashboardController controller =
       Get.put(OrganizationDashboardController());
+  PartyController partyController = Get.put(PartyController());
+
 
   bool isDeviceConnected = false;
   bool isAlertSet = false;
@@ -52,7 +52,6 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
   double currentDotIndex = 0.0;
   var partiesJsonData;
   bool itShouldLoad = true;
-  PartyController partyController = Get.put(PartyController());
 
   readNotificationCount() async {
     http.Response response = await http.post(
@@ -1205,13 +1204,12 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                                                                     child: GestureDetector(
                                                                         onTap: () {
                                                                           Get.to(
-                                                                              PartyPreview(
+                                                                              PartyPreviewScreen(
                                                                             isHistory:
                                                                                 false,
                                                                             isPopularParty:
                                                                                 false,
-                                                                            data:
-                                                                                controller.jsonPartyOgranisationDataUpcomming[index],
+                                                                            party: controller.jsonPartyOgranisationDataUpcomming[index],
                                                                           ));
                                                                         },
                                                                         child: controller.jsonPartyOgranisationDataUpcomming[index].approvalStatus != "1"
@@ -1352,7 +1350,7 @@ class PartiesContainerWidget extends StatefulWidget {
 }
 
 class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
-  PartyController partyController = Get.put(PartyController());
+  PartyController partyController = Get.find();
 
   @override
   Widget build(BuildContext context) {

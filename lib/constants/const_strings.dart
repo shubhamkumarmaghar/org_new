@@ -2,11 +2,13 @@ class API {
 
  static const String developmentUrl = 'https://65.2.59.129/app/v1';
  static const String productionUrlString = 'https://app.partypeople.in/v1';
- static const String apiUrlString = productionUrlString;
+ static const String apiUrlString = developmentUrl;
 
  static const String login = '$apiUrlString/account/login';
  static const String otp = '$apiUrlString/account/otp_verify';
 
+ static const String forgotUsername = '$apiUrlString/account/forgot_username';
+ static const String changeUsername = '$apiUrlString/account/change_username';
 
  static const String organizationDetails = '$apiUrlString/party/organization_details';
  static const String addOrganizationDetails = '$apiUrlString/party/add_organization';

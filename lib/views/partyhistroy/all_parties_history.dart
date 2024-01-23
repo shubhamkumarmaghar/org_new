@@ -1,20 +1,14 @@
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:adobe_xd/gradient_xd_transform.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
-import 'package:lottie/lottie.dart';
-import 'package:partypeoplebusiness/controller/organisation/dashboard/organization_dashboard.dart';
 import 'package:partypeoplebusiness/views/partyhistroy/party_history_controller/party_History_controller.dart';
 import 'package:sizer/sizer.dart';
-
+import '../../controller/organisation/dashboard/organization_dashboard.dart';
+import '../../controller/party_controller.dart';
 import '../../model/partyModel/partyDataModel.dart';
-import '../../widgets/payment_response_view.dart';
 import '../organization/party_preview/party_preview_screen_new.dart';
 import '../party/create_party.dart';
 
@@ -27,10 +21,10 @@ class AllPartiesHistory extends StatefulWidget {
 
 class _AllPartiesHistoryState extends State<AllPartiesHistory> {
   var data;
-  //List<Party> allParties = [];
-  OrganizationDashboardController dashboardController = Get.find();
 
- /* getAllPartiesHistory() async {
+  //List<Party> allParties = [];
+
+  /* getAllPartiesHistory() async {
 
       dashboardController.isLoading.value = true;
 
@@ -79,90 +73,94 @@ class _AllPartiesHistoryState extends State<AllPartiesHistory> {
 
   @override
   void initState() {
- //   getAllPartiesHistory();
+    //   getAllPartiesHistory();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body:
-      GetBuilder<PartyHistoryController>(
-        init: PartyHistoryController(),
-        builder:(controller) {
-          return controller.isLoading == true
-              ? const Center(
-              child: CupertinoActivityIndicator(
-                radius: 15,
-                color: Colors.black,
-              ))
-              :  Stack(
-            children: [
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment(1, -0.45),
-                    radius: 0.9,
-                    colors: [
-                      Color(0xff7e160a),
-                      Color(0xff2e0303),
-                    ],
-                    stops: [0.0, 1],
-                    transform: GradientXDTransform(
-                      0.0,
-                      -1.0,
-                      1.23,
-                      0.0,
-                      -0.115,
-                      1.0,
-                      Alignment(0.0, 0.0),
-                    ),
-                  ),
-                ),
-              ),
-              ListView.builder(
-                itemCount: controller.allParties.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      /*Get.to(PartyPreview(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: GetBuilder<PartyHistoryController>(
+          init: PartyHistoryController(),
+          builder: (controller) {
+            return controller.isLoading == true
+                ? const Center(
+                    child: CupertinoActivityIndicator(
+                    radius: 15,
+                    color: Colors.black,
+                  ))
+                : Stack(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          gradient: RadialGradient(
+                            center: Alignment(1, -0.45),
+                            radius: 0.9,
+                            colors: [
+                              Color(0xff7e160a),
+                              Color(0xff2e0303),
+                            ],
+                            stops: [0.0, 1],
+                            transform: GradientXDTransform(
+                              0.0,
+                              -1.0,
+                              1.23,
+                              0.0,
+                              -0.115,
+                              1.0,
+                              Alignment(0.0, 0.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListView.builder(
+                        itemCount: controller.allParties.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              /*Get.to(PartyPreview(
                               data: allParties[index],
                               isPopularParty: false,
                               isHistory: true,
                             ));*/
-                      Get.to(PartyPreviewScreen(
-                        party: controller.allParties[index],
-                        isPopularParty: false,
-                        isHistory: true,
-                      ));
-                    },
-                    child: CustomListTile(
-                      party: controller.allParties[index],
-                      endTime: '${controller.allParties[index].endTime}',
-                      startTime: '${controller.allParties[index].startTime}',
-                      endDate: '${controller.allParties[index].endDate}',
-                      startDate: '${controller.allParties[index].startDate}',
-                      title: '${controller.allParties[index].title}',
-                      subtitle: '${controller.allParties[index].description}',
-                      trailingText: "Trailing Text",
-                      leadingImage: '${controller.allParties[index].coverPhoto}',
-                      leadingIcon: const Icon(Icons.history),
-                      trailingIcon: const Icon(Icons.add),
-                      city: '${controller.allParties[index].city}',
-                    ),
+                              Get.to(PartyPreviewScreen(
+                                party: controller.allParties[index],
+                                isPopularParty: false,
+                                isHistory: true,
+                              ));
+                            },
+                            child: CustomListTile(
+                              party: controller.allParties[index],
+                              endTime:
+                                  '${controller.allParties[index].endTime}',
+                              startTime:
+                                  '${controller.allParties[index].startTime}',
+                              endDate:
+                                  '${controller.allParties[index].endDate}',
+                              startDate:
+                                  '${controller.allParties[index].startDate}',
+                              title: '${controller.allParties[index].title}',
+                              subtitle:
+                                  '${controller.allParties[index].description}',
+                              trailingText: "Trailing Text",
+                              leadingImage:
+                                  '${controller.allParties[index].coverPhoto}',
+                              leadingIcon: const Icon(Icons.history),
+                              trailingIcon: const Icon(Icons.add),
+                              city: '${controller.allParties[index].city}',
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   );
-                },
-              ),
-            ],
-          );
-        },
-      )
-    );
+          },
+        ));
   }
 }
 
@@ -185,7 +183,6 @@ class CustomListTile extends StatelessWidget {
     required this.title,
     required this.startTime, // pass start time to constructor
     required this.endTime, // pass end time to constructor
-
     required this.subtitle,
     required this.leadingImage,
     required this.startDate,
@@ -195,6 +192,7 @@ class CustomListTile extends StatelessWidget {
     required this.trailingIcon,
     required this.city,
   });
+  PartyController partyController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -266,51 +264,62 @@ class CustomListTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10.0),
-            Stack(children: [Container(
-              width: MediaQuery.of(context).size.width * 0.25,
-              height: MediaQuery.of(context).size.height * 0.13,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-                child: Image(
-                  image: CachedNetworkImageProvider(leadingImage),
-                  fit: BoxFit.fill,
-                  errorBuilder: (context, url,
-                      error) => Icon(
-                        Icons.error_outline,color: Colors.white,
-                    size: 28,
-                      ),
-                ),
-              ),
-            ),
-       Positioned(bottom: 0,child: GestureDetector(onTap: (){
-    partyController.isEditable.value = true;
-    partyController.getPrefiledData = party;
-    partyController.isPopular.value = false;
-    partyController.isRepostParty.value = true;
-    Get.to(
-    CreateParty(isPopular: false)
-    );
-    },
-    child: Container(
-                  alignment: Alignment.center,
-                  height: Get.width*.07,
+            Stack(
+              children: [
+                Container(
                   width: MediaQuery.of(context).size.width * 0.25,
-                  decoration: BoxDecoration(color: Colors.red.shade200,
-                    borderRadius:BorderRadius.only(
+                  height: MediaQuery.of(context).size.height * 0.13,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10),
                       bottomRight: Radius.circular(10),
+                    ),
+                    child: Image(
+                      image: CachedNetworkImageProvider(leadingImage),
+                      fit: BoxFit.fill,
+                      errorBuilder: (context, url, error) => Icon(
+                        Icons.error_outline,
+                        color: Colors.white,
+                        size: 28,
                       ),
+                    ),
                   ),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(Icons.refresh),
-                      Text('Repost',style: TextStyle(color: Colors.black,fontSize: 18,fontWeight: FontWeight.w600)),
-                    ],
-                  ),),
-       ) ),
-            ],
+                ),
+                Positioned(
+                    bottom: 0,
+                    child: GestureDetector(
+                      onTap: () {
+                        partyController.isEditable.value = true;
+                        partyController.getPrefiledData = party;
+                        partyController.isPopular.value = false;
+                        partyController.isRepostParty.value = true;
+
+                        Get.to(CreateParty(isPopular: false));
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: Get.width * .07,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade200,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(Icons.refresh),
+                            Text('Repost',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                    )),
+              ],
             ),
           ],
         ),

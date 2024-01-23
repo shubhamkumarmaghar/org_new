@@ -164,7 +164,7 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                                 '${data?.qr}',
                                 height: Get.height * 0.2,
                                 width: Get.height * 0.2,),
-                              overlay: partyDateChecker(data?.endDate?? '${DateTime.now()}')==true?Image.network(
+                              overlay: partyDateChecker(endDate: data?.endDate?? '${DateTime.now()}', startDate:data?.endDate?? '${DateTime.now()}' )==true?Image.network(
                             '${data?.qr}',
                             height: Get.height * 0.2,
                             width: Get.height * 0.2,):Container(),
@@ -217,7 +217,7 @@ class _JoinPartyDetailsState extends State<JoinPartyDetails> {
                     borderRadius: BorderRadius.circular(20)
                   ))),
                     onPressed: ()async {
-                      if(partyDateChecker(data?.endDate?? '${DateTime.now()}')==true) {
+                      if(partyDateChecker(endDate: data?.endDate?? '${DateTime.now()}', startDate:data?.startDate?? '${DateTime.now()}' )==true) {
                         await controller.approveRejectTicket();
                         Get.back();
                       }
@@ -261,12 +261,18 @@ return  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
 );
   }
 
-bool partyDateChecker(String datetime){
-  var time = datetime;
-  DateTime datee = DateTime.parse(time??'');
-  if(DateTime.now().isAfter(datee))
+bool partyDateChecker({required String endDate,required String startDate}){
+  var end = endDate;
+  var start = startDate;
+  DateTime EndDatee = DateTime.parse(end??'');
+  DateTime StartDatee = DateTime.parse(start??'');
+
+  if(DateTime.now().isAfter(EndDatee))
   {
    // Fluttertoast.showToast(msg: 'This QR.is Expired,');
+    return false;
+  }
+  else if(DateTime.now().isBefore(EndDatee)){
     return false;
   }
   else{

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:partypeoplebusiness/controller/login_controller/login_controller.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'forgot_username.dart';
 class LoginView extends StatefulWidget {
   LoginView({Key? key,}) : super(key: key);
 
@@ -413,6 +418,19 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ),*/
 SizedBox(height: 10,),
+                        GestureDetector(
+                          onTap: (){
+                            Get.to(ForgotUserName());
+                          },
+                          child: Container(margin:  const EdgeInsets.only(left: 12.0),
+                            alignment:Alignment.centerRight,
+                            child: Text('Forgot Username ? ',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14
+                              ),),),
+                        ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
@@ -431,7 +449,7 @@ SizedBox(height: 10,),
                               InkWell(
                                   onTap: () async {
                                     const url =
-                                        'https://partypeople.in'; // URL to redirect to
+                                        'https://partypeople.in/privacypolicy'; // URL to redirect to
                                     // ignore: deprecated_member_use
                                     if (await canLaunch(url)) {
                                       await launch(url);
@@ -450,7 +468,7 @@ SizedBox(height: 10,),
                                           ),
                                         ),
                                         TextSpan(
-                                          text: 'Terms and Conditions',
+                                          text: 'Privacy Policy',
                                           style: TextStyle(
                                             color: Colors.blue,
                                             decoration: TextDecoration.underline,
@@ -485,7 +503,7 @@ SizedBox(height: 10,),
                                     if ((controller.mobileNumber.text.isNotEmpty ||
                                         controller.emailAddress.text.isNotEmpty) &&
                                         controller.username.text.isNotEmpty) {
-                                      controller.verifyPhone(type: widget.countryType);
+                                      controller.verifyPhone(type: countryType);
                                     } else {
                                       Get.snackbar('Field is Empty',
                                           'Fill all the fields');
