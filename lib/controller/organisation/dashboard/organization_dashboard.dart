@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/const_strings.dart';
 import '../../../model/partyModel/partyDataModel.dart';
+import '../../../widgets/location_services.dart';
 import '../../party_controller.dart';
 
 class OrganizationDashboardController extends GetxController {
@@ -46,6 +47,8 @@ class OrganizationDashboardController extends GetxController {
   RxInt lengthOfTommParties = 0.obs;
   RxInt lengthOfUpcomingParties = 0.obs;
   RxString phoneNumber = ''.obs;
+  RxString lat = ''.obs;
+  RxString lng = ''.obs;
 
   RxList<Party> jsonPartyOrganisationDataToday = <Party>[].obs;
 
@@ -66,9 +69,21 @@ class OrganizationDashboardController extends GetxController {
 
     getAPIOverview();
 
-     Timer.periodic(Duration(seconds: 3), (timer) {
+   /*  Timer.periodic(Duration(seconds: 3), (timer) {
       getAPIOverview();
+    });*/
+  }
+
+  getLatLang() async {
+    LocationService.getCurrentPosition().then((value) {
+      log(value.toJson().toString());
+      lat.value = value.latitude.toString();
+      lng.value = value.longitude.toString();
     });
+  }
+
+  Future<String> getCurrentLocationProperties() async {
+    return await LocationService.getCurrentPlace();
   }
 
 

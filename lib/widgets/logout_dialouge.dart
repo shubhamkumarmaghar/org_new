@@ -13,7 +13,7 @@ void showLogoutAlertDialog(BuildContext context) {
   AwesomeDialog(
     context: context,
     dialogType: DialogType.question,
-    animType: AnimType.BOTTOMSLIDE,
+    animType: AnimType.bottomSlide,
     title: 'Logout ? ',
     desc: 'Are you sure you want to Logout ',
     titleTextStyle: TextStyle(fontSize: 22, color: Colors.black),

@@ -59,6 +59,7 @@ class _DrawerViewState extends State<DrawerView> {
             "My Profile",
             style: TextStyle(
               fontSize: 13.sp,
+              color: Colors.white
             ),
           ),
           iconTheme: const IconThemeData(

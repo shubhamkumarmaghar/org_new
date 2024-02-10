@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../constants/cached_image_placeholder.dart';
 import '../../../default_controller.dart';
+import '../../../widgets/location_services.dart';
 
 class CreateOrganisationProfile extends StatefulWidget {
   const CreateOrganisationProfile({Key? key}) : super(key: key);
@@ -26,6 +27,7 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
   @override
   void initState() {
     controller.editingOrg.value = false;
+    LocationService.checkPermission(context: context);
     super.initState();
   }
 

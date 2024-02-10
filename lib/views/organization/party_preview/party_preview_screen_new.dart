@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,7 @@ class PartyPreviewScreen extends StatefulWidget {
 }
 
 class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
-  
+  double _currentSliderValue = 0;
   String join = 'Join';
   List<Category> _categories = [];
   final List partyImages =[];
@@ -63,6 +64,28 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
     });
   }
 
+  Future<bool> changeSeatAvailable({ required String value ,required String partyID}) async {
+    http.Response response = await http.post(
+      Uri.parse(API.partySeatAvailable),
+      body: {'seat_occupancy':value.toString(),
+        'party_id':partyID},
+      headers: {'x-access-token': '${GetStorage().read('token')}'},
+    );
+    var data = jsonDecode(response.body);
+    print('data ${response.body} ');
+
+      if (data['status'] == 1) {
+Fluttertoast.showToast(msg: data['message']);
+return true;
+      }
+      else{
+        Fluttertoast.showToast(msg: 'Failed to update Party seat occupancy .');
+        return false;
+      }
+    setState(() {
+    });
+  }
+
   Future<void> _fetchData() async {
     http.Response response = await http.get(
       Uri.parse(API.partyAmenities),
@@ -80,7 +103,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
               title: category.name, amenities: category.amenities));
 
         });
-          getSelectedID();
+        getSelectedID();
       }
     });
   }
@@ -108,6 +131,7 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
   @override
   void initState() {
     controller.partyId.value = widget.party.id!;
+    _currentSliderValue = double.parse('${widget.party.seat_occupancy}');
     _fetchData();
     getpartyImages();
     print(" ${widget.party.toJson()}");
@@ -238,6 +262,41 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
                       CustomTextIcon(icon: CupertinoIcons.person_3, IconText: "${widget.party.ongoing} Going"),
                     ]),
                 const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Available Seat',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      fontFamily: 'malgun',
+                      fontSize: 20,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600),
+                ),
+                Slider(
+                  value: _currentSliderValue,
+                  max: 100,
+                  divisions: 10,
+                  activeColor: Colors.red.shade900,
+                  inactiveColor: Colors.red.shade50,
+                  label: _currentSliderValue.round().toString(),
+                  onChangeEnd: (double value)async{
+                    if(_currentSliderValue != widget.party.seat_occupancy) {
+                      await changeSeatAvailable(value: _currentSliderValue.toString(),
+                      partyID: '${widget.party.id}');
+                    }
+                  },
+                  onChanged: (double value) async{
+                    _currentSliderValue = value;
+
+                      setState(() {
+
+
+                      });
+
+                  },
+                ),
+                const SizedBox(
                   height: 25,
                 ),
                 Text(
@@ -298,8 +357,8 @@ class _PartyPreviewScreenState extends State<PartyPreviewScreen> {
 
                 CustomListTile(
                   icon: Icons.location_on,
-                  title: "${widget.party.latitude} ",
-                  subtitle: "${widget.party.longitude} , ${widget.party.pincode}",
+                  title: "Address ",
+                  subtitle: "${widget.party.address} ",
                   sub: true,
                 ),
 

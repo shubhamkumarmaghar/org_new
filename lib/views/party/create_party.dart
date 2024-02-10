@@ -39,10 +39,6 @@ class CreateParty extends StatefulWidget {
 class _CreatePartyState extends State<CreateParty> {
   String selectCity = 'Select City';
   String selectState = 'Select State';
-  List<StateName> cityItems = [];
-  List<StateName> stateItems = [];
-  List state = [];
-  List city = [];
 
   DefaultController defaultController = Get.put(DefaultController());
   PartyController controller = Get.put(PartyController());
@@ -175,6 +171,8 @@ class _CreatePartyState extends State<CreateParty> {
   }
 
   fillFieldPreFilled() async {
+    await controller.getStateData();
+
     controller.timeline.value = '${controller.getPrefiledData.coverPhoto}';
     controller.imageB.value = '${controller.getPrefiledData.imageB}';
     controller.imageC.value = '${controller.getPrefiledData.imageC}';
@@ -214,9 +212,19 @@ class _CreatePartyState extends State<CreateParty> {
     controller.othersPrice.text = controller.getPrefiledData.others!;
     controller.couplesPrice.text = controller.getPrefiledData.couples!;
     controller.pincode.text = controller.getPrefiledData.pincode!;
-    controller.location.text = controller.getPrefiledData.latitude!;
+    controller.location.text = controller.getPrefiledData.address!;
+    controller.lat.value=controller.getPrefiledData.latitude!;
+    controller.lng.value=controller.getPrefiledData.longitude!;
+
     controller.state.value = controller.getPrefiledData.state!;
     controller.city.value = controller.getPrefiledData.city!;
+    if(controller.state.value !=''||controller.state.value != 'Select State')
+    {
+      selectState = controller.state.value;
+      await controller.getCityData(cityid: '$selectState');
+      selectCity = controller.city.value;
+    }
+
     controller.partyId.value = controller.getPrefiledData.id!;
     controller.maxMinAmount.text = controller.getPrefiledData.billMaxAmount??'';
     controller.discountDescription.text = controller.getPrefiledData.discountDescription??"";
@@ -235,10 +243,13 @@ class _CreatePartyState extends State<CreateParty> {
       controller.listDiscount[0] = true;
       controller.listDiscount[1] = false;
     }
+setState(() {
 
+});
   }
 
-  nonField() {
+  nonField() async {
+    await controller.getStateData();
     setState(() {
       controller.timeline.value = '';
       controller.imageB.value = '';
@@ -269,28 +280,12 @@ class _CreatePartyState extends State<CreateParty> {
       controller.discountAmount.text = '';
       controller.discountDescription.text ='';
       controller.maxMinAmount.text ='';
+      controller.lng.value='';
+      controller.lat.value='';
     });
   }
 
-  void statelist() {
-    state.add('Select State');
-    stateItems.forEach((element) {
-      state.add(element.name);
-    });
-    setState(() {});
-    //log('${stateItemss.first}');
-  }
 
-  void cityList(String cityId) async {
-    await controller.getCityData(cityid: cityId);
-    cityItems = controller.cityName;
-    city.add('Select City');
-    cityItems.forEach((element) {
-      // stateItemss  = [{element.id:element.name},];
-      city.add(element.name);
-    });
-    setState(() {});
-  }
 
   @override
   void initState() {
@@ -299,15 +294,8 @@ class _CreatePartyState extends State<CreateParty> {
     } else {
       nonField();
     }
-    getData();
+    //getData();
     super.initState();
-  }
-
-  Future<void> getData() async {
-    await controller.getStateData();
-    stateItems = controller.stateName;
-    //  if(controller.)
-    statelist();
   }
 
   @override
@@ -334,10 +322,11 @@ class _CreatePartyState extends State<CreateParty> {
     controller.othersPrice.text = '';
     controller.isEditable.value = false;
     controller.couplesPrice.text = '';
-    cityItems.clear();
-    stateItems.clear();
-    state.clear();
-    city.clear();
+    controller.lat.value='';
+    controller.lng.value='';
+
+    controller.statenNameList.clear();
+    controller.cityNameList.clear();
     super.dispose();
   }
 
@@ -355,7 +344,7 @@ class _CreatePartyState extends State<CreateParty> {
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: Obx(
-          () => SingleChildScrollView(
+          () => controller.isLoading ==false ?SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -691,6 +680,25 @@ class _CreatePartyState extends State<CreateParty> {
                         )
                       : Container(),
                   //LocationButton(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: GestureDetector(onTap: ()async{
+                      await controller.userLocation();
+                      selectState=controller.state.value;
+                      selectCity= controller.city.value;
+                      setState(() {
+
+                      });
+                     // log( controller.fullAddress.text );
+                    },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('Current Location',style: TextStyle(color: Colors.black),),
+                            Icon(Icons.location_on_outlined,color: Colors.black,),
+                          ],
+                        )),
+                  ),
                   TextFieldWithTitle(
                     title: 'Address',
                     controller: controller.location,
@@ -738,13 +746,16 @@ class _CreatePartyState extends State<CreateParty> {
                     ),
                   ),
                   Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24.0, vertical: 14),
+
+                      padding: const EdgeInsets.only(
+                          left: 24.0,right: 24, top: 14,bottom: 14),
                       child: DropdownButtonFormField<String>(
+
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Colors.white, width: 2),
+
                             borderRadius: BorderRadius.circular(8),
                           ),
                           border: OutlineInputBorder(
@@ -752,23 +763,24 @@ class _CreatePartyState extends State<CreateParty> {
                                 BorderSide(color: Colors.white, width: 2),
                             borderRadius: BorderRadius.circular(8),
                           ),
+
                           filled: true,
                           fillColor: Colors.white,
                         ),
                         dropdownColor: Colors.white,
                         value: selectState,
-                        onChanged: (newValue) {
+                        onChanged: (newValue) async{
                           selectState = newValue.toString();
                           controller.state.value = selectState;
                           selectCity = 'Select City';
-                          log('$selectState');
-                          city.clear();
-                          cityList(selectState);
+                          log('you selected ${selectState}');
+                         controller.cityNameList.clear();
+                         await controller.getCityData(cityid: '${selectState}');
+                         // cityList(selectState);
                           controller.cityName.clear();
-                          cityItems.clear();
                           setState(() {});
                         },
-                        items: state.map((items) {
+                        items: controller.statenNameList.map((items) {
                           return DropdownMenuItem<String>(
                             value: items.toString(),
                             child: Text(items.toString()),
@@ -796,6 +808,7 @@ class _CreatePartyState extends State<CreateParty> {
                           fillColor: Colors.white,
                         ),
                         dropdownColor: Colors.white,
+
                         value: selectCity,
                         onChanged: (newValue) {
                           setState(() {
@@ -803,7 +816,8 @@ class _CreatePartyState extends State<CreateParty> {
                             controller.city.value = selectCity;
                           });
                         },
-                        items: city.map((items) {
+
+                        items: controller.cityNameList.map((items) {
                           return DropdownMenuItem<String>(
                             value: items.toString(),
                             child: Text(items.toString()),
@@ -1056,7 +1070,7 @@ class _CreatePartyState extends State<CreateParty> {
                 ],
               ),
             ),
-          ),
+          ):Center(child: CircularProgressIndicator()),
         ));
   }
 

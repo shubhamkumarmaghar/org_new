@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:ui' as ui;
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -29,7 +28,9 @@ import '../../../constants/const_strings.dart';
 import '../../../controller/organisation/dashboard/organization_dashboard.dart';
 import '../../../model/partyModel/partyDataModel.dart';
 import '../../../qr_Scanner/view/qr_scanner_view.dart';
+import '../../../widgets/location_services.dart';
 import '../../notification/notification_screen.dart';
+import '../../party/party_container_view.dart';
 import '../party_preview/party_preview_screen_new.dart';
 
 class OrganisationDashboard extends StatefulWidget {
@@ -43,8 +44,6 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
   OrganizationDashboardController controller =
       Get.put(OrganizationDashboardController());
   PartyController partyController = Get.put(PartyController());
-
-
   bool isDeviceConnected = false;
   bool isAlertSet = false;
   late StreamSubscription subscription;
@@ -61,6 +60,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
 
     print('Notification count read ::${response.body}');
   }
+
 
   alertBoxWithNavigation() async {
     if (controller.organisationVerification.value == '0') {
@@ -119,12 +119,8 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
               centerTitle: true,
               toolbarHeight: 65,
               backgroundColor: Colors.red.shade900,
-              leading: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                ),
-                onPressed: () {
+              leading: GestureDetector(
+                onTap: (){
                   Get.to(DrawerView(
                       imageApproval: controller.imageApproval.value.toString(),
                       views: controller.views.value.toString(),
@@ -132,11 +128,15 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                       profileImageView: controller.circularDP.value.toString(),
                       timeLineImage: controller.timelinePic.value.toString()));
                 },
-                child: Image.asset(
-                  'assets/side_drawer.png',
-                  color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'assets/side_drawer.png',
+                    color: Colors.white,
+                  ),
                 ),
               ),
+
               actions: [
                 GestureDetector(
                   onTap: () async {
@@ -145,7 +145,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                   child: Container(
                     height: 40,
                     width: 40,
-                    child: Icon(CupertinoIcons.qrcode_viewfinder,size: 30)
+                    child: Icon(CupertinoIcons.qrcode_viewfinder,size: 30,color: Colors.white,)
                    /* Image.asset(
                       'assets/notification.png',
                       fit: BoxFit.fill,
@@ -207,6 +207,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontFamily: 'SegeoUI',
+                            color: Colors.white
                           ),
                         ),
                       ),
@@ -1310,7 +1311,7 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
       AwesomeDialog(
           context: context,
           dialogType: DialogType.noHeader,
-          animType: AnimType.BOTTOMSLIDE,
+          animType: AnimType.bottomSlide,
           body: Column(crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment:MainAxisAlignment.center,
             children: [Lottie.asset('assets/noInternet.json',),
@@ -1338,324 +1339,3 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
 
 }
 
-class PartiesContainerWidget extends StatefulWidget {
-  int lengthOfParties = 0;
-  List<Party> jsonPartyData = [];
-
-  PartiesContainerWidget(
-      {required this.lengthOfParties, required this.jsonPartyData});
-
-  @override
-  State<PartiesContainerWidget> createState() => _PartiesContainerWidgetState();
-}
-
-class _PartiesContainerWidgetState extends State<PartiesContainerWidget> {
-  PartyController partyController = Get.find();
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.lengthOfParties == 0
-        ? Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 5.sp),
-            child: Text(
-              "Sorry, there are no parties available at this time. Please try again later or check back for updates.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.grey.shade300,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w400),
-            ),
-          )
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Stack(
-              children: [
-                Container(
-                  height: 190,
-                  width: Get.width,
-                  child: ListView.builder(
-                      controller: ScrollController(initialScrollOffset: 0),
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-
-                      // physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.lengthOfParties,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              if (widget.jsonPartyData[index].papularStatus ==
-                                  '1') {
-                                /*Get.to(PartyPreview(
-                                  isHistory: false,
-                                  isPopularParty: true,
-                                  data: widget.jsonPartyData[index],
-                                ));*/
-                                Get.to(PartyPreviewScreen(
-                                  isHistory: false,
-                                  isPopularParty: true,
-                                  party: widget.jsonPartyData[index],
-                                ));
-                              } else {
-                                /*Get.to(PartyPreview(
-                                  isHistory: false,
-                                  isPopularParty: false,
-                                  data: widget.jsonPartyData[index],
-                                ));*/
-                                Get.to(PartyPreviewScreen(
-                                  isHistory: false,
-                                  isPopularParty: false,
-                                  party: widget.jsonPartyData[index],
-                                ));
-                              }
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 160,
-                                  width: 171,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xffffffff),
-                                    borderRadius: BorderRadius.circular(17.0),
-                                  ),
-                                  child: widget.jsonPartyData[index].imageStatus ==
-                                          '1'
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(13.0),
-                                          child: CachedNetworkImage(
-                                            imageUrl:
-                                                '${widget.jsonPartyData[index].coverPhoto}',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(13.0),
-                                          child: ImageFiltered(
-                                            imageFilter: ui.ImageFilter.blur(
-                                                sigmaX: 8.0, sigmaY: 8.0),
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  '${widget.jsonPartyData[index].coverPhoto}',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        height: 80,
-                                        width: 171,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xffffffff),
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 3,
-                                              blurRadius: 7,
-                                              offset: const Offset(0,
-                                                  3), // changes position of shadow
-                                            ),
-                                          ],
-                                          border: Border.all(
-                                            color: Colors.black,
-                                            width: 1,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 10.0,
-                                              left: 20.0,
-                                              right: 10.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "${widget.jsonPartyData[index].title}"
-                                                    .capitalizeFirst!,
-                                                style: TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontFamily: 'malgun',
-                                                  fontSize: 13.sp,
-                                                  color:
-                                                      const Color(0xff564d4d),
-                                                  height: 1.25,
-                                                ),
-                                                textHeightBehavior:
-                                                    const TextHeightBehavior(
-                                                  applyHeightToFirstAscent:
-                                                      false,
-                                                ),
-                                                softWrap: false,
-                                              ),
-                                              SizedBox(height: 3),
-                                              Text(
-                                                "${widget.jsonPartyData[index].description}"
-                                                    .capitalizeFirst!,
-                                                style: TextStyle(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'malgun',
-                                                  fontSize: 12.sp,
-                                                  color:
-                                                      const Color(0xff564d4d),
-                                                  height: 1.25,
-                                                ),
-                                                textHeightBehavior:
-                                                    const TextHeightBehavior(
-                                                  applyHeightToFirstAscent:
-                                                      false,
-                                                ),
-                                                softWrap: false,
-                                              ),
-                                              SizedBox(height: 3),
-                                              Text(
-                                                '${widget.jsonPartyData[index].startTime}',
-                                                style: TextStyle(
-                                                  fontFamily: 'malgun',
-                                                  fontSize: 10.sp,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                widget.lengthOfParties != 0
-                                    ? Positioned(
-                                        left: 0,
-                                        top: 0,
-                                        child: Container(
-                                          height: 40,
-                                          width: 40,
-                                          child: GestureDetector(
-                                              onTap: () {
-                                                partyController
-                                                    .isEditable.value = true;
-                                                partyController.isRepostParty.value = false;
-                                                partyController
-                                                        .getPrefiledData =
-                                                    widget.jsonPartyData[index];
-                                                if (widget.jsonPartyData[index].papularStatus ==
-                                                    '1') {
-                                                  partyController
-                                                      .isPopular.value = true;
-                                                  /*Get.to(PartyPreview(
-                                                    isHistory: false,
-                                                    isPopularParty: true,
-                                                    data: widget
-                                                        .jsonPartyData[index],
-                                                  ));*/
-                                                  Get.to(PartyPreviewScreen(
-                                                    isHistory: false,
-                                                    isPopularParty: true,
-                                                    party: widget
-                                                        .jsonPartyData[index],
-                                                  ));
-                                                } else {
-                                                  partyController
-                                                      .isPopular.value = false;
-                                               /*   Get.to(PartyPreview(
-                                                    isHistory: false,
-                                                    isPopularParty: false,
-                                                    data: widget
-                                                        .jsonPartyData[index],
-                                                  ));*/
-                                                  Get.to(PartyPreviewScreen(
-                                                    isHistory: false,
-                                                    isPopularParty: false,
-                                                    party: widget
-                                                        .jsonPartyData[index],
-                                                  ));
-                                                }
-                                              },
-                                              child: widget.jsonPartyData[index].approvalStatus !=
-                                                      "1"
-                                                  ? Card(
-                                                      elevation: 5,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          40)),
-                                                      child: Container(
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.black,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          40)),
-                                                          child: SizedBox(
-                                                              height: 15,
-                                                              width: 15,
-                                                              child: Lottie.asset(
-                                                                  'assets/127247-disapproved.json'))),
-                                                    )
-                                                  : widget.jsonPartyData[index].papularStatus ==
-                                                          '1'
-                                                      ? Container()
-                                                      : Container()),
-                                        ),
-                                      )
-                                    : Container(),
-                                Positioned(
-                                  top: 10,
-                                  right: 5,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      partyController.isEditable.value = true;
-                                      partyController.isRepostParty.value = false;
-                                      partyController.getPrefiledData =
-                                          widget.jsonPartyData[index];
-                                      partyController.partyId.value = partyController.getPrefiledData.id!;
-                                      if (widget.jsonPartyData[index].papularStatus ==
-                                          '1') {
-                                        partyController.isPopular.value = true;
-                                        Get.to(Get.to(
-                                            CreateParty(isPopular: true)));
-                                      } else {
-                                        partyController.isPopular.value = false;
-                                        Get.to(
-                                            CreateParty(isPopular: false)
-                                        );
-                                      }
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: Colors.orange,
-                                      child: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-          );
-  }
-}

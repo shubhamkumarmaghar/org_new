@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:csc_picker/csc_picker.dart';
@@ -16,6 +17,7 @@ import 'package:sizer/sizer.dart';
 import '../../../constants/cached_image_placeholder.dart';
 import '../../../constants/const_strings.dart';
 import '../../../controller/organisation/create_profile_controller/create_profile_controller.dart';
+import '../../../widgets/location_services.dart';
 import 'add_profile_images.dart';
 
 class EditOrganisationProfile extends StatefulWidget {
@@ -97,6 +99,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
 
   @override
   void initState() {
+    LocationService.checkPermission(context: context);
     controller.getAPIOverview();
     getAmenities();
     super.initState();
@@ -318,6 +321,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                   controller: controller.branches,
                   inputType: TextInputType.name,
                 ),
+
                 TextFieldWithTitle(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -329,6 +333,20 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                   title: 'Organization Full Address',
                   controller: controller.fullAddress,
                   inputType: TextInputType.name,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+                  child: GestureDetector(onTap: ()async{
+                   await controller.getLocationEditabledata();
+                   log( controller.fullAddress.text );
+                  },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('Current Location',style: TextStyle(color: Colors.white),),
+                          Icon(Icons.location_on_outlined,color: Colors.white,),
+                        ],
+                      )),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(

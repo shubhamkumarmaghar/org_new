@@ -6,11 +6,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:partypeoplebusiness/services/myhttp_overrides.dart';
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 import 'package:partypeoplebusiness/views/splash_screen/splash_screen_view.dart';
+import 'package:partypeoplebusiness/widgets/location_services.dart';
 import 'package:sizer/sizer.dart';
 
 @pragma('vm:entry-point')
@@ -73,6 +77,7 @@ void main() async {
   } else {
     print('User declined permission');
   }
+
   messaging.getToken().then((value) {
     print('Firebase Messaging Token : ${value}');
   });
@@ -110,6 +115,7 @@ class _MyAppState extends State<MyApp> {
               return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 0.9), child: child ?? Text(''));
             },
             theme: ThemeData(
+              useMaterial3: false,
               primarySwatch: Colors.red,
               fontFamily:'PlusJakartaSans'
             ),
@@ -117,4 +123,6 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
+
+
 }

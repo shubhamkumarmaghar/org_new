@@ -81,6 +81,8 @@ class Party {
   String?  discountAmount;
   String?  billMaxAmount;
   String?  discountDescription;
+  String?  address;
+  String? seat_occupancy;
   List<PartyAmenitie>? partyAmenitie;
 
   Party(
@@ -137,6 +139,8 @@ class Party {
         this.discountAmount,
         this.billMaxAmount,
         this.discountType,
+        this.address,
+        this.seat_occupancy,
         this.partyAmenitie});
 
   Party.fromJson(Map<String, dynamic> json) {
@@ -193,6 +197,8 @@ class Party {
     discountDescription= json['discount_description'];
     discountType= json['discount_type'];
     billMaxAmount= json['bill_amount'];
+    address = json['address'];
+    seat_occupancy = json['seat_occupancy'];
 
     if (json['party_amenitie'] != null) {
       partyAmenitie = <PartyAmenitie>[];
@@ -256,8 +262,9 @@ class Party {
     data['discount_amount'] = this.discountAmount;
     data['bill_amount'] = this.billMaxAmount;
     data['discount_description'] = this.discountDescription;
-
+    data['address'] = this.address;
     data['profile_picture'] = this.profilePicture;
+    data['seat_occupancy'] = this.seat_occupancy;
     if (this.partyAmenitie != null) {
       data['party_amenitie'] =
           this.partyAmenitie!.map((v) => v.toJson()).toList();

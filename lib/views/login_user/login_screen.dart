@@ -9,6 +9,7 @@ import 'package:partypeoplebusiness/controller/login_controller/login_controller
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../widgets/location_services.dart';
 import 'forgot_username.dart';
 class LoginView extends StatefulWidget {
   LoginView({Key? key,}) : super(key: key);
@@ -22,6 +23,11 @@ class _LoginViewState extends State<LoginView> {
   String countryType = '1';
 
   LoginController controller = Get.put(LoginController());
+@override
+  void initState() {
+  //LocationService.checkPermission(context: context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -234,14 +234,14 @@ class _AmenitiesPartyScreenState extends State<AmenitiesPartyScreen> {
                               if (controller.isEditable.value == true) {
                                 if(controller.isRepostParty.value == true)
                                   {
-                                    controller.sendRequst();
+                                    controller.sendRequest();
                                   }
                                 else{
                                   controller.sendEditParty();
                                 }
 
                               } else {
-                                controller.sendRequst();
+                                controller.sendRequest();
                               }
                             }),
                           ),

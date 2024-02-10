@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +7,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +20,7 @@ import 'package:partypeoplebusiness/controller/organisation/create_profile_contr
 import 'package:partypeoplebusiness/views/organization/dashboard/organisation_dashboard.dart';
 
 import '../../../services/services.dart';
+import '../../../widgets/location_services.dart';
 
 class CreteOrganisationProfileController extends GetxController {
   //TODO: Implement AddOrganizationsEventController
@@ -45,6 +50,47 @@ class CreteOrganisationProfileController extends GetxController {
   var state = ''.obs;
   var city = ''.obs;
   RxList selectedAmenitiesListID = [].obs;
+  RxString lat = ''.obs;
+  RxString lng = ''.obs;
+
+@override
+  onInit(){
+ // userLocation();
+  getCurrentLocationProperties();
+if(!isProfileEditable.value){
+  getLocationEditabledata();
+}
+
+    super.onInit();
+  }
+
+  getLocationEditabledata() async{
+  await getLatLang();
+  List<Placemark> placeMarks =
+  await placemarkFromCoordinates(double.parse(lat.value),double.parse(lng.value));
+  log('Address :: '+placeMarks[0].toString());
+  String currentAddress =
+      '${placeMarks[0].name} ${placeMarks[0].subThoroughfare} ${placeMarks[0].thoroughfare}  ${placeMarks[0].subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(' ', '-')}  ${placeMarks[0].postalCode} ';
+ fullAddress.text= await currentAddress;
+ county.value = await'${placeMarks[0].country?.replaceAll(' ', '')}';
+ state.value = await '${placeMarks[0].locality?.replaceAll(' ', '')}';
+ city.value = await '${placeMarks[0].name} ${placeMarks[0].subThoroughfare?.replaceAll(" ", '-')} ${placeMarks[0].thoroughfare?.replaceAll(" ", '-')}  ${placeMarks[0].subLocality?.replaceAll(' ', '')}';
+ log('$county $state $city');
+  update();
+  }
+  getLatLang() async {
+    LocationService.getCurrentPosition().then((value) {
+      log("lat lang ${value.toJson().toString()}");
+      lat.value = value.latitude.toString();
+      lng.value = value.longitude.toString();
+    });
+  }
+
+  Future<String> getCurrentLocationProperties() async {
+    return await LocationService.getCurrentPlace();
+
+  }
+
 
   Future<String?> savePhotoToFirebase(
       String tokenId, File photo, String imageName) async {
@@ -363,8 +409,8 @@ class CreteOrganisationProfileController extends GetxController {
       'description': description.text,
       'branch': branches.text == '' ? "No Branches" : branches.text,
       'name': name.text.toUpperCase(),
-      'latitude': '${fullAddress.text}',
-      'longitude': '${fullAddress.text}, $city, $state, $county',
+      'latitude': lat.value??'',
+      'longitude': lng.value??'',
       'type': '1',
       if(timeline.value.isNotEmpty && coverProfile_img.path.isEmpty)'timeline_pic': timeline.value??'',
       if(profile.value.isNotEmpty && imageProfile.path.isEmpty)'profile_pic': profile.value??'',
@@ -449,8 +495,8 @@ class CreteOrganisationProfileController extends GetxController {
       'description': description.text,
       'branch': branches.text,
       'name': name.text.toUpperCase(),
-      'latitude': '${fullAddress.text}',
-      'longitude': '${fullAddress.text}, $city, $state, $county',
+      'latitude': lat.value??'',
+      'longitude': lng.value??'',
       'organization_id': organisationID.value,
       'type': '1',
       'profile_pic': profile.value,
@@ -462,6 +508,8 @@ class CreteOrganisationProfileController extends GetxController {
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(await response.stream.bytesToString());
         if (jsonResponse['message'] == 'Organization Update Successfully.') {
+           await GetStorage().write('lng', lng.value.toString());
+            await  GetStorage().write('lat', lat.value.toString());
           Get.offAll(const OrganisationDashboard());
         }
       } else {
@@ -474,4 +522,6 @@ class CreteOrganisationProfileController extends GetxController {
     isLoading.value = false;
     update();
   }
+
+
 }

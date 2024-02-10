@@ -5,6 +5,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -16,9 +19,12 @@ import '../constants/const_strings.dart';
 import '../constants/statecity/model/state_model.dart';
 import '../model/partyModel/partyDataModel.dart';
 import '../model/subscription_plan_model/subscription_plan_model.dart';
+import '../widgets/location_services.dart';
 
 class PartyController extends GetxController {
 
+  List statenNameList = [];
+  List cityNameList = [];
   List<StateName> stateName = [] ;
   List<StateName> cityName = [] ;
   var isComplet = false.obs;
@@ -29,6 +35,8 @@ class PartyController extends GetxController {
   static final count = false.obs;
   static var address = "";
   RxInt photoSelectNo = 0.obs;
+  RxString lat=''.obs;
+  RxString lng=''.obs;
   File image_c =File('');
   File image_b = File('');
   File cover_img = File('');
@@ -302,6 +310,9 @@ class PartyController extends GetxController {
   @override
   onInit() {
     super.onInit();
+    lat.value=GetStorage().read('lat');
+    lng.value = GetStorage().read('lng');
+   // getStateData();
     genderList.clear();
   }
 
@@ -324,13 +335,21 @@ class PartyController extends GetxController {
       'end_date': endDate.text,
       'start_time': startTime.text,
       'end_time': endTime.text,
-      'latitude': location.text,
+     /* 'latitude': location.text,
       'longitude': '$city, $state, India',
       'city':city.toString(),
       'state':state.toString(),
       'country':'India',
+      'pincode' : pincode.text,*/
+      'latitude': lat.value??'',
+      'longitude': lng.value??"",
+      'address':'${location.text}',
+      //'city':'$location ${city.toString()}',
+      'city':'${city.value.toString()}',
+      'state':state.toString(),
+      'country': 'India',
       'pincode' : pincode.text,
-      'type': getPertyType(partyType.value),
+      'type': getPartyType(partyType.value),
       'gender': genderList
           .toString()
           .replaceAll('[', ' ')
@@ -449,10 +468,12 @@ class PartyController extends GetxController {
   }
 */
 
-  sendRequst() async {
+  sendRequest() async {
     /// discount_type == 1 {percent wise}
     /// discount_type == 0 {No discount}
     /// discount_type == 2 {Flat off}
+
+
     isLoading.value = true;
     var headers = {
       'x-access-token': '${GetStorage().read('token')}'
@@ -469,13 +490,15 @@ class PartyController extends GetxController {
       'end_date': endDate.text,
       'start_time': startTime.text,
       'end_time': endTime.text,
-      'latitude': location.text,
-      'longitude': '$city, $state, India',
-      'city':city.toString(),
+      'latitude': lat.value??'',
+      'longitude': lng.value??"",
+      'address':'${location.text}',
+      //'city':'$location ${city.toString()}',
+      'city':'${city.value.toString()}',
       'state':state.toString(),
       'country': 'India',
       'pincode' : pincode.text,
-      'type': getPertyType(partyType.value),
+      'type': getPartyType(partyType.value),
       'gender': genderList
           .toString()
           .replaceAll('[', '')
@@ -556,7 +579,7 @@ class PartyController extends GetxController {
     }
   }
 
-  getPertyType(String gender) {
+  getPartyType(String gender) {
     switch (gender) {
       case 'Music event':
         return '1';
@@ -568,6 +591,7 @@ class PartyController extends GetxController {
   }
 
    Future<void> getStateData() async {
+     isLoading.value =true;
     final response = await http.post(
       Uri.parse(API.getStates),
       headers: <String, String>{
@@ -586,6 +610,11 @@ class PartyController extends GetxController {
         var list = data.data ?? [] ;
         stateName= list ;
         cityName.clear();
+        statenNameList.add('Select State');
+        stateName.forEach((element) {
+          statenNameList.add(element.name);
+        });
+isLoading.value =false;
         update();
       }
       else {
@@ -624,6 +653,13 @@ class PartyController extends GetxController {
           var data = StateCityModel.fromJson(jsonResponse);
           var list = data.data ?? [];
           cityName = list;
+
+          cityNameList.add('Select City');
+          cityName.forEach((element) {
+            // stateItemss  = [{element.id:element.name},];
+            cityNameList.add(element.name);
+          });
+          log('abcde $cityNameList');
           update();
         }
         else {
@@ -678,6 +714,68 @@ class PartyController extends GetxController {
       log('error: $e');
     }
   }
+
+  Future<void> partystopResume({required String status , required String partyId})async {
+try{
+
+  final response = await http.post(
+    Uri.parse(API.partyPauseResume),
+    body: {
+      'party_id':'315',
+      'status':'0',
+    },
+    headers: <String, String>{
+      'x-access-token': '${GetStorage().read('token')}',
+    },
+  );
+
+  if(response.statusCode == 200){
+    var jsonResponse = jsonDecode(response.body);
+    log('data ::$jsonResponse');
+update();
+  }
+}
+catch(e){
+  log('error:: $e');
+}
+  }
+
+  Future<void> userLocation()async{
+
+    bool? granted=await LocationService.checkPermissionForLocation();
+
+    if( granted != null && granted){
+      await LocationService.getCurrentPosition().then((value) {
+        log("lat lang ${value.toJson().toString()}");
+        lat.value = value.latitude.toString();
+        lng.value = value.longitude.toString();
+      });
+      Position position = await LocationService.getCurrentPosition();
+      List<Placemark> placeMarks =
+      await placemarkFromCoordinates(position.latitude, position.longitude);
+      log('Address :: '+placeMarks[0].toString());
+      String currentAddress =
+          '${placeMarks[0].name} ${placeMarks[0].subThoroughfare} ${placeMarks[0].thoroughfare}  ${placeMarks[0].subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(' ', '-')}  ${placeMarks[0].postalCode} ';
+      log('current address $currentAddress');
+      location.text= await currentAddress;
+      county.value = await'${placeMarks[0].country?.replaceAll(' ', '')}';
+      state.value = await '${placeMarks[0].administrativeArea?.replaceAll(' ', '')}';
+      if(state.value !="" || state.value != 'Select State'){
+        cityNameList.clear();
+        cityName.clear();
+        await getCityData(cityid: '${state}');
+        city.value = await '${placeMarks[0].locality}';
+      }
+      pincode.text = await '${placeMarks[0].postalCode}';
+      log('$county $state $city');
+
+    }
+    else{
+      Fluttertoast.showToast(msg: "Location permission not granted",textColor: Colors.white,);
+    }
+  }
+
+
   @override
   void onClose() {
     stateName.clear();

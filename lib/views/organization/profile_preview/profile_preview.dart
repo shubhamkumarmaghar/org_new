@@ -40,7 +40,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
               value: jsonAddAmenitiesData[i]['name'],
               enabled: true,
               perpetualSelected: true,
-              highlightColor: Colors.red,
+              highlightColor: Colors.red.shade900,
               selected: true,
               label: jsonAddAmenitiesData[i]['name']));
         });
@@ -277,7 +277,7 @@ class _ProfilePreviewViewState extends State<ProfilePreviewView> {
                       controller: MultiSelectController(deSelectPerpetualSelectedItems: true),
                       itemsDecoration: const MultiSelectDecorations(),
                       itemsPadding: const EdgeInsets.all(10),
-                      highlightColor: Colors.red,
+                      highlightColor: Colors.red.shade900,
                       maxSelectableCount: 0,
                       prefix: MultiSelectPrefix(
                           disabledPrefix: const Icon(

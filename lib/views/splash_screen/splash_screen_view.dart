@@ -24,6 +24,7 @@ class _SplashScreenMainState extends State<SplashScreenMain> {
   void initState() {
     super.initState();
     updaterApp();
+
     Timer(const Duration(seconds: 2), () {
       if ('${GetStorage().read('onboarding')}' == '1') {
         if (GetStorage().read('loggedIn') == '1') {
