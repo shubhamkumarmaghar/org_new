@@ -2,7 +2,7 @@ class API {
 
  static const String developmentUrl = 'https://65.2.59.129/app/v1';
  static const String productionUrlString = 'https://app.partypeople.in/v1';
- static const String apiUrlString = developmentUrl;
+ static const String apiUrlString = productionUrlString;
 
  static const String login = '$apiUrlString/account/login';
  static const String otp = '$apiUrlString/account/otp_verify';

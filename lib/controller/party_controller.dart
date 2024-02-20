@@ -310,8 +310,8 @@ class PartyController extends GetxController {
   @override
   onInit() {
     super.onInit();
-    lat.value=GetStorage().read('lat');
-    lng.value = GetStorage().read('lng');
+    lat.value=GetStorage().read('lat')??"";
+    lng.value = GetStorage().read('lng')??"";
    // getStateData();
     genderList.clear();
   }

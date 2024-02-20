@@ -23,6 +23,10 @@ class OrganizationDashboardController extends GetxController {
   RxString going = '0'.obs;
   RxInt count = 0.obs;
   RxString token = ''.obs;
+  RxString fullAddress = ''.obs;
+  RxString county = ''.obs;
+  RxString state = ''.obs;
+  RxString city = ''.obs;
   RxString organisationName = 'Organisation Name'.obs;
   RxString organisationRating = '0'.obs;
   RxString partyStartTime = ''.obs;
@@ -69,9 +73,9 @@ class OrganizationDashboardController extends GetxController {
 
     getAPIOverview();
 
-   /*  Timer.periodic(Duration(seconds: 3), (timer) {
+     Timer.periodic(Duration(minutes: 1), (timer) {
       getAPIOverview();
-    });*/
+    });
   }
 
   getLatLang() async {
@@ -116,10 +120,6 @@ class OrganizationDashboardController extends GetxController {
       if(data['profile_pic_e'] != null){
         profileImgE.value = data['profile_pic_e'];
       }
-
-
-
-
       likes.value = _formatNumber(data['like']);
       views.value = _formatNumber(data['view']);
       going.value = _formatNumber(data['ongoing']);
@@ -131,6 +131,13 @@ class OrganizationDashboardController extends GetxController {
       organisationRating.value = data['rating'];
       organizationDesc.value = data['description'];
       imageApproval.value = data['profile_pic_approval_status'];
+      fullAddress.value = data['city_id'];
+      county.value = data['country'];
+      state.value = data['state'];
+      city.value = data['city'];
+      lat.value = data['latitude'];
+      lng.value = data['longitude'];
+
       update();
       await getPartyByDate();
       await getOrganisationDetailsPopular();
@@ -183,7 +190,7 @@ class OrganizationDashboardController extends GetxController {
       );
 
       dynamic decodedData = jsonDecode(response.body);
-      print('shubhamm $decodedData');
+      print('party data ::: $decodedData');
 
       // Initialize lists to store parties
       List<Party> todayParties = [];

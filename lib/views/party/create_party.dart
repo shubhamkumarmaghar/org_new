@@ -20,6 +20,7 @@ import 'package:sizer/sizer.dart';
 import '../../constants/cached_image_placeholder.dart';
 import '../../constants/statecity/model/state_model.dart';
 import '../../controller/organisation/create_profile_controller/select_photo_options_screen.dart';
+import '../../controller/organisation/dashboard/organization_dashboard.dart';
 import '../../services/services.dart';
 
 //
@@ -42,6 +43,7 @@ class _CreatePartyState extends State<CreateParty> {
 
   DefaultController defaultController = Get.put(DefaultController());
   PartyController controller = Get.put(PartyController());
+  OrganizationDashboardController organizationDashboardController =  Get.find();
 
   String getRandomString() {
     DateTime now = DateTime.now();
@@ -250,38 +252,46 @@ setState(() {
 
   nonField() async {
     await controller.getStateData();
+    controller.timeline.value = '';
+    controller.imageB.value = '';
+    controller.imageC.value = '';
+    controller.image_b = File('');
+    controller.image_c = File('');
+    controller.cover_img = File('');
+    controller.title.text = '';
+    controller.description.text = '';
+    controller.mobileNumber.text = '';
+    controller.startDate.text = '';
+    controller.endDate.text = '';
+    controller.startTime.text = '';
+    controller.endTime.text = '';
+    controller.peopleLimit.text = '';
+    controller.startPeopleAge.text = '';
+    controller.endPeopleAge.text = '';
+    controller.offersText.text = '';
+    controller.ladiesPrice.text = '';
+    controller.stagPrice.text = '';
+    controller.othersPrice.text = '';
+    controller.couplesPrice.text = '';
+    controller.pincode.text = '';
+    controller.location.text = organizationDashboardController.fullAddress.value??"";
+    controller.state.value = organizationDashboardController.state.value??'';
+    controller.city.value = organizationDashboardController.city.value??"";
+log('message::: ${controller.city.value} ');
+    if(controller.state.value !=''||controller.state.value != 'Select State')
+    {
+      selectState = controller.state.value;
+      await controller.getCityData(cityid: '$selectState');
+      selectCity = controller.city.value;
+    }
+    controller.discountPortion.value=false;
+    controller.discountAmount.text = '';
+    controller.discountDescription.text ='';
+    controller.maxMinAmount.text ='';
+    controller.lng.value=organizationDashboardController.lng.value??"";
+    controller.lat.value=organizationDashboardController.lat.value??"";
     setState(() {
-      controller.timeline.value = '';
-      controller.imageB.value = '';
-      controller.imageC.value = '';
-      controller.image_b = File('');
-      controller.image_c = File('');
-      controller.cover_img = File('');
-      controller.title.text = '';
-      controller.description.text = '';
-      controller.mobileNumber.text = '';
-      controller.startDate.text = '';
-      controller.endDate.text = '';
-      controller.startTime.text = '';
-      controller.endTime.text = '';
-      controller.peopleLimit.text = '';
-      controller.startPeopleAge.text = '';
-      controller.endPeopleAge.text = '';
-      controller.offersText.text = '';
-      controller.ladiesPrice.text = '';
-      controller.stagPrice.text = '';
-      controller.othersPrice.text = '';
-      controller.couplesPrice.text = '';
-      controller.pincode.text = '';
-      controller.location.text = '';
-      controller.city.value = '';
-      controller.state.value = '';
-      controller.discountPortion.value=false;
-      controller.discountAmount.text = '';
-      controller.discountDescription.text ='';
-      controller.maxMinAmount.text ='';
-      controller.lng.value='';
-      controller.lat.value='';
+
     });
   }
 
@@ -680,7 +690,7 @@ setState(() {
                         )
                       : Container(),
                   //LocationButton(),
-                  Padding(
+                /*  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: GestureDetector(onTap: ()async{
                       await controller.userLocation();
@@ -698,7 +708,7 @@ setState(() {
                             Icon(Icons.location_on_outlined,color: Colors.black,),
                           ],
                         )),
-                  ),
+                  ),*/
                   TextFieldWithTitle(
                     title: 'Address',
                     controller: controller.location,
@@ -748,7 +758,7 @@ setState(() {
                   Container(
 
                       padding: const EdgeInsets.only(
-                          left: 24.0,right: 24, top: 14,bottom: 14),
+                          left: 24.0,right: 14, top: 14,bottom: 14),
                       child: DropdownButtonFormField<String>(
 
                         decoration: InputDecoration(
@@ -762,11 +772,13 @@ setState(() {
                             borderSide:
                                 BorderSide(color: Colors.white, width: 2),
                             borderRadius: BorderRadius.circular(8),
+
                           ),
 
                           filled: true,
                           fillColor: Colors.white,
                         ),
+
                         dropdownColor: Colors.white,
                         value: selectState,
                         onChanged: (newValue) async{
@@ -790,8 +802,8 @@ setState(() {
                   // for city
                   Container(
                       // width: 300,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24.0, vertical: 14),
+                      padding: const EdgeInsets.only(
+                          left: 24.0,right: 14, top: 14,bottom: 14),
                       child: DropdownButtonFormField<String>(
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(

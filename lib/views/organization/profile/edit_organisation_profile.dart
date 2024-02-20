@@ -28,7 +28,7 @@ class EditOrganisationProfile extends StatefulWidget {
 }
 
 class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
-  CreteOrganisationProfileController controller = Get.put(CreteOrganisationProfileController());
+  CreteOrganisationProfileController controller = Get.find();
   DefaultController defaultController = Get.put(DefaultController());
   List<MultiSelectCard> ameList = [];
 
@@ -100,7 +100,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
   @override
   void initState() {
     LocationService.checkPermission(context: context);
-    controller.getAPIOverview();
+   // controller.getAPIOverview();
     getAmenities();
     super.initState();
   }
@@ -409,6 +409,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                       setState(() {
                         controller.county.value = value.toString();
                       });
+                      controller.update();
                     },
 
                     ///triggers once state selected in dropdown
@@ -419,6 +420,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                           controller.state.value = value.toString();
                         }
                       });
+                      controller.update();
                     },
 
                     ///triggers once city selected in dropdown
@@ -430,6 +432,7 @@ class _EditOrganisationProfileState extends State<EditOrganisationProfile> {
                           controller.city.value = value.toString();
                         }
                       });
+                      controller.update();
                     },
                   ),
                 ),

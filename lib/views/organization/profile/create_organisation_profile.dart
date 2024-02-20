@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:csc_picker/csc_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,7 +36,6 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
   @override
   Widget build(BuildContext context) {
     controller.getAmenities();
-
     return Scaffold(
         body: SingleChildScrollView(
             child: Obx(
@@ -264,6 +265,21 @@ class _CreateOrganisationProfileState extends State<CreateOrganisationProfile> {
                   title: 'Organization Full Address',
                   controller: controller.fullAddress,
                   inputType: TextInputType.name,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+                  child: GestureDetector(onTap: ()async{
+                    await controller.getLocationEditabledata();
+                    log( controller.fullAddress.text );
+                  },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('Current Location',style: TextStyle(color: Colors.white),),
+                          Icon(Icons.location_on_outlined,color: Colors.white,),
+                        ],
+                      )),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(

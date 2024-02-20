@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_multi_select_items/flutter_multi_select_items.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -45,10 +44,10 @@ class CreteOrganisationProfileController extends GetxController {
   RxString profileD = ''.obs;
 
   RxInt ProfilePhotoSelectNos = 0.obs;
-  var county = ''.obs;
+  RxString county = ''.obs;
   RxString organisationID = ''.obs;
-  var state = ''.obs;
-  var city = ''.obs;
+  RxString state = ''.obs;
+  RxString city = ''.obs;
   RxList selectedAmenitiesListID = [].obs;
   RxString lat = ''.obs;
   RxString lng = ''.obs;
@@ -56,39 +55,63 @@ class CreteOrganisationProfileController extends GetxController {
 @override
   onInit(){
  // userLocation();
-  getCurrentLocationProperties();
-if(!isProfileEditable.value){
-  getLocationEditabledata();
-}
-
+  //getCurrentLocationProperties();
+  getData();
+  getAPIOverview();
     super.onInit();
   }
-
-  getLocationEditabledata() async{
-  await getLatLang();
-  List<Placemark> placeMarks =
-  await placemarkFromCoordinates(double.parse(lat.value),double.parse(lng.value));
-  log('Address :: '+placeMarks[0].toString());
-  String currentAddress =
-      '${placeMarks[0].name} ${placeMarks[0].subThoroughfare} ${placeMarks[0].thoroughfare}  ${placeMarks[0].subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(' ', '-')}  ${placeMarks[0].postalCode} ';
- fullAddress.text= await currentAddress;
- county.value = await'${placeMarks[0].country?.replaceAll(' ', '')}';
- state.value = await '${placeMarks[0].locality?.replaceAll(' ', '')}';
- city.value = await '${placeMarks[0].name} ${placeMarks[0].subThoroughfare?.replaceAll(" ", '-')} ${placeMarks[0].thoroughfare?.replaceAll(" ", '-')}  ${placeMarks[0].subLocality?.replaceAll(' ', '')}';
- log('$county $state $city');
-  update();
+void getData() async {
+  if(isProfileEditable.value == true) {
+    await getAPIOverview();
+    await getLatLang();
   }
+  }
+
+  getLocationEditabledata() async {
+    await getLatLang();
+
+    try {
+      if(lat.value.isNotEmpty && lat.value != "") {
+        List<Placemark> placeMarks =
+        await placemarkFromCoordinates(
+            double.parse(lat.value), double.parse(lng.value));
+        log('Address :: ' + placeMarks[0].toString());
+        String currentAddress =
+            '${placeMarks[0].name} ${placeMarks[0]
+            .subThoroughfare} ${placeMarks[0].thoroughfare}  ${placeMarks[0]
+            .subLocality?.replaceAll(' ', '-')}-${placeMarks[0].locality
+            ?.replaceAll(' ', '-')}-${placeMarks[0].administrativeArea
+            ?.replaceAll(' ', '-')}-${placeMarks[0].country?.replaceAll(
+            ' ', '-')}  ${placeMarks[0].postalCode} ';
+        fullAddress.text = await currentAddress;
+        county.value = await'${placeMarks[0].country?.replaceAll(' ', '')}';
+        state.value = await '${placeMarks[0].administrativeArea?.replaceAll(' ', '')}';
+        city.value =
+        await '${placeMarks[0].locality}';
+        log('$county $state $city');
+        update();
+      }
+      else{
+        Fluttertoast.showToast(msg: "Unable to get location");
+      }
+    }
+    catch(e)
+    {
+      log('error latlng :: $e');
+    }
+  }
+
   getLatLang() async {
     LocationService.getCurrentPosition().then((value) {
-      log("lat lang ${value.toJson().toString()}");
+      log("lat lang ${value.toJson().toString()}  ${value.latitude.toString()}  ${value.longitude.toString()}");
       lat.value = value.latitude.toString();
       lng.value = value.longitude.toString();
+      log("lat lang ${lat.value }  ${lng.value }");
     });
   }
 
   Future<String> getCurrentLocationProperties() async {
     return await LocationService.getCurrentPlace();
-
   }
 
 
@@ -402,7 +425,7 @@ if(!isProfileEditable.value){
           .toString()
           .replaceAll('[', '')
           .replaceAll(']', ''),
-      'city_id': '${fullAddress.text}, $city, $state, $county',
+      'city_id': '${fullAddress.text}',
       'country' : county.value,
       'city' :  city.value,
       'state' : state.value,
@@ -433,6 +456,7 @@ if(!isProfileEditable.value){
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(await response.stream.bytesToString());
       isLoading.value = false;
+      log('add org data :::$jsonResponse');
       if (jsonResponse['message'] == 'Organization Create Successfully.') {
         GetStorage().write('loggedIn', '1');
 
@@ -451,18 +475,20 @@ if(!isProfileEditable.value){
     http.Response response = await http.post(
         Uri.parse(API.organizationDetails),
         headers: {'x-access-token': '${GetStorage().read('token')}'});
-    organisationID.value = jsonDecode(response.body)['data'][0]['id'];
+        log('get data $response');
     if (jsonDecode(response.body)['data'] != null) {
       GetStorage().write('loggedIn', '1');
+      organisationID.value = jsonDecode(response.body)['data'][0]['id'];
       name.text = jsonDecode(response.body)['data'][0]['name'];
       branches.text = jsonDecode(response.body)['data'][0]['branch'] ?? '';
       description.text = jsonDecode(response.body)['data'][0]['description'];
-      fullAddress.text = jsonDecode(response.body)['data'][0]['latitude'];
+      fullAddress.text = jsonDecode(response.body)['data'][0]['city_id'];
       county.value = jsonDecode(response.body)['data'][0]['country'];
       state.value = jsonDecode(response.body)['data'][0]['state'];
       city.value = jsonDecode(response.body)['data'][0]['city'];
-      timeline.value =
-          "${jsonDecode(response.body)['data'][0]['timeline_pic']}";
+      lat.value = jsonDecode(response.body)['data'][0]['latitude'];
+      lng.value = jsonDecode(response.body)['data'][0]['longitude'];
+      timeline.value = "${jsonDecode(response.body)['data'][0]['timeline_pic']}";
       profile.value = "${jsonDecode(response.body)['data'][0]['profile_pic']}";
       profileB.value = "${jsonDecode(response.body)['data'][0]['profile_pic_b']}";
       profileC.value = "${jsonDecode(response.body)['data'][0]['profile_pic_c']}";
@@ -488,7 +514,7 @@ if(!isProfileEditable.value){
           .toString()
           .replaceAll('[', '')
           .replaceAll(']', ''),
-      'city_id': '${fullAddress.text}, $city, $state, $county}',
+      'city_id': '${fullAddress.text}',
       'country' : county.value,
       'city' :  city.value,
       'state' : state.value,
