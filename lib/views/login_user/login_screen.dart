@@ -265,6 +265,7 @@ class _LoginViewState extends State<LoginView> {
                                     ],
                                     controller: controller.mobileNumber,
                                     keyboardType: TextInputType.number,
+                                    maxLength: 10,
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Enter Mobile Number',
@@ -506,13 +507,13 @@ SizedBox(height: 10,),
                                     Get.snackbar('Terms & Condition', 'Please accept the terms and conditions.');
                                   }
                                   else {
-                                    if ((controller.mobileNumber.text.isNotEmpty ||
+                                    if (((controller.mobileNumber.text.isNotEmpty && controller.mobileNumber.text.length ==10) ||
                                         controller.emailAddress.text.isNotEmpty) &&
                                         controller.username.text.isNotEmpty) {
                                       controller.verifyPhone(type: countryType);
                                     } else {
                                       Get.snackbar('Field is Empty',
-                                          'Fill all the fields');
+                                          'Please Fill valid details');
                                     }
                                   }
                                 },

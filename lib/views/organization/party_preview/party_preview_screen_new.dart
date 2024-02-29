@@ -343,7 +343,8 @@ return true;
                   icon: Icons.calendar_month_outlined,
                   title: "Popular Party Dates",
                   subtitle:
-                  "${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.party.prStartDate}'))}",
+                  "${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.party.prStartDate}'))} to "
+                      "${DateFormat('EEEE, d MMMM y').format(DateTime.parse('${widget.party.prEndDate}'))}",
                   sub: true,)
                     :Container(),
 
