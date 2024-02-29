@@ -20,6 +20,7 @@ import 'package:partypeoplebusiness/controller/party_controller.dart';
 import 'package:partypeoplebusiness/views/organization/profile_preview/profile_preview.dart';
 import 'package:partypeoplebusiness/views/organization/side_drawer/drawer_view.dart';
 import 'package:partypeoplebusiness/views/party/create_party.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
@@ -79,8 +80,9 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
   }
 
   Future _handleRefresh() async {
-    controller.getAPIOverview();
-    controller.getOrganisationDetailsPopular();
+    await controller.getAPIOverview();
+    controller.refreshController.refreshCompleted();
+   // controller.getOrganisationDetailsPopular();
   }
   getConnectivity() =>
       subscription = Connectivity().onConnectivityChanged.listen(
@@ -111,9 +113,10 @@ class _OrganisationDashboardState extends State<OrganisationDashboard> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => LiquidPullToRefresh(
-        key: _refreshIndicatorKey, // key if you want to add
+      () => SmartRefresher(
+      //  key: _refreshIndicatorKey, // key if you want to add
         onRefresh: _handleRefresh, // refresh callback
+        controller: controller.refreshController,
         child: Scaffold(
           appBar: AppBar(
               centerTitle: true,

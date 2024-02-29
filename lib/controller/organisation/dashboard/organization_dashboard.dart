@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../constants/const_strings.dart';
 import '../../../model/partyModel/partyDataModel.dart';
@@ -13,7 +14,9 @@ import '../../../widgets/location_services.dart';
 import '../../party_controller.dart';
 
 class OrganizationDashboardController extends GetxController {
+
   //TODO: Implement OrganizationProfileNewController
+  final refreshController = RefreshController(initialRefresh: false);
   RxString notificationCount = '0'.obs;
   RxString likes = '0'.obs;
   RxString views = '0'.obs;
@@ -32,7 +35,7 @@ class OrganizationDashboardController extends GetxController {
   RxString partyStartTime = ''.obs;
   RxString partyDesc = ''.obs;
   RxString popularPartyVerification = '0'.obs;
-  RxString organisationVerification = '0'.obs;
+  RxString organisationVerification = '1'.obs;
   RxString partyLike = ''.obs;
   RxString partyView = ''.obs;
   RxString partyOngoing = ''.obs;

@@ -62,8 +62,8 @@ class LoginController extends GetxController {
 
       dynamic json = jsonDecode(response.body);
       log('${json}  ${response.body}');
-      if (json['status'] == 0) {
-        Get.snackbar('Error', 'Username or Mobile Number is not matching',
+      if (json['status'] == 0 ) {
+        Get.snackbar('Error', '${json['message']}',
             backgroundColor: Colors.white);
       } else {
         await GetStorage().write('token', json['data']['token'].toString());
